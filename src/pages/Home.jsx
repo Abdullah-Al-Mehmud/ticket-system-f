@@ -15,61 +15,13 @@ import {
   Search,
 } from "lucide-react";
 import TrustedOrgsCarousel from "../components/SimpleAutoCarousel";
+import TrendingEvent from "./TrendingEvent";
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Sample events data
-  const events = [
-    {
-      id: 1,
-      title: "Summer Music Festival 2025",
-      date: "Aug 15, 2025",
-      time: "6:00 PM",
-      location: "Central Park Arena",
-      price: "$45",
-      image:
-        "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=250&fit=crop",
-      category: "Music",
-      attendees: 1200,
-    },
-    {
-      id: 2,
-      title: "Tech Innovation Conference",
-      date: "Sep 22, 2025",
-      time: "9:00 AM",
-      location: "Convention Center",
-      price: "$120",
-      image:
-        "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=250&fit=crop",
-      category: "Technology",
-      attendees: 800,
-    },
-    {
-      id: 3,
-      title: "Food & Wine Expo",
-      date: "Oct 8, 2025",
-      time: "12:00 PM",
-      location: "Downtown Plaza",
-      price: "$35",
-      image:
-        "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=250&fit=crop",
-      category: "Food",
-      attendees: 600,
-    },
-    {
-      id: 4,
-      title: "Art Gallery Opening",
-      date: "Nov 12, 2025",
-      time: "7:00 PM",
-      location: "Modern Art Museum",
-      price: "$25",
-      image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop",
-      category: "Art",
-      attendees: 300,
-    },
-  ];
+  
 
   // Trusted organizations data
   const trustedOrgs = [
@@ -317,9 +269,9 @@ const Home = () => {
 
       {/* Features Section */}
       
-
+       <TrendingEvent />
       {/* All Events Section */}
-      <section className="py-16 bg-gray-50">
+      {/* <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
             <div>
@@ -392,7 +344,7 @@ const Home = () => {
             </button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Trusted Organizations Section */}
       <section className="py-16 bg-white">
