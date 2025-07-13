@@ -13,6 +13,9 @@ import {
   Zap,
   Search,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+import {eventApiSlice} from "../redux/features/event/EventApiSlice";
+
 const events = [
   {
     id: 1,
@@ -65,6 +68,9 @@ const events = [
 ];
 
 const TrendingEvent = () => {
+
+   const []
+
   return (
     <div>
       <section className="py-16 bg-gray-50">
@@ -78,10 +84,10 @@ const TrendingEvent = () => {
                 Don't miss out on these popular events
               </p>
             </div>
-            <button className="hidden md:flex items-center text-blue-600 hover:text-blue-700 font-medium">
+            <Link to="/event" className="hidden md:flex items-center text-blue-600 hover:text-blue-700 font-medium">
               View All Events
               <ChevronRight className="w-5 h-5 ml-1" />
-            </button>
+            </Link>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">

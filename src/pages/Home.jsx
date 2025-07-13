@@ -15,7 +15,7 @@ import {
   Search,
 } from "lucide-react";
 import TrustedOrgsCarousel from "../components/SimpleAutoCarousel";
-import TrendingEvent from "./TrendingEvent";
+import TrendingEvent from "../components/TrendingEvent";
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
