@@ -1,26 +1,23 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/auth/AuthApiSlice";
 
-
-
 const Login = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-
   const [login] = useLoginMutation();
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+    setApiError("");
   };
 
   const validateForm = () => {
@@ -32,8 +29,8 @@ const Login = () => {
     }
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -41,15 +38,28 @@ const Login = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
+
+    setIsLoading(true);
+    setApiError("");
+
     try {
-      await login(formData).unwrap();
-      // Handle successful login (e.g., redirect to dashboard)
+      const response = await login(formData).unwrap();
+
+      // Optionally store token (depends on backend)
+      localStorage.setItem("token", response.token);
+
+      // Redirect to dashboard
+      navigate("/dashboard");
     } catch (error) {
-      // Handle login error (e.g., show error message)
       console.error("Login failed:", error);
-      setErrors({ form: "Login failed. Please check your credentials." });
+      if (error?.data?.message) {
+        setApiError(error.data.message);
+      } else {
+        setApiError("Login failed. Please check your credentials.");
+      }
+    } finally {
+      setIsLoading(false);
     }
-   
   };
 
   return (
@@ -60,15 +70,18 @@ const Login = () => {
           <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <User className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome Back
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
           <p className="text-gray-600">Sign in to your account to continue</p>
         </div>
 
+        {/* API error */}
+        {apiError && (
+          <p className="mb-4 text-sm text-red-600 text-center">{apiError}</p>
+        )}
+
         {/* Form */}
         <div className="space-y-5">
-          {/* Email Field */}
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email Address
@@ -80,7 +93,7 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter your email"
@@ -91,7 +104,7 @@ const Login = () => {
             )}
           </div>
 
-          {/* Password Field */}
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Password
@@ -103,7 +116,7 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter your password"
@@ -112,11 +125,7 @@ const Login = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
             {errors.password && (
@@ -140,15 +149,15 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 flex items-center justify-center space-x-2">
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 flex items-center justify-center space-x-2">
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                <span>Processing...</span>
+                <span>Signing in...</span>
               </>
             ) : (
               <>
@@ -158,13 +167,11 @@ const Login = () => {
             )}
           </button>
         </div>
+
         <div className="text-center mt-6 text-sm text-gray-600">
           <p>
             Don’t have an account?{" "}
-            <Link
-              to = "/register"
-              type="button"
-              className="text-blue-600 hover:text-blue-500 font-medium">
+            <Link to="/register" className="text-blue-600 hover:text-blue-500 font-medium">
               Sign up
             </Link>
           </p>
