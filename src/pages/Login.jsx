@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLoginMutation } from "../redux/features/auth/AuthApiSlice";
+
+
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
+
+  const [login] = useLoginMutation();
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,13 +41,15 @@ const Login = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-    setIsLoading(true);
-    // fake API call
-    setTimeout(() => {
-      setIsLoading(false);
-      alert("Login successful!");
-      setFormData({ email: "", password: "" });
-    }, 1500);
+    try {
+      await login(formData).unwrap();
+      // Handle successful login (e.g., redirect to dashboard)
+    } catch (error) {
+      // Handle login error (e.g., show error message)
+      console.error("Login failed:", error);
+      setErrors({ form: "Login failed. Please check your credentials." });
+    }
+   
   };
 
   return (
