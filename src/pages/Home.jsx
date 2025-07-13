@@ -133,7 +133,7 @@ const Home = () => {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Tick<span className="text-blue-600">Events</span>
+                  Tap<span className="text-blue-600">Kori</span>
                 </h1>
               </div>
             </div>
@@ -188,7 +188,7 @@ const Home = () => {
               </div>
 
               <Link
-                to="/register"
+                to="/login"
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 Login
               </Link>
@@ -316,34 +316,7 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">
-              Why Choose TickEvents?
-            </h3>
-            <p className="text-xl text-gray-600">
-              Experience the future of event ticketing
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="text-center group hover:scale-105 transition-transform">
-                <div className="bg-gray-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-gray-100">
-                  {feature.icon}
-                </div>
-                <h4 className="text-xl font-semibold text-gray-900 mb-2">
-                  {feature.title}
-                </h4>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* All Events Section */}
       <section className="py-16 bg-gray-50">
@@ -501,7 +474,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h4 className="text-xl font-bold mb-4">TickEvents</h4>
+              <h4 className="text-xl font-bold mb-4">Tapkori</h4>
               <p className="text-gray-400 mb-4">
                 Your premier destination for discovering and booking amazing
                 events.
@@ -605,7 +578,7 @@ const Home = () => {
           </div>
 
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 TickEvents. All rights reserved.</p>
+            <p>&copy; 2025 TapKori. All rights reserved.</p>
           </div>
         </div>
       </footer>
