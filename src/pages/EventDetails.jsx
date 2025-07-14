@@ -13,6 +13,7 @@ import {
   Phone,
   Mail,
   Camera,
+  SquareUserRound,
   Music,
   Utensils,
 } from "lucide-react";
@@ -22,6 +23,7 @@ import { useGetEventByIdQuery } from "../redux/features/event/EventApiSlice";
 const EventDetails = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   const { id } = useParams();
   const { data, isLoading, isError } = useGetEventByIdQuery(id);
@@ -43,8 +45,8 @@ const EventDetails = () => {
   const start = new Date(event.start_date);
   const end = new Date(event.end_date);
 
-  const dateOptions = { day: "numeric", month: "short", year: "numeric" }; 
-  const timeOptions = { hour: "numeric", minute: "2-digit", hour12: true }; 
+  const dateOptions = { day: "numeric", month: "short", year: "numeric" };
+  const timeOptions = { hour: "numeric", minute: "2-digit", hour12: true };
 
   function formatDateTimeRange(start, end) {
     const formattedStartTime = start.toLocaleTimeString("en-US", timeOptions);
@@ -57,6 +59,21 @@ const EventDetails = () => {
     const formattedEndDate = end.toLocaleDateString("en-US", dateOptions);
     return `${formattedStartDate} - ${formattedEndDate}`;
   }
+
+
+  
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
+  const maxLength = 300; // এখানে যত শব্দ বা অক্ষর দেখাতে চাও সেটি দাও
+  const descriptionText = event.event_description || "";
+
+  const shortDescription =
+    descriptionText.length > maxLength
+      ? descriptionText.slice(0, maxLength) + "..."
+      : descriptionText;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
@@ -118,6 +135,15 @@ const EventDetails = () => {
                       <p className="text-sm text-gray-500">Event time</p>
                     </div>
                   </div>
+                  {/* <div className="flex items-center gap-3 text-gray-700">
+                    <MapPin className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <p className="font-semibold">{event.location}</p>
+                      <p className="text-sm text-gray-500">Location</p>
+                    </div>
+                  </div> */}
+                </div>
+                <div className="space-y-4">
                   <div className="flex items-center gap-3 text-gray-700">
                     <MapPin className="w-5 h-5 text-purple-600" />
                     <div>
@@ -125,9 +151,7 @@ const EventDetails = () => {
                       <p className="text-sm text-gray-500">Location</p>
                     </div>
                   </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-gray-700">
+                  {/* <div className="flex items-center gap-3 text-gray-700">
                     <Users className="w-5 h-5 text-purple-600" />
                     <div>
                       <p className="font-semibold">
@@ -135,21 +159,23 @@ const EventDetails = () => {
                       </p>
                       <p className="text-sm text-gray-500">Join the crowd!</p>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="flex items-center gap-3 text-gray-700">
                     <Ticket className="w-5 h-5 text-purple-600" />
                     <div>
-                      <p className="font-semibold">৳{event.ticket_price}</p>
+                      <p className="font-semibold">
+                        <span className="text-2xl">৳</span> {event.ticket_price}
+                      </p>
                       <p className="text-sm text-gray-500">Ticket price</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-gray-700">
+                  {/* <div className="flex items-center gap-3 text-gray-700">
                     <Star className="w-5 h-5 text-purple-600" />
                     <div>
                       <p className="font-semibold">4.8/5 Rating</p>
                       <p className="text-sm text-gray-500">Based on reviews</p>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -159,7 +185,18 @@ const EventDetails = () => {
               <h2 className="text-2xl font-bold mb-4 text-gray-800">
                 About This Event
               </h2>
-              <p className="text-gray-600">{event.event_description}</p>
+              <div>
+                <p className="text-gray-600">
+                  {showFullDescription ? descriptionText : shortDescription}
+                </p>
+                {descriptionText.length > maxLength && (
+                  <button
+                    onClick={toggleDescription}
+                    className="text-blue-600 hover:underline text-sm mt-1">
+                    {showFullDescription ? "See less" : "See more"}
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -186,13 +223,13 @@ const EventDetails = () => {
                 Organizer
               </h3>
               <div className="flex items-center gap-3 text-gray-700">
-                <Music className="w-5 h-5 text-purple-600" />
+                <SquareUserRound className="w-4 h-4" />
                 <span>{event.organizer.name || "Unknown Organizer"}</span>
               </div>
-              <div className="flex items-center gap-3 text-gray-600 mt-2">
+              {/* <div className="flex items-center gap-3 text-gray-600 mt-2">
                 <Phone className="w-4 h-4" />
                 <span className="text-sm">+1 (555) 123-4567</span>
-              </div>
+              </div> */}
               <div className="flex items-center gap-3 text-gray-600 mt-1">
                 <Mail className="w-4 h-4" />
                 <span className="text-sm">{event.organizer.email}</span>
@@ -202,8 +239,8 @@ const EventDetails = () => {
             {/* Alerts */}
             <Alert className="border-amber-200 bg-amber-50">
               <AlertDescription className="text-amber-800">
-                <strong>Note:</strong> Bring a valid ID and your ticket
-                confirmation.
+                <strong>Note:</strong>
+                {event.privacy_policy}
               </AlertDescription>
             </Alert>
           </div>
