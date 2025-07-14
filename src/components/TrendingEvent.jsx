@@ -5,7 +5,7 @@ import { useGetEventsQuery } from "../redux/features/event/EventApiSlice";
 
 const TrendingEvent = () => {
   const { data, isLoading, isError } = useGetEventsQuery();
-  const events = data?.data ?? []; // safely get the array
+  const events = data?.data ?? [];
 
   return (
     <section className="py-16 bg-gray-50">
@@ -21,7 +21,8 @@ const TrendingEvent = () => {
           </div>
           <Link
             to="/event"
-            className="hidden md:flex items-center text-blue-600 hover:text-blue-700 font-medium">
+            className="hidden md:flex items-center text-blue-600 hover:text-blue-700 font-medium"
+          >
             View All Events
             <ChevronRight className="w-5 h-5 ml-1" />
           </Link>
@@ -36,10 +37,11 @@ const TrendingEvent = () => {
         )}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-          {events.map((event) => (
+          {events.slice(0, 4).map((event) => (
             <div
               key={event.id}
-              className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden group">
+              className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden group"
+            >
               <div className="relative">
                 <img
                   src={event.image_url}
@@ -88,7 +90,7 @@ const TrendingEvent = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold text-blue-600">
-                   ৳ {event.ticket_price}
+                    ৳ {event.ticket_price}
                   </span>
                   <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                     Book Now
