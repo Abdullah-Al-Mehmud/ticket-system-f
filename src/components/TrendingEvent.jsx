@@ -36,7 +36,7 @@ const TrendingEvent = () => {
           <div className="text-center text-red-500">Failed to load events.</div>
         )}
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           {events.slice(0, 4).map((event) => (
             <Link
               to={`/eventdetails/${event.id}`}
@@ -56,13 +56,14 @@ const TrendingEvent = () => {
                   {event.category}
                 </div>
               </div>
-              <div className="p-6">
+              <div className="p-2">
                 <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                   {event.title}
                   
                 </h4>
-                <div className="space-y-2 text-sm text-gray-600 mb-4">
-                  <div className="flex items-center">
+
+                <div className="grid grid-cols-2 space-y-2 text-sm text-gray-600 mb-2">
+                  <div className=" col-span-1 flex items-center">
                     <Calendar className="w-4 h-4 mr-2" />
                     <span>
                      
@@ -76,7 +77,7 @@ const TrendingEvent = () => {
                       )}
                     </span>
                   </div>
-                  <div className="flex items-center">
+                  <div className=" col-span-1 flex items-center">
                     <Clock className="w-4 h-4 mr-2" />
                     <span>
                       {new Date(event.start_date).toLocaleTimeString([], {
@@ -85,14 +86,11 @@ const TrendingEvent = () => {
                       })}
                     </span>
                   </div>
-                  <div className="flex items-center">
+                  <div className=" col-span-1 flex items-center">
                     <MapPin className="w-4 h-4 mr-2" />
                     <span>{event.location}</span>
                   </div>
-                  <div className="flex items-center">
-                    <Users className="w-4 h-4 mr-2" />
-                    <span>{event.organizer.name}</span>
-                  </div>
+                 
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xl font-bold text-blue-600">
@@ -102,6 +100,7 @@ const TrendingEvent = () => {
                     Book Now
                   </button>
                 </div>
+
               </div>
             </div>
               </Link>

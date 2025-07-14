@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useRegisterMutation } from "../redux/features/auth/AuthApiSlice";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,11 +57,13 @@ const Register = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+ 
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
     setIsLoading(true);
     setApiError("");
+    navigate("/login");
 
     try {
       await register({

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/auth/AuthApiSlice";
 
 const Login = () => {
@@ -49,7 +49,14 @@ const Login = () => {
       localStorage.setItem("token", response.token);
 
       // Redirect to dashboard
-      navigate("/dashboard");
+      if(data.role === "user"){
+           navigate("/admindashboard");
+      }else if (data.role === "organizer"){
+           navigate("/organizerdashboard");
+      }else{
+        navigate("/userdashboard");
+      }
+      
     } catch (error) {
       console.error("Login failed:", error);
       if (error?.data?.message) {

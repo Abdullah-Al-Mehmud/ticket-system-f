@@ -73,92 +73,71 @@ const Event = () => {
     const IconComponent = getCategoryIcon(event.category);
     return (
        <Link
-              to={`/eventdetails/${event.id}`}
-              className="group relative bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden"
-              key={event.id}>
-      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
-        <div className="relative">
-          {event.image_url ? (
-            <img
-              src={event.image_url}
-              alt={event.title}
-              className="w-full h-44 object-cover"
-            />
-          ) : (
-            <div className="w-full h-44 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 flex items-center justify-center">
-              <IconComponent className="w-12 h-12 text-white opacity-80" />
-            </div>
-          )}
-          {event.featured && (
-            <Badge className="absolute top-3 left-3 bg-orange-500 hover:bg-orange-600">
-              Featured
-            </Badge>
-          )}
-          <div className="absolute top-3 right-3 flex space-x-2">
-            <Button variant="secondary" size="sm" className="w-8 h-8 p-0 bg-white/80 hover:bg-white">
-              <Heart className="w-4 h-4" />
-            </Button>
-            <Button variant="secondary" size="sm" className="w-8 h-8 p-0 bg-white/80 hover:bg-white">
-              <Share2 className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
-        <CardContent className="p-4">
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex-1">
-              <Badge variant="outline" className="mb-1 text-xs">
-                {event.category}
-              </Badge>
-              <h3 className="text-base font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors line-clamp-1">
-                {event.title}
-              </h3>
-              <p className="text-xs text-gray-600 mb-2 line-clamp-2">{event.description}</p>
-            </div>
-            <div className="flex items-center space-x-1 text-xs text-gray-500 ml-2">
-              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-              <span>{event.rating ?? '4.5'}</span>
-            </div>
-          </div>
-
-          <div className="space-y-1 mb-3">
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <Calendar className="w-3 h-3 text-blue-500" />
-              <span>
-                {new Date(event.start_date).toLocaleDateString(undefined, {
-                  year: 'numeric', month: 'short', day: 'numeric'
-                })}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <Clock className="w-3 h-3 text-green-500" />
-              <span>
-                {new Date(event.start_date).toLocaleTimeString([], {
-                  hour: '2-digit', minute: '2-digit'
-                })}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <MapPin className="w-3 h-3 text-red-500" />
-              <span className="truncate">{event.location}</span>
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
-              <Users className="w-3 h-3 text-purple-500" />
-              <span>{event.organizer?.name ?? 'Organizer'}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="text-lg font-bold text-gray-900">
-              ৳ {event.ticket_price}
-            </div>
-            <Button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm">
-              Book Now
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-      </Link>
+                    to={`/eventdetails/${event.id}`}
+                    className="group relative bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden"
+                    key={event.id}>
+                  <div
+                    key={event.id}
+                    className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden group"
+                  >
+                    <div className="relative">
+                      <img
+                        src={event.image_url}
+                        alt={event.title}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-4 left-4 bg-white/90 px-2 py-1 rounded-full text-sm font-medium">
+                        {event.category}
+                      </div>
+                    </div>
+                    <div className="p-2">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                        {event.title}
+                        
+                      </h4>
+      
+                      <div className="grid grid-cols-2 space-y-2 text-sm text-gray-600 mb-2">
+                        <div className=" col-span-1 flex items-center">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          <span>
+                           
+                            {new Date(event.start_date).toLocaleDateString(
+                              undefined,
+                              {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              }
+                            )}
+                          </span>
+                        </div>
+                        <div className=" col-span-1 flex items-center">
+                          <Clock className="w-4 h-4 mr-2" />
+                          <span>
+                            {new Date(event.start_date).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                        <div className=" col-span-1 flex items-center">
+                          <MapPin className="w-4 h-4 mr-2" />
+                          <span>{event.location}</span>
+                        </div>
+                       
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xl font-bold text-blue-600">
+                          ৳ {event.ticket_price}
+                        </span>
+                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                          Book Now
+                        </button>
+                      </div>
+      
+                    </div>
+                  </div>
+                    </Link>
     );
   };
 
