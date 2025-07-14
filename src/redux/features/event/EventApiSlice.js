@@ -5,7 +5,7 @@ export const eventApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     
     getEvents: builder.query({
-      query: () => "/events",
+      query: () => "/event",
       providesTags: ["Event"],
     }),
 
