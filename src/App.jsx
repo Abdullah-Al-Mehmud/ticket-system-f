@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import { Routes, Route } from 'react-router-dom';
 import Event from './pages/Event';
 import Layout from './components/Layout';
+import EventDetails from './pages/EventDetails';
 function App() {
   
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/dashboard' element={<Dashboard />} />
       <Route path='/event' element={<Event />} />
+      <Route path='/eventdetails/:id' element={<EventDetails />} />
     </Route>
     </Routes>
   )

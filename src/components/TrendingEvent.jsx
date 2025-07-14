@@ -35,9 +35,13 @@ const TrendingEvent = () => {
         {isError && (
           <div className="text-center text-red-500">Failed to load events.</div>
         )}
-
+        
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
           {events.slice(0, 4).map((event) => (
+            <Link
+              to={`/eventdetails/${event.id}`}
+              className="group relative bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden"
+              key={event.id}>
             <div
               key={event.id}
               className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden group"
@@ -55,11 +59,13 @@ const TrendingEvent = () => {
               <div className="p-6">
                 <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
                   {event.title}
+                  
                 </h4>
                 <div className="space-y-2 text-sm text-gray-600 mb-4">
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-2" />
                     <span>
+                     
                       {new Date(event.start_date).toLocaleDateString(
                         undefined,
                         {
@@ -98,8 +104,10 @@ const TrendingEvent = () => {
                 </div>
               </div>
             </div>
+              </Link>
           ))}
         </div>
+         
 
         <div className="text-center mt-8">
           <button className="md:hidden bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">

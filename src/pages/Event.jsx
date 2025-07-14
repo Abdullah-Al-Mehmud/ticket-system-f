@@ -21,6 +21,7 @@ import {
   BookOpen,
   Camera
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Event = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,6 +72,10 @@ const Event = () => {
   const EventCard = ({ event }) => {
     const IconComponent = getCategoryIcon(event.category);
     return (
+       <Link
+              to={`/eventdetails/${event.id}`}
+              className="group relative bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden"
+              key={event.id}>
       <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 group">
         <div className="relative">
           {event.image_url ? (
@@ -153,6 +158,7 @@ const Event = () => {
           </div>
         </CardContent>
       </Card>
+      </Link>
     );
   };
 
