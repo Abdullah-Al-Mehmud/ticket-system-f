@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Calendar, Users, DollarSign, TrendingUp, Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Eye, MapPin, Clock } from 'lucide-react';
+import React, { use, useEffect, useState } from 'react';
+import { Calendar, Users, DollarSign, TrendingUp, Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Eye, MapPin, Clock, LogOut } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -9,6 +10,20 @@ const AdminDashboard = () => {
 
   // Get data form localStorage
   const  user = localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {};
+   
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear("token");
+    navigate("/login");
+  }
 
   // Sample data
   const stats = [
@@ -168,13 +183,28 @@ const AdminDashboard = () => {
             <div className="flex items-center">
               <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
             </div>
+            <Link to="/">
+
+                          <div className="flex-shrink-0">
+                            <h1 className="text-2xl font-bold text-gray-900">
+                              Tap<span className="text-blue-600">Kori</span>
+                            </h1>
+                          </div>
+                          </Link>
             <div className="flex items-center gap-4">
             <p>{user.email}</p>
               <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 New Event
               </button>
-              <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+              <button 
+  onClick={handleLogout}
+  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+>
+  <LogOut className="h-4 w-4" />
+  Logout
+</button>
+              
             </div>
           </div>
         </div>

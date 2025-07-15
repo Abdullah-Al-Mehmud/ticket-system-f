@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -24,22 +29,18 @@ import {
   Star,
   ChevronRight,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const UserDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
 
-  
-
-  
-
   // get User Data
-  const  user = localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {};
- 
-  // console.log(user.name);
+  const user = localStorage.getItem("data")
+    ? JSON.parse(localStorage.getItem("data"))
+    : {};
 
- 
- 
+  console.log(user.name);
 
   // Mock stats for the user
   const userStats = [
@@ -133,6 +134,22 @@ const UserDashboard = () => {
     },
   ];
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to login if user is not authenticated
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear("token");  
+    navigate("/login");
+  }
+
+
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "Critical":
@@ -204,17 +221,15 @@ const UserDashboard = () => {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <Avatar className="w-10 h-10">
-                  <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
+                  {/* <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
                     {user.avatar}
-                  </AvatarFallback>
+                  </AvatarFallback> */}
                 </Avatar>
                 <div>
                   <h1 className="text-xl font-bold text-gray-900">
                     Welcome back, {user.name || "User"}
                   </h1>
-                  <p className="text-sm text-gray-600">
-                    {user.email }
-                  </p>
+                  <p className="text-sm text-gray-600">{user.email}</p>
                 </div>
               </div>
             </div>
@@ -230,6 +245,10 @@ const UserDashboard = () => {
                 <Plus className="w-4 h-4 mr-2" />
                 New Ticket
               </Button>
+              <button onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
             </div>
           </div>
         </div>

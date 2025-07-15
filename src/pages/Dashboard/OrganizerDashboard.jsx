@@ -1,113 +1,218 @@
-import React, { useState } from 'react';
-import { 
-  Calendar, Users, DollarSign, Star, Plus, Search, Filter, MoreHorizontal, 
-  Edit, Trash2, Eye, MapPin, Clock, Bell, Settings, BarChart3, 
-  CheckCircle, XCircle, AlertTriangle, MessageCircle, Share2, Download
-} from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import React, { useEffect, useState } from "react";
+import {
+  Calendar,
+  Users,
+  DollarSign,
+  Star,
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Eye,
+  MapPin,
+  Clock,
+  Bell,
+  LogOut ,
+  Settings,
+  BarChart3,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  MessageCircle,
+  Share2,
+  Download,
+} from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useNavigate } from "react-router-dom";
 
 const OrganizerDashboard = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const [showCreateEvent, setShowCreateEvent] = useState(false);
 
-    // Get data form localStorage
-    const  user = localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {};
+  // Get data form localStorage
+  const user = localStorage.getItem("data")
+    ? JSON.parse(localStorage.getItem("data"))
+    : {};
+   
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+         const token = localStorage.getItem("token");
+         if(!token) {
+           navigate("/login");
+         }
+  }, []);
+
+  const handleLogout = () => { 
+    localStorage.clear("token");
+    navigate("/login");
+  }
 
   // Sample organizer data
   const organizerStats = [
-    { title: 'My Events', value: '24', change: '+3 this month', icon: Calendar, color: 'bg-blue-500' },
-    { title: 'Total Attendees', value: '3,247', change: '+234 this week', icon: Users, color: 'bg-green-500' },
-    { title: 'Revenue', value: '$45,230', change: '+$5,200', icon: DollarSign, color: 'bg-purple-500' },
-    { title: 'Avg Rating', value: '4.8', change: '+0.2 rating', icon: Star, color: 'bg-yellow-500' }
+    {
+      title: "My Events",
+      value: "24",
+      change: "+3 this month",
+      icon: Calendar,
+      color: "bg-blue-500",
+    },
+    {
+      title: "Total Attendees",
+      value: "3,247",
+      change: "+234 this week",
+      icon: Users,
+      color: "bg-green-500",
+    },
+    {
+      title: "Revenue",
+      value: "$45,230",
+      change: "+$5,200",
+      icon: DollarSign,
+      color: "bg-purple-500",
+    },
+    {
+      title: "Avg Rating",
+      value: "4.8",
+      change: "+0.2 rating",
+      icon: Star,
+      color: "bg-yellow-500",
+    },
   ];
 
   const myEvents = [
     {
       id: 1,
-      title: 'Web Development Workshop',
-      date: '2024-08-15',
-      time: '09:00 AM',
-      location: 'Online',
+      title: "Web Development Workshop",
+      date: "2024-08-15",
+      time: "09:00 AM",
+      location: "Online",
       attendees: 45,
       capacity: 50,
-      status: 'active',
-      revenue: '$2,250',
-      category: 'Workshop',
-      registrations: 'open'
+      status: "active",
+      revenue: "$2,250",
+      category: "Workshop",
+      registrations: "open",
     },
     {
       id: 2,
-      title: 'Digital Marketing Bootcamp',
-      date: '2024-07-28',
-      time: '10:00 AM',
-      location: 'New York, NY',
+      title: "Digital Marketing Bootcamp",
+      date: "2024-07-28",
+      time: "10:00 AM",
+      location: "New York, NY",
       attendees: 120,
       capacity: 150,
-      status: 'active',
-      revenue: '$12,000',
-      category: 'Training',
-      registrations: 'open'
+      status: "active",
+      revenue: "$12,000",
+      category: "Training",
+      registrations: "open",
     },
     {
       id: 3,
-      title: 'Startup Pitch Night',
-      date: '2024-08-05',
-      time: '07:00 PM',
-      location: 'San Francisco, CA',
+      title: "Startup Pitch Night",
+      date: "2024-08-05",
+      time: "07:00 PM",
+      location: "San Francisco, CA",
       attendees: 85,
       capacity: 100,
-      status: 'active',
-      revenue: '$4,250',
-      category: 'Networking',
-      registrations: 'open'
+      status: "active",
+      revenue: "$4,250",
+      category: "Networking",
+      registrations: "open",
     },
     {
       id: 4,
-      title: 'AI Conference 2024',
-      date: '2024-07-15',
-      time: '09:00 AM',
-      location: 'Boston, MA',
+      title: "AI Conference 2024",
+      date: "2024-07-15",
+      time: "09:00 AM",
+      location: "Boston, MA",
       attendees: 200,
       capacity: 200,
-      status: 'completed',
-      revenue: '$15,000',
-      category: 'Conference',
-      registrations: 'closed'
-    }
+      status: "completed",
+      revenue: "$15,000",
+      category: "Conference",
+      registrations: "closed",
+    },
   ];
 
   const recentActivity = [
-    { type: 'registration', message: 'New registration for Web Development Workshop', time: '5 min ago', icon: CheckCircle, color: 'text-green-500' },
-    { type: 'message', message: 'New message from attendee', time: '15 min ago', icon: MessageCircle, color: 'text-blue-500' },
-    { type: 'cancellation', message: 'Cancellation for Digital Marketing Bootcamp', time: '1 hour ago', icon: XCircle, color: 'text-red-500' },
-    { type: 'reminder', message: 'Event reminder sent to 45 attendees', time: '2 hours ago', icon: Bell, color: 'text-purple-500' }
+    {
+      type: "registration",
+      message: "New registration for Web Development Workshop",
+      time: "5 min ago",
+      icon: CheckCircle,
+      color: "text-green-500",
+    },
+    {
+      type: "message",
+      message: "New message from attendee",
+      time: "15 min ago",
+      icon: MessageCircle,
+      color: "text-blue-500",
+    },
+    {
+      type: "cancellation",
+      message: "Cancellation for Digital Marketing Bootcamp",
+      time: "1 hour ago",
+      icon: XCircle,
+      color: "text-red-500",
+    },
+    {
+      type: "reminder",
+      message: "Event reminder sent to 45 attendees",
+      time: "2 hours ago",
+      icon: Bell,
+      color: "text-purple-500",
+    },
   ];
 
   const upcomingTasks = [
-    { task: 'Send welcome email to new registrants', priority: 'high', due: 'Today' },
-    { task: 'Prepare presentation materials', priority: 'medium', due: 'Tomorrow' },
-    { task: 'Follow up with venue coordinator', priority: 'low', due: 'Aug 10' },
-    { task: 'Update event description', priority: 'medium', due: 'Aug 12' }
+    {
+      task: "Send welcome email to new registrants",
+      priority: "high",
+      due: "Today",
+    },
+    {
+      task: "Prepare presentation materials",
+      priority: "medium",
+      due: "Tomorrow",
+    },
+    {
+      task: "Follow up with venue coordinator",
+      priority: "low",
+      due: "Aug 10",
+    },
+    { task: "Update event description", priority: "medium", due: "Aug 12" },
   ];
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'completed': return 'bg-gray-100 text-gray-800';
-      case 'cancelled': return 'bg-red-100 text-red-800';
-      default: return 'bg-blue-100 text-blue-800';
+      case "active":
+        return "bg-green-100 text-green-800";
+      case "completed":
+        return "bg-gray-100 text-gray-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-blue-100 text-blue-800";
     }
   };
 
   const getPriorityColor = (priority) => {
     switch (priority) {
-      case 'high': return 'text-red-600 bg-red-50';
-      case 'medium': return 'text-yellow-600 bg-yellow-50';
-      case 'low': return 'text-green-600 bg-green-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case "high":
+        return "text-red-600 bg-red-50";
+      case "medium":
+        return "text-yellow-600 bg-yellow-50";
+      case "low":
+        return "text-green-600 bg-green-50";
+      default:
+        return "text-gray-600 bg-gray-50";
     }
   };
 
@@ -118,7 +223,9 @@ const OrganizerDashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{stat.value}</p>
+            <p className="text-3xl font-bold text-gray-900 mt-2">
+              {stat.value}
+            </p>
             <p className="text-sm text-green-600 mt-1">{stat.change}</p>
           </div>
           <div className={`${stat.color} p-3 rounded-full`}>
@@ -149,20 +256,30 @@ const OrganizerDashboard = () => {
             </div>
           </div>
           <div className="flex items-center gap-4 mt-3">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(event.status)}`}>
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                event.status
+              )}`}>
               {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
             </span>
-            <span className="text-sm text-gray-600">{event.attendees}/{event.capacity} attendees</span>
-            <span className="text-sm font-medium text-green-600">{event.revenue}</span>
+            <span className="text-sm text-gray-600">
+              {event.attendees}/{event.capacity} attendees
+            </span>
+            <span className="text-sm font-medium text-green-600">
+              {event.revenue}
+            </span>
           </div>
           <div className="mt-3">
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-blue-600 h-2 rounded-full" 
-                style={{ width: `${(event.attendees / event.capacity) * 100}%` }}
-              ></div>
+              <div
+                className="bg-blue-600 h-2 rounded-full"
+                style={{
+                  width: `${(event.attendees / event.capacity) * 100}%`,
+                }}></div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{Math.round((event.attendees / event.capacity) * 100)}% capacity</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {Math.round((event.attendees / event.capacity) * 100)}% capacity
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -186,22 +303,41 @@ const OrganizerDashboard = () => {
   const CreateEventModal = () => (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Create New Event</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Create New Event
+        </h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Event Title</label>
-            <input type="text" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Event Title
+            </label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-            <input type="date" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Date
+            </label>
+            <input
+              type="date"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input type="text" className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Location
+            </label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category
+            </label>
             <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
               <option>Workshop</option>
               <option>Conference</option>
@@ -211,16 +347,14 @@ const OrganizerDashboard = () => {
           </div>
         </div>
         <div className="flex gap-3 mt-6">
-          <button 
+          <button
             onClick={() => setShowCreateEvent(false)}
-            className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
-          >
+            className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
             Cancel
           </button>
-          <button 
+          <button
             onClick={() => setShowCreateEvent(false)}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-          >
+            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             Create Event
           </button>
         </div>
@@ -242,20 +376,26 @@ const OrganizerDashboard = () => {
                 <Bell className="h-5 w-5 text-gray-600" />
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
               </button> */}
-              <div><p>{user.email}</p></div>
-              <button 
+              <div>
+                <p>{user.email}</p>
+              </div>
+              <button
                 onClick={() => setShowCreateEvent(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-              >
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Create Event
               </button>
               <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">JD</span>
               </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
             </div>
           </div>
-           
         </div>
       </div>
 
@@ -263,26 +403,27 @@ const OrganizerDashboard = () => {
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
-            {['dashboard', 'events', 'attendees', 'analytics', 'messages'].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
+            {["dashboard", "events", "attendees", "analytics", "messages"].map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === tab
+                      ? "border-blue-500 text-blue-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}>
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              )
+            )}
           </nav>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'dashboard' && (
+        {activeTab === "dashboard" && (
           <div className="space-y-8">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -295,17 +436,25 @@ const OrganizerDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Recent Activity */}
               <div className="lg:col-span-2">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  Recent Activity
+                </h2>
                 <div className="bg-white rounded-lg shadow-sm border p-6">
                   <div className="space-y-4">
                     {recentActivity.map((activity, index) => {
                       const IconComponent = activity.icon;
                       return (
                         <div key={index} className="flex items-start gap-3">
-                          <IconComponent className={`h-5 w-5 mt-0.5 ${activity.color}`} />
+                          <IconComponent
+                            className={`h-5 w-5 mt-0.5 ${activity.color}`}
+                          />
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900">{activity.message}</p>
-                            <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                            <p className="text-sm font-medium text-gray-900">
+                              {activity.message}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {activity.time}
+                            </p>
                           </div>
                         </div>
                       );
@@ -316,19 +465,28 @@ const OrganizerDashboard = () => {
 
               {/* Upcoming Tasks */}
               <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Tasks</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                  Upcoming Tasks
+                </h2>
                 <div className="bg-white rounded-lg shadow-sm border p-6">
                   <div className="space-y-4">
                     {upcomingTasks.map((task, index) => (
                       <div key={index} className="flex items-start gap-3">
                         <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-900">{task.task}</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {task.task}
+                          </p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                            <span
+                              className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(
+                                task.priority
+                              )}`}>
                               {task.priority}
                             </span>
-                            <span className="text-xs text-gray-500">{task.due}</span>
+                            <span className="text-xs text-gray-500">
+                              {task.due}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -340,7 +498,9 @@ const OrganizerDashboard = () => {
 
             {/* Quick Actions */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Quick Actions
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                   <Bell className="h-5 w-5 text-blue-600" />
@@ -359,7 +519,7 @@ const OrganizerDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'events' && (
+        {activeTab === "events" && (
           <div className="space-y-6">
             {/* Search and Filters */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
@@ -377,8 +537,7 @@ const OrganizerDashboard = () => {
                 <select
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)}
-                >
+                  onChange={(e) => setSelectedFilter(e.target.value)}>
                   <option value="all">All Events</option>
                   <option value="active">Active</option>
                   <option value="completed">Completed</option>
@@ -396,37 +555,48 @@ const OrganizerDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'attendees' && (
+        {activeTab === "attendees" && (
           <div className="space-y-6">
             <Alert>
               <Users className="h-4 w-4" />
               <AlertDescription>
-                Manage attendees across all your events. View registration details, send messages, and track attendance.
+                Manage attendees across all your events. View registration
+                details, send messages, and track attendance.
               </AlertDescription>
             </Alert>
-            
+
             <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Attendee Management</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Attendee Management
+              </h3>
               <div className="text-center py-12">
                 <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">Attendee management interface would be implemented here</p>
+                <p className="text-gray-500">
+                  Attendee management interface would be implemented here
+                </p>
               </div>
             </div>
           </div>
         )}
 
-        {activeTab === 'analytics' && (
+        {activeTab === "analytics" && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Event Performance</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Event Performance
+                </h3>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <p className="text-gray-500">Performance chart would go here</p>
+                  <p className="text-gray-500">
+                    Performance chart would go here
+                  </p>
                 </div>
               </div>
-              
+
               <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Analytics</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Revenue Analytics
+                </h3>
                 <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
                   <p className="text-gray-500">Revenue chart would go here</p>
                 </div>
@@ -435,13 +605,17 @@ const OrganizerDashboard = () => {
           </div>
         )}
 
-        {activeTab === 'messages' && (
+        {activeTab === "messages" && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Messages & Communications</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Messages & Communications
+              </h3>
               <div className="text-center py-12">
                 <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">Messaging interface would be implemented here</p>
+                <p className="text-gray-500">
+                  Messaging interface would be implemented here
+                </p>
               </div>
             </div>
           </div>
