@@ -12,6 +12,10 @@ const OrganizerDashboard = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [showCreateEvent, setShowCreateEvent] = useState(false);
 
+    // Get data form localStorage
+    const  user = localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {};
+
+
   // Sample organizer data
   const organizerStats = [
     { title: 'My Events', value: '24', change: '+3 this month', icon: Calendar, color: 'bg-blue-500' },
@@ -231,13 +235,14 @@ const OrganizerDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">Event Organizer</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
             </div>
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-100 rounded-full relative">
+              {/* <button className="p-2 hover:bg-gray-100 rounded-full relative">
                 <Bell className="h-5 w-5 text-gray-600" />
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-              </button>
+              </button> */}
+              <div><p>{user.email}</p></div>
               <button 
                 onClick={() => setShowCreateEvent(true)}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
@@ -250,6 +255,7 @@ const OrganizerDashboard = () => {
               </div>
             </div>
           </div>
+           
         </div>
       </div>
 

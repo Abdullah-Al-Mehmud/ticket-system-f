@@ -29,13 +29,17 @@ const UserDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
 
-  // Mock user data
-  const user = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    avatar: "JD",
-    memberSince: "March 2023",
-  };
+  
+
+  
+
+  // get User Data
+  const  user = localStorage.getItem("data") ? JSON.parse(localStorage.getItem("data")) : {};
+ 
+  // console.log(user.name);
+
+ 
+ 
 
   // Mock stats for the user
   const userStats = [
@@ -206,10 +210,10 @@ const UserDashboard = () => {
                 </Avatar>
                 <div>
                   <h1 className="text-xl font-bold text-gray-900">
-                    Welcome back, {user.name}
+                    Welcome back, {user.name || "User"}
                   </h1>
                   <p className="text-sm text-gray-600">
-                    Manage your support tickets
+                    {user.email }
                   </p>
                 </div>
               </div>

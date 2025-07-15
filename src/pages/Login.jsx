@@ -44,17 +44,22 @@ const Login = () => {
 
     try {
       const response = await login(formData).unwrap();
+      // console.log("Login successful:", response.data.role);
 
       // Optionally store token (depends on backend)
       localStorage.setItem("token", response.token);
+      // Optionally store user data (depends on backend)
+      localStorage.setItem("data", JSON.stringify(response.data));
+    
+      
 
       // Redirect to dashboard
-      if(data.role === "user"){
-           navigate("/admindashboard");
-      }else if (data.role === "organizer"){
+      if(response.data.role === "user"){
+           navigate("/userdashboard");
+      }else if (response.data.role === "organizer"){
            navigate("/organizerdashboard");
       }else{
-        navigate("/userdashboard");
+        navigate("/admindashboard");
       }
       
     } catch (error) {
