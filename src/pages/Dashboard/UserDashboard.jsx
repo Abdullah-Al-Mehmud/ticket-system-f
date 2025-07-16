@@ -34,6 +34,8 @@ import { useNavigate } from "react-router-dom";
 const UserDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
+ 
+  
 
   // get User Data
   const user = localStorage.getItem("data")
@@ -144,11 +146,16 @@ const UserDashboard = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.clear("token");  
-    navigate("/login");
-  }
-
+  const handleLogout = async () => {
+    try { 
+     
+      localStorage.clear("token");
+      localStorage.clear("data");
+      navigate("/login");
+    } catch (error){
+      console.log("Logout failed:", error);
+    }
+  };
 
   const getPriorityColor = (priority) => {
     switch (priority) {

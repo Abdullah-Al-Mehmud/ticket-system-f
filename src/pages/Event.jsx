@@ -50,10 +50,10 @@ const Event = () => {
     const matchesSearch =
       event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       event.location?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.category?.toLowerCase().includes(searchTerm.toLowerCase());
+      event.category_id?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesCategory =
-      selectedCategory === 'all' || event.category === selectedCategory;
+      selectedCategory === 'all' || event.category_id === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -70,7 +70,7 @@ const Event = () => {
   }, [searchTerm, selectedCategory]);
 
   const EventCard = ({ event }) => {
-    const IconComponent = getCategoryIcon(event.category);
+    const IconComponent = getCategoryIcon(event.category_id);
     return (
        <Link
                     to={`/eventdetails/${event.id}`}
@@ -87,7 +87,7 @@ const Event = () => {
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute top-4 left-4 bg-white/90 px-2 py-1 rounded-full text-sm font-medium">
-                        {event.category}
+                        {event.category_id}
                       </div>
                     </div>
                     <div className="p-2">

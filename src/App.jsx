@@ -20,9 +20,9 @@ function App() {
       <Route path='/event' element={<Event />} />
       <Route path='/eventdetails/:id' element={<EventDetails />} />
     </Route>
-    <Route path='/userdashboard' element={<UserDashboard />} />
-     <Route path='/admindashboard' element={<AdminDashboard/>} />
-     <Route path='/organizerdashboard' element={<OrganizerDashboard />} />
+    <Route path='/user/dashboard' element={<UserDashboard />} />
+     <Route path='/admin/dashboard' element={<AdminDashboard/>} />
+     <Route path='/organizer/dashboard' element={<OrganizerDashboard />} />
     </Routes>
   )
 }

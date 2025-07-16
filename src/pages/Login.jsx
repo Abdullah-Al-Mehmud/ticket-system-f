@@ -47,21 +47,18 @@ const Login = () => {
       // console.log("Login successful:", response.data.role);
 
       // Optionally store token (depends on backend)
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("token", JSON.stringify(response.token));
       // Optionally store user data (depends on backend)
       localStorage.setItem("data", JSON.stringify(response.data));
-    
-      
 
       // Redirect to dashboard
-      if(response.data.role === "user"){
-           navigate("/userdashboard");
-      }else if (response.data.role === "organizer"){
-           navigate("/organizerdashboard");
-      }else{
-        navigate("/admindashboard");
+      if (response.data.role === "user") {
+        navigate("/user/dashboard");
+      } else if (response.data.role === "organizer") {
+        navigate("/organizer/dashboard");
+      } else {
+        navigate("/admin/dashboard");
       }
-      
     } catch (error) {
       console.error("Login failed:", error);
       if (error?.data?.message) {
@@ -82,7 +79,9 @@ const Login = () => {
           <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <User className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Welcome Back
+          </h1>
           <p className="text-gray-600">Sign in to your account to continue</p>
         </div>
 
@@ -137,7 +136,11 @@ const Login = () => {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
               </button>
             </div>
             {errors.password && (
@@ -183,7 +186,9 @@ const Login = () => {
         <div className="text-center mt-6 text-sm text-gray-600">
           <p>
             Don’t have an account?{" "}
-            <Link to="/register" className="text-blue-600 hover:text-blue-500 font-medium">
+            <Link
+              to="/register"
+              className="text-blue-600 hover:text-blue-500 font-medium">
               Sign up
             </Link>
           </p>
