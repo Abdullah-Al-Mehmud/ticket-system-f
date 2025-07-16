@@ -12,6 +12,7 @@ import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard";
 import NotFound from "./pages/Notfound";
 import UserList from "./pages/User/UserList";
 import AdminLayout from "./Layout/AdminLayout";
+import CreateUser from "./pages/User/CreateUser";
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="user-list" element={<UserList />} />
+          <Route path="create-user" element={<CreateUser />} />
+          {/* Add more admin routes as needed */}
         </Route>
 
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />

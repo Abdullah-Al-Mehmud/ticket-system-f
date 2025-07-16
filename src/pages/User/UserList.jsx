@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Mail, Calendar, Search, Filter, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -116,10 +117,12 @@ const UserList = () => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900"></h1>
+            <Link to="/admin/create-user" >
             <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center space-x-2">
               <Plus size={18} />
               <span>Add User</span>
             </button>
+             </Link>
           </div>
         </div>
       </div>
