@@ -8,7 +8,11 @@ import {
   ChevronRight,
   Bell,
   Search,
+  Package,
+  Calendar,
 } from "lucide-react";
+
+
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 
 const AdminLayout = ({ children }) => {
@@ -29,6 +33,8 @@ const AdminLayout = ({ children }) => {
       path: "/admin/dashboard",
     },
     { id: "users", label: "Users", icon: Users, path: "/admin/user-list" },
+    { id: "catagories", label: "Categories", icon: Package, path: "/admin/categories" },
+    {id : "events", label: "Events", icon: Calendar, path: "/admin/events"},
     // add more
   ];
 

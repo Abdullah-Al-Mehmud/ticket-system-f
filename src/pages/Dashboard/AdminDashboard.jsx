@@ -76,7 +76,8 @@ const AdminDashboard = () => {
 
   const sidebarItems = [
     { id: "dashboard", label: "Dashboard", icon: Home, path: "/admin/dashboard" },
-    { id: "users", label: "Users", icon: Users, path: "/admin/user-list" }
+    { id: "users", label: "Users", icon: Users, path: "/admin/user-list" },
+    { id: "catagories", label: "Categories", icon: Package, path: "/admin/categories" },
   ];
 
   const StatCard = ({ title, value, icon: Icon, change, changeType }) => (
