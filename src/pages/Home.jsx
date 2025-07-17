@@ -21,7 +21,6 @@ const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Sample events data
-  
 
   // Trusted organizations data
   const trustedOrgs = [
@@ -79,7 +78,6 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-   
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white">
@@ -134,83 +132,8 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      
-       <TrendingEvent />
-      {/* All Events Section */}
-      {/* <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-12">
-            <div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                Trending Events
-              </h3>
-              <p className="text-xl text-gray-600">
-                Don't miss out on these popular events
-              </p>
-            </div>
-            <button className="hidden md:flex items-center text-blue-600 hover:text-blue-700 font-medium">
-              View All Events
-              <ChevronRight className="w-5 h-5 ml-1" />
-            </button>
-          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {events.map((event) => (
-              <div
-                key={event.id}
-                className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow overflow-hidden group">
-                <div className="relative">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform"
-                  />
-                  <div className="absolute top-4 left-4 bg-white/90 px-2 py-1 rounded-full text-sm font-medium">
-                    {event.category}
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                    {event.title}
-                  </h4>
-                  <div className="space-y-2 text-sm text-gray-600 mb-4">
-                    <div className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      <span>{event.date}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-2" />
-                      <span>{event.time}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      <span>{event.location}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 mr-2" />
-                      <span>{event.attendees} attending</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-blue-600">
-                      {event.price}
-                    </span>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                      Book Now
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
-            <button className="md:hidden bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
-              View All Events
-            </button>
-          </div>
-        </div>
-      </section> */}
+      <TrendingEvent />
 
       {/* Trusted Organizations Section */}
       <section className="py-16 bg-white">
@@ -225,16 +148,6 @@ const Home = () => {
           </div>
 
           <div className=" items-center">
-            {/* {trustedOrgs.map((org, index) => (
-              <div key={index} className="text-center group">
-                <img
-                  src={org.logo}
-                  alt={org.name}
-                  className="mx-auto h-12 w-auto grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100"
-                />
-              </div>
-            ))} */}
-
             <TrustedOrgsCarousel />
           </div>
         </div>
@@ -286,8 +199,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      
     </div>
   );
 };

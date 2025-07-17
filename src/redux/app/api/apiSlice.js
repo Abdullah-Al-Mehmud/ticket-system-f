@@ -7,7 +7,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       import.meta.env.VITE_API_URL || 
-      'http://192.168.68.115:8000/api', 
+      'http://192.168.68.115:8000/api' , 
     prepareHeaders: (headers, { getState }) => {
       let token = localStorage.getItem('token');
       try {

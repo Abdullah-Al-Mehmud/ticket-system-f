@@ -1,41 +1,33 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { User, Mail, Calendar, Search, Filter, Plus, Edit, Trash2, Eye, Users, Shield, Crown, X, ChevronRight } from 'lucide-react';
+import { useGetUserListQuery } from '../../redux/features/user/userApiSlice';
+import {useDeleteUserMutation} from '../../redux/features/user/userApiSlice';
+import { Link } from 'react-router-dom';
 
 const UserList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
 
-  // Mock data for demonstration
-  const usersData = {
-    data: [
-      {
-        id: 1,
-        name: 'John Smith',
-        email: 'john.smith@company.com',
-        role: 'admin',
-        created_at: '2024-01-15T10:30:00Z'
-      },
-      {
-        id: 2,
-        name: 'Sarah Johnson',
-        email: 'sarah.johnson@company.com',
-        role: 'moderator',
-        created_at: '2024-01-20T14:15:00Z'
-      },
-      {
-        id: 3,
-        name: 'Mike Davis',
-        email: 'mike.davis@company.com',
-        role: 'user',
-        created_at: '2024-01-25T09:45:00Z'
+  const { data, error, isLoading } = useGetUserListQuery();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const handleDelete = async (userId) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {   
+      try {
+        await deleteUser(userId).unwrap();
+        setSelectedUser(null); // Deselect user after deletion
+      } catch (err) {
+        console.error('Failed to delete user:', err);
+        alert('Failed to delete user. Please try again.');
       }
-    ]
+    }
   };
 
-  const isLoading = false;
-  const error = null;
 
+  const usersData = data?.data ?? [];
+
+  
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -98,7 +90,7 @@ const UserList = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Total Users</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">{usersData?.data?.length || 0}</p>
+                <p className="text-2xl font-semibold text-gray-900 mt-1">{usersData?.length || 0}</p>
               </div>
             </div>
           </div>
@@ -109,7 +101,7 @@ const UserList = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Admins</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">{(usersData?.data?.filter(u => u.role === 'admin').length) || 0}</p>
+                <p className="text-2xl font-semibold text-gray-900 mt-1">{(usersData?.filter(u => u.role === 'admin').length) || 0}</p>
               </div>
             </div>
           </div>
@@ -120,7 +112,7 @@ const UserList = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Moderators</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">{(usersData?.data?.filter(u => u.role === 'moderator').length) || 0}</p>
+                <p className="text-2xl font-semibold text-gray-900 mt-1">{(usersData?.filter(u => u.role === 'moderator').length) || 0}</p>
               </div>
             </div>
           </div>
@@ -131,7 +123,7 @@ const UserList = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Users</p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">{(usersData?.data?.filter(u => u.role === 'user').length) || 0}</p>
+                <p className="text-2xl font-semibold text-gray-900 mt-1">{(usersData?.filter(u => u.role === 'user').length) || 0}</p>
               </div>
             </div>
           </div>
@@ -181,7 +173,7 @@ const UserList = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {usersData && usersData?.data?.map((user) => (
+                {usersData && usersData?.map((user) => (
                   <tr
                     key={user.id}
                     onClick={() => setSelectedUser(user)}
@@ -209,11 +201,12 @@ const UserList = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(user.role)}`}>
-                        <span className="mr-1.5">{getRoleIcon(user.role)}</span>
-                        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(user.role.name)}`}>
+                        <span className="mr-1.5">{getRoleIcon(user.role.name)}</span>
+                        {user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)}
                       </span>
                     </td>
+                    
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <Calendar size={16} className="text-gray-400 mr-3" />
@@ -222,13 +215,13 @@ const UserList = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-3">
-                        <button className="text-gray-600 hover:text-blue-600 p-1.5 rounded-md hover:bg-blue-50 transition-colors">
+                        <Link to={`/admin/user-profile/${user.id}`} className="text-gray-600 hover:text-blue-600 p-1.5 rounded-md hover:bg-blue-50 transition-colors">
                           <Eye size={16} />
-                        </button>
+                        </Link>
                         <button className="text-gray-600 hover:text-green-600 p-1.5 rounded-md hover:bg-green-50 transition-colors">
                           <Edit size={16} />
                         </button>
-                        <button className="text-gray-600 hover:text-red-600 p-1.5 rounded-md hover:bg-red-50 transition-colors">
+                        <button onClick={handleDelete} className="text-gray-600 hover:text-red-600 p-1.5 rounded-md hover:bg-red-50 transition-colors">
                           <Trash2 size={16} />
                         </button>
                       </div>
@@ -269,7 +262,7 @@ const UserList = () => {
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Role</label>
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(selectedUser.role)}`}>
                   <span className="mr-1.5">{getRoleIcon(selectedUser.role)}</span>
-                  {selectedUser.role.charAt(0).toUpperCase() + selectedUser.role.slice(1)}
+                  {/* {selectedUser.role.charAt(0).toUpperCase() + selectedUser.role.slice(1)} */}
                 </span>
               </div>
               <div className="bg-gray-50 p-4 rounded-md border border-gray-200">

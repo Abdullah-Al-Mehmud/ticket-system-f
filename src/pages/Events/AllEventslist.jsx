@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, Edit, Trash2, Plus, Search, Filter, Download, MoreVertical, Calendar, MapPin, Users, Clock } from 'lucide-react';
+import { useGetEventsQuery } from '../../redux/features/event/EventApiSlice';
 
 const AllEventslist = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,93 +9,10 @@ const AllEventslist = () => {
   const [sortBy, setSortBy] = useState('event_name');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  // Sample events data
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      event_name: 'Annual Tech Conference 2024',
-      category: 'Technology',
-      status: 'active',
-      event_date: '2024-08-15',
-      event_time: '09:00 AM',
-      location: 'Convention Center, NYC',
-      attendees: 450,
-      max_capacity: 500,
-      price: '$299',
-      created_at: '2024-01-15',
-      updated_at: '2024-03-20'
-    },
-    {
-      id: 2,
-      event_name: 'Marketing Summit 2024',
-      category: 'Marketing',
-      status: 'active',
-      event_date: '2024-07-22',
-      event_time: '10:00 AM',
-      location: 'Marriott Hotel, Chicago',
-      attendees: 180,
-      max_capacity: 200,
-      price: '$199',
-      created_at: '2024-02-10',
-      updated_at: '2024-03-18'
-    },
-    {
-      id: 3,
-      event_name: 'Finance Workshop',
-      category: 'Finance',
-      status: 'completed',
-      event_date: '2024-06-10',
-      event_time: '02:00 PM',
-      location: 'Business Center, LA',
-      attendees: 85,
-      max_capacity: 100,
-      price: '$149',
-      created_at: '2024-01-20',
-      updated_at: '2024-06-11'
-    },
-    {
-      id: 4,
-      event_name: 'HR Leadership Forum',
-      category: 'Human Resources',
-      status: 'pending',
-      event_date: '2024-09-05',
-      event_time: '11:00 AM',
-      location: 'Corporate Plaza, Miami',
-      attendees: 120,
-      max_capacity: 150,
-      price: '$179',
-      created_at: '2024-03-01',
-      updated_at: '2024-03-22'
-    },
-    {
-      id: 5,
-      event_name: 'Operations Excellence Workshop',
-      category: 'Operations',
-      status: 'cancelled',
-      event_date: '2024-07-30',
-      event_time: '01:00 PM',
-      location: 'Training Center, Boston',
-      attendees: 45,
-      max_capacity: 80,
-      price: '$129',
-      created_at: '2024-03-05',
-      updated_at: '2024-07-15'
-    },
-    {
-      id: 6,
-      event_name: 'Digital Innovation Expo',
-      category: 'Technology',
-      status: 'active',
-      event_date: '2024-10-12',
-      event_time: '09:30 AM',
-      location: 'Tech Hub, San Francisco',
-      attendees: 320,
-      max_capacity: 400,
-      price: '$249',
-      created_at: '2024-02-28',
-      updated_at: '2024-03-25'
-    }
-  ]);
+    const { data, isLoading, isError } = useGetEventsQuery();
+    const events = data?.data || [];
+    
+
 
   const getStatusBadge = (status) => {
     const statusStyles = {
@@ -148,29 +66,7 @@ const AllEventslist = () => {
     }
   };
 
-  const filteredAndSortedEvents = events
-    .filter(event => {
-      const matchesSearch = event.event_name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus = statusFilter === 'all' || event.status === statusFilter;
-      const matchesCategory = categoryFilter === 'all' || event.category === categoryFilter;
-      return matchesSearch && matchesStatus && matchesCategory;
-    })
-    .sort((a, b) => {
-      let aValue = a[sortBy];
-      let bValue = b[sortBy];
-      
-      if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-      
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
+  console.log(events);
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -372,23 +268,23 @@ const AllEventslist = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredAndSortedEvents.map((event) => (
+                {events?.map((event) => (
                   <tr key={event.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       #{event.id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                      <div className="max-w-xs truncate">{event.event_name}</div>
+                      <div className="max-w-xs truncate">{event.title}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {getCategoryBadge(event.category)}
+                      {getCategoryBadge(event.category.name)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {getStatusBadge(event.status)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div>{formatDate(event.event_date)}</div>
-                      <div className="text-xs text-gray-400">{event.event_time}</div>
+                      <div>{formatDate(event.start_date)}</div>
+                      <div className="text-xs text-gray-400">{event.end_date}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div className="max-w-xs truncate" title={event.location}>
@@ -398,21 +294,21 @@ const AllEventslist = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex items-center">
                         <div className="flex-1">
-                          <div className="flex items-center justify-between text-xs">
+                          {/* <div className="flex items-center justify-between text-xs">
                             <span>{event.attendees}/{event.max_capacity}</span>
                             <span>{getAttendancePercentage(event.attendees, event.max_capacity)}%</span>
-                          </div>
+                          </div> */}
                           <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                            <div 
+                            {/* <div 
                               className="bg-blue-600 h-2 rounded-full" 
                               style={{ width: `${getAttendancePercentage(event.attendees, event.max_capacity)}%` }}
-                            ></div>
+                            ></div> */}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span className="font-medium text-green-600">{event.price}</span>
+                      <span className="font-medium text-green-600">{event.ticket_price}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <div className="flex items-center justify-center gap-2">
@@ -442,18 +338,12 @@ const AllEventslist = () => {
             </table>
           </div>
           
-          {filteredAndSortedEvents.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">No events found matching your criteria.</p>
-            </div>
-          )}
+        
         </div>
 
         {/* Footer */}
         <div className="mt-6 flex items-center justify-between bg-white px-6 py-3 rounded-lg shadow-sm border">
-          <div className="text-sm text-gray-600">
-            Showing {filteredAndSortedEvents.length} of {events.length} events
-          </div>
+          
           <div className="flex items-center gap-2">
             <button className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50">
               Previous

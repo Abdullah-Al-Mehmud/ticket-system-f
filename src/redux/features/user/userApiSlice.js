@@ -3,13 +3,14 @@ import { apiSlice } from '../../app/api/apiSlice';
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboard: builder.query({
-      query: () => '/admin/dashboard',
+      query: () => '/dashboard',
       providesTags: ['User'],
     }),
     getUserList: builder.query({
-      query: () => '/admin/user', // Adjust endpoint if different
+      query: () => '/user', 
       providesTags: ['User'],
     }),
+
     getUserById: builder.query({
       query: (id) => `/user/${id}`,
       providesTags: (result, error, id) => [{ type: 'User', id }],
@@ -24,7 +25,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `/user/${id}`,
+        url: `/users/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['User'],
