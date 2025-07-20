@@ -47,8 +47,8 @@ const CategoriesList = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this category?")) {
       try {
-        await deleteCategory(id).unwrap();
-        toast.success("Category deleted successfully");
+        let res = await deleteCategory(id).unwrap();
+        toast.success(res.message || "Category deleted successfully!!");
         refetch();
       } catch (err) {
         console.error(err);
