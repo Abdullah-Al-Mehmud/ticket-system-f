@@ -16,8 +16,12 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useGetUserListQuery } from "../../redux/features/user/userApiSlice";
-import { useDeleteUserMutation,useGetDashboardQuery } from "../../redux/features/user/userApiSlice";
+import {
+  useDeleteUserMutation,
+  useGetDashboardQuery,
+} from "../../redux/features/user/userApiSlice";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const UserList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -29,7 +33,11 @@ const UserList = () => {
   // console.log(data?.total_user);
   const [deleteUser] = useDeleteUserMutation();
   // const [dashboardData] = useGetDashboardQuery();
-  const { data: dashboardInfo, isLoading: isDashboardLoading,refetch:fetch } = useGetDashboardQuery();
+  const {
+    data: dashboardInfo,
+    isLoading: isDashboardLoading,
+    refetch: fetch,
+  } = useGetDashboardQuery();
   // console.log(dashboardInfo?.data.users.admins);
 
   // const filter
@@ -39,16 +47,15 @@ const UserList = () => {
   const handleDelete = async (userId) => {
     console.log("Deleting user:", userId);
 
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await deleteUser(userId).unwrap();
-        refetch(); // Refetch the user list after deletion
-        fetch(); // Refetch dashboard data
-        setSelectedUser(null); // Deselect user after deletion
-      } catch (err) {
-        console.error("Failed to delete user:", err);
-        alert("Failed to delete user. Please try again.");
-      }
+    try {
+      const res =  await deleteUser(userId).unwrap();
+      toast.success(res.message);
+      refetch(); // Refetch the user list after deletion
+      fetch(); // Refetch dashboard data
+      setSelectedUser(null); // Deselect user after deletion
+    } catch (err) {
+      console.error("Failed to delete user:", err);
+      alert("Failed to delete user. Please try again.");
     }
   };
 
@@ -81,8 +88,8 @@ const UserList = () => {
 
   useEffect(() => {
     refetch();
-    fetch()
-  }, [refetch,fetch]);
+    fetch();
+  }, [refetch, fetch]);
 
   const getRoleColor = (role) => {
     switch (role) {
@@ -182,7 +189,7 @@ const UserList = () => {
                   Organizer
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 mt-1">
-                    {dashboardInfo?.data.users.organizers}
+                  {dashboardInfo?.data.users.organizers}
                 </p>
               </div>
             </div>
