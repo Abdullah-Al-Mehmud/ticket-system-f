@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Eye,
   Edit,
@@ -14,21 +14,58 @@ import {
   useGetCategoriesQuery,
   useDeleteCategoryMutation,
 } from "../../redux/features/categories/categoriesApiSlice";
+import toast from "react-hot-toast";
 
 const CategoriesList = () => {
-  const { data, isLoading, isError, refetch } = useGetCategoriesQuery();
-  const [deleteCategory] = useDeleteCategoryMutation();
   const location = useLocation();
+  const [categories, setCategories] = useState([]);
+  const [deleteCategory] = useDeleteCategoryMutation();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("id");
-  const [sortOrder, setSortOrder] = useState("dsc");
+  const [sortOrder, setSortOrder] = useState("desc");
 
-  const categories = data?.data || [];
+  // useEffect to call RTK API
+  const { data, isLoading, isError, refetch } = useGetCategoriesQuery(
+    undefined,
+    {
+      skip: false,
+    }
+  );
+
+  useEffect(() => {
+    if (data?.data) setCategories(data.data);
+  }, [data]);
+
+  useEffect(() => {
+    if (location.state?.refresh) {
+      refetch();
+    }
+  }, [location.state]);
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        await deleteCategory(id).unwrap();
+        toast.success("Category deleted successfully");
+        refetch();
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete category");
+      }
+    }
+  };
+
+  const handleSort = (column) => {
+    setSortBy(column);
+    setSortOrder((prev) =>
+      sortBy === column && prev === "asc" ? "desc" : "asc"
+    );
+  };
 
   const getStatusBadge = (status) => {
-    const styles = {
+    const badgeMap = {
       active: "bg-green-100 text-green-800 border-green-200",
       inactive: "bg-red-100 text-red-800 border-red-200",
       pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
@@ -36,7 +73,7 @@ const CategoriesList = () => {
     return (
       <span
         className={`px-2 py-1 text-xs font-medium rounded-full border ${
-          styles[status] || ""
+          badgeMap[status] || ""
         }`}
       >
         {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -51,36 +88,13 @@ const CategoriesList = () => {
       day: "numeric",
     });
 
-  const handleSort = (column) => {
-    setSortBy((prev) => (prev === column ? column : column));
-    setSortOrder((prev) =>
-      sortBy === column && prev === "asc" ? "desc" : "asc"
-    );
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      try {
-        await deleteCategory(id).unwrap();
-        alert("Category deleted successfully");
-        refetch();
-      } catch (err) {
-        console.error("Failed to delete category:", err);
-        alert("Failed to delete category");
-      }
-    }
-  };
-
-  const filteredAndSortedCategories = useMemo(() => {
+  const filteredCategories = useMemo(() => {
     return categories
-      .filter((category) => {
-        const matchesSearch = category.name
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-        const matchesStatus =
-          statusFilter === "all" || category.status === statusFilter;
-        return matchesSearch && matchesStatus;
-      })
+      .filter(
+        (cat) =>
+          cat.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (statusFilter === "all" || cat.status === statusFilter)
+      )
       .sort((a, b) => {
         const aVal =
           typeof a[sortBy] === "string" ? a[sortBy].toLowerCase() : a[sortBy];
@@ -95,14 +109,11 @@ const CategoriesList = () => {
           : -1;
       });
   }, [categories, searchTerm, statusFilter, sortBy, sortOrder]);
-  useEffect(() => {
-    if (location.state?.refresh) {
-      refetch();
-    }
-  }, [location.state]);
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Categories</h1>
@@ -118,6 +129,7 @@ const CategoriesList = () => {
           </Link>
         </div>
 
+        {/* Filter Section */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
           <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
             <div className="flex flex-col sm:flex-row gap-4 flex-1">
@@ -162,6 +174,7 @@ const CategoriesList = () => {
           </div>
         </div>
 
+        {/* Table */}
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
           {isLoading ? (
             <div className="text-center py-12 text-gray-500">
@@ -199,7 +212,7 @@ const CategoriesList = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {filteredAndSortedCategories.map((category) => (
+                    {filteredCategories.map((category) => (
                       <tr key={category.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 text-sm font-medium text-gray-900">
                           #{category.id}
@@ -247,7 +260,7 @@ const CategoriesList = () => {
                 </table>
               </div>
 
-              {filteredAndSortedCategories.length === 0 && (
+              {filteredCategories.length === 0 && (
                 <div className="text-center py-12">
                   <p className="text-gray-500">
                     No categories found matching your criteria.
