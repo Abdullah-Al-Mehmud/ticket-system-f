@@ -16,13 +16,7 @@ import { useGetUserByIdQuery } from "../../redux/features/user/userApiSlice";
 import { Link, useParams } from "react-router-dom";
 
 export default function UserProfilePage() {
-  // Demo data - replace with actual API calls
-  // const userData = {
-  //   id: "USR-2024-001",
-  //   name: "Sarah Johnson",
-  //   email: "sarah.johnson@company.com",
-  //   role: "Senior Developer"
-  // };
+ 
 
   const { id } = useParams();
   const { data, isLoading, isError } = useGetUserByIdQuery(id);
@@ -32,9 +26,6 @@ export default function UserProfilePage() {
 
   const getRoleVariant = (role) => {
     const roleVariants = {
-      "Senior Developer": "secondary",
-      "Junior Developer": "outline",
-      "Team Lead": "secondary",
       Manager: "secondary",
       Admin: "destructive",
     };
