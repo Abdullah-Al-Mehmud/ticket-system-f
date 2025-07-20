@@ -2,24 +2,24 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { User, Mail, Hash, Shield, Ticket, Calendar, Activity, Settings, Eye } from 'lucide-react';
-// import {useGetUserByIdQuery} from '../../redux/features/user/userApiSlice';
-// import { useParams } from 'react-router-dom';
+import {useGetUserByIdQuery} from '../../redux/features/user/userApiSlice';
+import { useParams } from 'react-router-dom';
 
 export default function UserProfilePage() {
   // Demo data - replace with actual API calls
-  const userData = {
-    id: "USR-2024-001",
-    name: "Sarah Johnson", 
-    email: "sarah.johnson@company.com",
-    role: "Senior Developer"
-  };
+  // const userData = {
+  //   id: "USR-2024-001",
+  //   name: "Sarah Johnson", 
+  //   email: "sarah.johnson@company.com",
+  //   role: "Senior Developer"
+  // };
   
-  const isLoading = false;
-  const isError = false;
+ 
 
-  // const { id } = useParams();
-  // const { data, isLoading, isError } = useGetUserByIdQuery(id);
-  // const userData = data?.data;
+  const { id } = useParams();
+  const { data, isLoading, isError } = useGetUserByIdQuery(id);
+  const userData = data?.data;
+
 
   console.log(userData);
 
@@ -61,10 +61,10 @@ export default function UserProfilePage() {
             <p className="text-gray-600 mt-1">Manage user information and view activity</p>
           </div>
           <div className="flex gap-2">
-            <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+            {/* <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
               <Eye className="w-4 h-4" />
               View Activity
-            </button>
+            </button> */}
             <button className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
               <Settings className="w-4 h-4" />
               Edit Profile

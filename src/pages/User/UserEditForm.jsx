@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react';
 import { User } from 'lucide-react';
-import { useUpdateUserMutation, useGetUserListQuery } from '../../redux/features/user/userApiSlice';
+import {
+  useUpdateUserMutation,
+  useGetUserByIdQuery,
+} from '../../redux/features/user/userApiSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 
 export default function UserEditForm() {
-  const { id } = useParams(); // Get user ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data: user, isLoading: isFetching } = useGetUserListQuery(id);
-  const [updateUser, { isLoading, isSuccess, isError, error }] = useUpdateUserMutation();
+  // ✅ Fetch single user by ID
+  const { data: user, isLoading: isFetching } = useGetUserByIdQuery(id);
+  console.log(user);
+  const [updateUser, { isLoading, isSuccess, isError, error }] =
+    useUpdateUserMutation();
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: '',
-    password: '',
-    password_confirmation: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -23,25 +27,23 @@ export default function UserEditForm() {
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.name || '',
-        email: user.email || '',
-        role: user.role || '',
-        password: '',
-        password_confirmation: '',
+        name: user?.data.name,
+        email: user?.data.email,
+        role: user?.data.role,
       });
     }
   }, [user]);
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
 
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: ''
+        [field]: '',
       }));
     }
   };
@@ -56,7 +58,7 @@ export default function UserEditForm() {
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email';
+      newErrors.email = 'Invalid email format';
     }
 
     if (!formData.role) {
@@ -82,7 +84,7 @@ export default function UserEditForm() {
     try {
       await updateUser(updateData).unwrap();
       alert('User updated successfully!');
-      navigate('/user/list');
+      navigate('/admin/user-list');
     } catch (err) {
       alert('Update failed. See console for error.');
       console.error(err);
@@ -137,43 +139,14 @@ export default function UserEditForm() {
           }`}
         >
           <option value="">Select a role</option>
-          <option value="Admin">Admin</option>
-          <option value="Scanner">Scanner</option>
-          <option value="Manager">Manager</option>
-          <option value="User">User</option>
-          <option value="Editor">Editor</option>
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+          <option value="organizer">Organizer</option>
         </select>
         {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role}</p>}
       </div>
 
-      {/* Password */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium">Password</label>
-        <input
-          type="password"
-          value={formData.password}
-          onChange={(e) => handleInputChange('password', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md"
-          placeholder="Leave empty to keep unchanged"
-        />
-      </div>
-
-      {/* Confirm Password */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium">Confirm Password</label>
-        <input
-          type="password"
-          value={formData.password_confirmation}
-          onChange={(e) => handleInputChange('password_confirmation', e.target.value)}
-          className={`w-full px-3 py-2 border rounded-md ${
-            errors.password_confirmation ? 'border-red-500' : 'border-gray-300'
-          }`}
-        />
-        {errors.password_confirmation && (
-          <p className="text-red-500 text-sm mt-1">{errors.password_confirmation}</p>
-        )}
-      </div>
-
+    
       <button
         onClick={handleSave}
         disabled={isLoading}
@@ -183,7 +156,9 @@ export default function UserEditForm() {
       </button>
 
       {isError && (
-        <p className="mt-4 text-red-500 text-sm">Error: {error?.data?.message || 'Failed to update'}</p>
+        <p className="mt-4 text-red-500 text-sm">
+          Error: {error?.data?.message || 'Failed to update'}
+        </p>
       )}
     </div>
   );

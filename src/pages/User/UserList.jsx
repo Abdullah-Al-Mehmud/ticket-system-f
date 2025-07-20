@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { use, useState, useEffect } from "react";
 import {
   User,
   Mail,
@@ -24,7 +24,7 @@ const UserList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("all");
 
-  const { data, error, isLoading } = useGetUserListQuery();
+  const { data, error, isLoading, refetch } = useGetUserListQuery();
   // console.log(data);
   // console.log(data?.total_user);
   const [deleteUser] = useDeleteUserMutation();
@@ -39,6 +39,7 @@ const UserList = () => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await deleteUser(userId).unwrap();
+        refetch(); // Refetch the user list after deletion
         setSelectedUser(null); // Deselect user after deletion
       } catch (err) {
         console.error("Failed to delete user:", err);
@@ -52,11 +53,17 @@ const UserList = () => {
   // ✅ Fixed filter logic
   const filteredUsers = usersData
     .filter((user) => {
-      const nameMatch = user.name?.toLowerCase().includes(searchTerm.toLowerCase());
-      const emailMatch = user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      const nameMatch = user.name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const emailMatch = user.email
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
       return nameMatch || emailMatch;
     })
-    .filter((user) => (filterRole === "all" ? true : user.role.name === filterRole));
+    .filter((user) =>
+      filterRole === "all" ? true : user.role.name === filterRole
+    );
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -67,6 +74,10 @@ const UserList = () => {
       minute: "2-digit",
     });
   };
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const getRoleColor = (role) => {
     switch (role) {
@@ -113,7 +124,8 @@ const UserList = () => {
                 Manage and monitor user accounts
               </p>
             </div>
-            <Link to="/admin/create-user"
+            <Link
+              to="/admin/create-user"
               className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2 font-medium">
               <Plus size={16} />
               <span>Add User</span>
@@ -135,7 +147,7 @@ const UserList = () => {
                   Total Users
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {data?.total_user || 0}
+                  {data?.total_users || 0}
                 </p>
               </div>
             </div>
@@ -186,12 +198,10 @@ const UserList = () => {
             </div>
           </div>
         </div>
-
       </div>
-        {/* Filters */}
+      {/* Filters */}
 
-      
-       <div className="max-w-7xl   mx-auto px-8 py-6">
+      <div className="max-w-7xl   mx-auto px-8 py-6">
         <div className="flex flex-col top-3  md:flex-row gap-5 justify-between items-center">
           <div className="relative w-full md:w-1/2">
             <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
@@ -208,8 +218,7 @@ const UserList = () => {
             <select
               value={filterRole}
               onChange={(e) => setFilterRole(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
+              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
               <option value="all">All Roles</option>
               <option value="admin">Admin</option>
               <option value="user">User</option>
@@ -220,7 +229,7 @@ const UserList = () => {
       </div>
       {/* User Table */}
 
-     <div className="max-w-7xl mx-auto px-8 pb-10">
+      <div className="max-w-7xl mx-auto px-8 pb-10">
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -243,35 +252,49 @@ const UserList = () => {
                   </tr>
                 ) : (
                   filteredUsers.map((user) => (
-                    
                     <tr key={user.id} className="hover:bg-gray-50">
-                   
-                    <Link to={`/admin/user-profile/${user.id}`} > <td className="px-6 py-4">#{user.id.toString().padStart(3, "0")}</td> </Link>
-                     <td className="px-6 py-4">{user.name}</td>
+                      <Link to={`/admin/user-profile/${user.id}`}>
+                        {" "}
+                        <td className="px-6 py-4">
+                          #{user.id.toString().padStart(3, "0")}
+                        </td>{" "}
+                      </Link>
+                      <td className="px-6 py-4">{user.name}</td>
                       <td className="px-6 py-4">{user.email}</td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(user.role.name)}`}>
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
+                            user.role.name
+                          )}`}>
                           {getRoleIcon(user.role.name)}
-                          <span className="ml-1 capitalize">{user.role.name}</span>
+                          <span className="ml-1 capitalize">
+                            {user.role.name}
+                          </span>
                         </span>
                       </td>
-                      <td className="px-6 py-4">{formatDate(user.created_at)}</td>
+                      <td className="px-6 py-4">
+                        {formatDate(user.created_at)}
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
-                          <Link to={`/admin/user-profile/${user.id}`} className="text-blue-600 hover:text-blue-800">
+                          <Link
+                            to={`/admin/user-profile/${user.id}`}
+                            className="text-blue-600 hover:text-blue-800">
                             <Eye size={16} />
                           </Link>
-                          <Link to={`/admin/edit/${user.id}`} className="text-green-600 hover:text-green-800">
+                          <Link
+                            to={`/admin/edit/${user.id}`}
+                            className="text-green-600 hover:text-green-800">
                             <Edit size={16} />
                           </Link>
-                          <button onClick={() => handleDelete(user.id)} className="text-red-600 hover:text-red-800">
+                          <button
+                            onClick={() => handleDelete(user.id)}
+                            className="text-red-600 hover:text-red-800">
                             <Trash2 size={16} />
                           </button>
                         </div>
                       </td>
-                   
                     </tr>
-                    
                   ))
                 )}
               </tbody>
