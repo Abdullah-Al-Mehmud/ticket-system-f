@@ -69,9 +69,9 @@ const Login = () => {
 
   // Demo credentials
   const demoCredentials = {
-    admin: { email: "admin@example.com", password: "admin123" },
-    organizer: { email: "organizer@example.com", password: "organizer123" },
-    user: { email: "user@example.com", password: "user123" },
+    admin: { email: "admin@gmail.com", password: "password" },
+    organizer: { email: "organizer@gmail.com", password: "password" },
+    user: { email: "user@gmail.com", password: "password" },
   };
 
   return (
@@ -138,7 +138,8 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
                 ) : (
@@ -162,7 +163,8 @@ const Login = () => {
             </label>
             <button
               type="button"
-              className="text-sm text-blue-600 hover:text-blue-500">
+              className="text-sm text-blue-600 hover:text-blue-500"
+            >
               Forgot password?
             </button>
           </div>
@@ -172,19 +174,22 @@ const Login = () => {
             <button
               type="button"
               onClick={() => setFormData(demoCredentials.admin)}
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md">
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md"
+            >
               Demo Admin
             </button>
             <button
               type="button"
               onClick={() => setFormData(demoCredentials.organizer)}
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md">
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md"
+            >
               Demo Organizer
             </button>
             <button
               type="button"
               onClick={() => setFormData(demoCredentials.user)}
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md">
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md"
+            >
               Demo User
             </button>
           </div>
@@ -193,7 +198,8 @@ const Login = () => {
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 flex items-center justify-center space-x-2">
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 flex items-center justify-center space-x-2"
+          >
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -214,7 +220,8 @@ const Login = () => {
             Don’t have an account?{" "}
             <Link
               to="/register"
-              className="text-blue-600 hover:text-blue-500 font-medium">
+              className="text-blue-600 hover:text-blue-500 font-medium"
+            >
               Sign up
             </Link>
           </p>
