@@ -17,6 +17,9 @@ import CategoriesList from "./pages/Categories/CategoriesList";
 import AllEventslist from "./pages/Events/AllEventslist";
 import UserProfilePage from "./pages/User/UserProfilePage";
 import UserEditForm from "./pages/User/UserEditForm";
+import CategoryForm from "./pages/Categories/CategoryForm";
+import ViewCategoryDetails from "./pages/Categories/ViewCategoryDetails";
+import CategoryUpdate from "./pages/Categories/CategoryUpdate";
 
 
 function App() {
@@ -45,7 +48,9 @@ function App() {
           <Route path="events" element={<AllEventslist />} />
           <Route path="user-profile/:id" element={<UserProfilePage />} />
           <Route path="edit/:id" element={<UserEditForm />} />
-          {/* Add more admin routes as needed */}
+          <Route path="create-category" element={<CategoryForm />} />
+          <Route path="categories/:id" element={<ViewCategoryDetails />} />
+          <Route path="categories/edit/:id" element={<CategoryUpdate />} />
         </Route>
 
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
