@@ -13,6 +13,10 @@ import NotFound from "./pages/Notfound";
 import UserList from "./pages/User/UserList";
 import AdminLayout from "./Layout/AdminLayout";
 import CreateUser from "./pages/User/CreateUser";
+import CategoriesList from "./pages/Categories/CategoriesList";
+import AllEventslist from "./pages/Events/AllEventslist";
+import UserProfilePage from "./pages/User/UserProfilePage";
+import UserEditForm from "./pages/User/UserEditForm";
 
 function App() {
   return (
@@ -36,6 +40,10 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="user-list" element={<UserList />} />
           <Route path="create-user" element={<CreateUser />} />
+          <Route path="categories" element={<CategoriesList />} />
+          <Route path="events" element={<AllEventslist />} />
+          <Route path="user-profile/:id" element={<UserProfilePage />} />
+          <Route path="edit/:id" element={<UserEditForm />} />
           {/* Add more admin routes as needed */}
         </Route>
 

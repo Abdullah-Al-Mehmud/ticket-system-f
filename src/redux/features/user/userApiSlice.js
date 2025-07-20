@@ -3,20 +3,21 @@ import { apiSlice } from '../../app/api/apiSlice';
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboard: builder.query({
-      query: () => '/user/dashboard',
+      query: () => '/dashboard',
       providesTags: ['User'],
     }),
     getUserList: builder.query({
-      query: () => '/user/list', // Adjust endpoint if different
+      query: () => '/user', 
       providesTags: ['User'],
     }),
+
     getUserById: builder.query({
       query: (id) => `/user/${id}`,
       providesTags: (result, error, id) => [{ type: 'User', id }],
     }),
     updateUser: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `/user/${id}`,
+        url: `/users/${id}`,
         method: 'PUT',
         body: data,
       }),
@@ -24,7 +25,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `/user/${id}`,
+        url: `/users/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['User'],
