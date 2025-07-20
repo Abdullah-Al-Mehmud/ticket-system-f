@@ -21,6 +21,7 @@ import CategoryForm from "./pages/Categories/CategoryForm";
 import ViewCategoryDetails from "./pages/Categories/ViewCategoryDetails";
 import CategoryUpdate from "./pages/Categories/CategoryUpdate";
 
+
 function App() {
   return (
     <Routes>
