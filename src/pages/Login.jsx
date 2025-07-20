@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
-import { data, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/auth/AuthApiSlice";
 
 const Login = () => {
@@ -44,14 +44,10 @@ const Login = () => {
 
     try {
       const response = await login(formData).unwrap();
-      // console.log("Login successful:", response.data.role);
 
-      // Optionally store token (depends on backend)
       localStorage.setItem("token", JSON.stringify(response.token));
-      // Optionally store user data (depends on backend)
       localStorage.setItem("data", JSON.stringify(response.data));
 
-      // Redirect to dashboard
       if (response.data.role === "user") {
         navigate("/user/dashboard");
       } else if (response.data.role === "organizer") {
@@ -69,6 +65,13 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Demo credentials
+  const demoCredentials = {
+    admin: { email: "admin@example.com", password: "admin123" },
+    organizer: { email: "organizer@example.com", password: "organizer123" },
+    user: { email: "user@example.com", password: "user123" },
   };
 
   return (
@@ -164,6 +167,28 @@ const Login = () => {
             </button>
           </div>
 
+          {/* Demo Login Buttons */}
+          <div className="flex justify-between gap-2 mt-4">
+            <button
+              type="button"
+              onClick={() => setFormData(demoCredentials.admin)}
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md">
+              Demo Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => setFormData(demoCredentials.organizer)}
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md">
+              Demo Organizer
+            </button>
+            <button
+              type="button"
+              onClick={() => setFormData(demoCredentials.user)}
+              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md">
+              Demo User
+            </button>
+          </div>
+
           {/* Submit */}
           <button
             onClick={handleSubmit}
@@ -183,6 +208,7 @@ const Login = () => {
           </button>
         </div>
 
+        {/* Signup link */}
         <div className="text-center mt-6 text-sm text-gray-600">
           <p>
             Don’t have an account?{" "}
