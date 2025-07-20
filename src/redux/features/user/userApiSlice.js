@@ -3,7 +3,7 @@ import { apiSlice } from '../../app/api/apiSlice';
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboard: builder.query({
-      query: () => '/dashboard',
+      query: () => 'admin/dashboard',
       providesTags: ['User'],
     }),
     getUserList: builder.query({
@@ -37,6 +37,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ['User'],
+    }),
+    getDashboard: builder.query({
+        query: () => "admin/dashboard",
+        providesTags: ["Dashboard"],
     }),
   }),
 });

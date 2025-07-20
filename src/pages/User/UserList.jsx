@@ -16,7 +16,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useGetUserListQuery } from "../../redux/features/user/userApiSlice";
-import { useDeleteUserMutation } from "../../redux/features/user/userApiSlice";
+import { useDeleteUserMutation,useGetDashboardQuery } from "../../redux/features/user/userApiSlice";
 import { Link } from "react-router-dom";
 
 const UserList = () => {
@@ -28,6 +28,9 @@ const UserList = () => {
   // console.log(data);
   // console.log(data?.total_user);
   const [deleteUser] = useDeleteUserMutation();
+  // const [dashboardData] = useGetDashboardQuery();
+  const { data: dashboardInfo, isLoading: isDashboardLoading,refetch:fetch } = useGetDashboardQuery();
+  // console.log(dashboardInfo?.data.users.admins);
 
   // const filter
 
@@ -40,6 +43,7 @@ const UserList = () => {
       try {
         await deleteUser(userId).unwrap();
         refetch(); // Refetch the user list after deletion
+        fetch(); // Refetch dashboard data
         setSelectedUser(null); // Deselect user after deletion
       } catch (err) {
         console.error("Failed to delete user:", err);
@@ -77,7 +81,8 @@ const UserList = () => {
 
   useEffect(() => {
     refetch();
-  }, [refetch]);
+    fetch()
+  }, [refetch,fetch]);
 
   const getRoleColor = (role) => {
     switch (role) {
@@ -147,7 +152,7 @@ const UserList = () => {
                   Total Users
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {data?.total_users || 0}
+                  {dashboardInfo?.data.users.total}
                 </p>
               </div>
             </div>
@@ -162,7 +167,7 @@ const UserList = () => {
                   Admins
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {usersData?.filter((u) => u.role === "admin").length || 0}
+                  {dashboardInfo?.data.users.admins}
                 </p>
               </div>
             </div>
@@ -177,7 +182,7 @@ const UserList = () => {
                   Organizer
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {usersData?.filter((u) => u.role === "organizer").length || 0}
+                    {dashboardInfo?.data.users.organizers}
                 </p>
               </div>
             </div>
@@ -192,7 +197,7 @@ const UserList = () => {
                   Users
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {usersData?.filter((u) => u.role === "user").length || 0}
+                  {dashboardInfo?.data.users.users}
                 </p>
               </div>
             </div>
