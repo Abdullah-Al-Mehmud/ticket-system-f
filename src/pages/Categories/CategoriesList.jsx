@@ -215,11 +215,24 @@ const CategoriesList = () => {
                     {filteredCategories.map((category) => (
                       <tr key={category.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                          #{category.id}
+                          <Link
+                            to={`/admin/categories/${category.id}`}
+                            className="hover:underline text-black-600"
+                            title="View Category"
+                          >
+                            #{category.id}
+                          </Link>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          {category.name}
+                          <Link
+                            to={`/admin/categories/${category.id}`}
+                            className="hover:underline text-black-600"
+                            title="View Category"
+                          >
+                            {category.name}
+                          </Link>
                         </td>
+
                         <td className="px-6 py-4 text-sm">
                           {getStatusBadge(category.status)}
                         </td>
