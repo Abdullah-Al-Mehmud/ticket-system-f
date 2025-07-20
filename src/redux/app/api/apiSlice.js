@@ -6,8 +6,7 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl:
-      import.meta.env.VITE_API_URL || 
-      'http://192.168.68.115:8000/api' , 
+       'http://192.168.68.115:8000/api' ,  
     prepareHeaders: (headers, { getState }) => {
       let token = localStorage.getItem('token');
       try {
@@ -24,3 +23,4 @@ export const apiSlice = createApi({
   tagTypes: ['User', 'Event', 'Other'],
   endpoints: (builder) => ({}), // Inject endpoints later
 });
+// 'http://192.168.68.115:8000/api' ||
