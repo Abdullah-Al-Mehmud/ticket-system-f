@@ -1,5 +1,3 @@
-// src/app/api/apiSlice.js
-
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({
@@ -23,4 +21,3 @@ export const apiSlice = createApi({
   tagTypes: ['User', 'Event', 'Other'],
   endpoints: (builder) => ({}), // Inject endpoints later
 });
-// 'http://192.168.68.115:8000/api' ||
