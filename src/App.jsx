@@ -23,6 +23,10 @@ import CategoryUpdate from "./pages/Categories/CategoryUpdate";
 import EventForm from "./pages/Events/EventForm";
 import ViewEventsDetails from "./pages/Events/ViewEventsDetails";
 import EventEditForm from "./pages/Events/EventEditForm";
+import TicketsList from "./pages/Tickets/TicketsList";
+import TicketsForm from "./pages/Tickets/TicketsForm";
+import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
+import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
 
 
 function App() {
@@ -58,6 +62,10 @@ function App() {
           <Route path="create-event" element={<EventForm />} />
           <Route path="events-details/:id" element={<ViewEventsDetails />} />
           <Route path="event-edit/:id" element={<EventEditForm />} />
+          <Route path="tickets" element={<TicketsList />} />
+          <Route path="tickets/create-ticket" element={<TicketsForm />} />
+          <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
+          <Route path="tickets/:id" element={<ViewTicketsDetails />} />
         </Route>
 
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
