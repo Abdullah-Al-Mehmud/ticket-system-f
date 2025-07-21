@@ -23,13 +23,15 @@ const EventDetails = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [ticketId, setTicketId] = useState(null); // track created ticket ID
   const [showFullDescription, setShowFullDescription] = useState(false);
-
+  console.log(ticketId);
   const { id } = useParams();
   const { data, isLoading, isError } = useGetEventByIdQuery(id);
   const event = data?.data;
 
-  const [createTicket, { isLoading: isRegistering }] = useCreateTicketMutation();
-  const [deleteTicket, { isLoading: isUnregistering }] = useDeleteTicketMutation();
+  const [createTicket, { isLoading: isRegistering }] =
+    useCreateTicketMutation();
+  const [deleteTicket, { isLoading: isUnregistering }] =
+    useDeleteTicketMutation();
 
   const handleLike = () => setIsLiked(!isLiked);
 
@@ -43,7 +45,7 @@ const EventDetails = () => {
         };
         const response = await createTicket(ticketPayload).unwrap();
         setIsRegistered(true);
-        setTicketId(response.id); // save the ticket id for later deletion
+        setTicketId(response.data.id); // save the ticket id for later deletion
         toast.success("Successfully registered for the event!");
       } catch (err) {
         console.error("Registration failed:", err);
@@ -56,13 +58,14 @@ const EventDetails = () => {
           toast.error("No ticket found to unregister.");
           return;
         }
-        await deleteTicket(ticketId).unwrap();
+        const res = await deleteTicket(ticketId).unwrap();
         setIsRegistered(false);
         setTicketId(null);
-        toast.success("You have unregistered from the event.");
+        if (res.status === true) toast.success(res.message);
+        else toast.error(res.message);
       } catch (err) {
         console.error("Unregistration failed:", err);
-        toast.error("Unregistration failed. Please try again.");
+        toast.error("You does not have the right permissions.");
       }
     }
   };
@@ -114,7 +117,6 @@ const EventDetails = () => {
 
   return (
     <>
-
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-4">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
@@ -161,7 +163,9 @@ const EventDetails = () => {
                     <div className="flex items-center gap-3 text-gray-700">
                       <Calendar className="w-5 h-5 text-purple-600" />
                       <div>
-                        <p className="font-semibold">{formatDate(start, end)}</p>
+                        <p className="font-semibold">
+                          {formatDate(start, end)}
+                        </p>
                         <p className="text-sm text-gray-500">Event Date</p>
                       </div>
                     </div>
@@ -187,7 +191,8 @@ const EventDetails = () => {
                       <Ticket className="w-5 h-5 text-purple-600" />
                       <div>
                         <p className="font-semibold">
-                          <span className="text-2xl">৳</span> {event.ticket_price}
+                          <span className="text-2xl">৳</span>{" "}
+                          {event.ticket_price}
                         </p>
                         <p className="text-sm text-gray-500">Ticket price</p>
                       </div>
