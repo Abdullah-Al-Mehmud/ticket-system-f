@@ -10,6 +10,7 @@ import {
   Search,
   Package,
   Calendar,
+  Ticket
 } from "lucide-react";
 
 
@@ -35,6 +36,7 @@ const AdminLayout = ({ children }) => {
     { id: "users", label: "Users", icon: Users, path: "/admin/user-list" },
     { id: "catagories", label: "Categories", icon: Package, path: "/admin/categories" },
     {id : "events", label: "Events", icon: Calendar, path: "/admin/events"},
+    { id: "tickets", label: "Tickets", icon: Ticket, path: "/admin/tickets" },
     // add more
   ];
 
