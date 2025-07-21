@@ -20,7 +20,7 @@ import UserEditForm from "./pages/User/UserEditForm";
 import CategoryForm from "./pages/Categories/CategoryForm";
 import ViewCategoryDetails from "./pages/Categories/ViewCategoryDetails";
 import CategoryUpdate from "./pages/Categories/CategoryUpdate";
-
+import TicketsList from "./pages/Tickets/TicketsList";
 
 function App() {
   return (
@@ -51,6 +51,7 @@ function App() {
           <Route path="create-category" element={<CategoryForm />} />
           <Route path="categories/:id" element={<ViewCategoryDetails />} />
           <Route path="categories/edit/:id" element={<CategoryUpdate />} />
+          <Route path="tickets" element={<TicketsList />} />
         </Route>
 
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
