@@ -117,7 +117,7 @@ export const TicketsList = () => {
             </p>
           </div>
           <Link
-            to="/admin/create-ticket"
+            to="/admin/tickets/create-ticket"
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
           >
             <Plus size={20} /> Add Tickets
@@ -148,7 +148,8 @@ export const TicketsList = () => {
               >
                 <option value="all">All Status</option>
                 <option value="booked">Booked</option>
-                <option value="cancelled">Cancelled</option>
+                <option value="refunded">Refunded</option>
+                <option value="canceled">Canceled</option>
               </select>
 
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
@@ -188,6 +189,7 @@ export const TicketsList = () => {
                         "event",
                         "ticket_quantity",
                         "price_per_ticket",
+                        "Total_Price",
                         "status",
                         "purchased_at",
                       ].map((col) => (
@@ -212,9 +214,11 @@ export const TicketsList = () => {
                   <tbody className="divide-y divide-gray-200">
                     {filteredTickets.map((ticket) => (
                       <tr key={ticket.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                          #{ticket.id}
-                        </td>
+                        <Link to={`/admin/tickets/${ticket.id}`}>
+                          <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                            #{ticket.id}
+                          </td>
+                        </Link>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           {ticket.user.name}
                         </td>
@@ -226,6 +230,9 @@ export const TicketsList = () => {
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           ${ticket.price_per_ticket}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          ${ticket.price_per_ticket * ticket.ticket_quantity}
                         </td>
                         <td className="px-6 py-4 text-sm">
                           {getStatusBadge(ticket.status)}
