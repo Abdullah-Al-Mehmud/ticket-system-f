@@ -10,9 +10,9 @@ import {
   Search,
   Package,
   Calendar,
-  Ticket
+  Ticket,
+  Forward
 } from "lucide-react";
-
 
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 
@@ -34,9 +34,15 @@ const AdminLayout = ({ children }) => {
       path: "/admin/dashboard",
     },
     { id: "users", label: "Users", icon: Users, path: "/admin/user-list" },
-    { id: "catagories", label: "Categories", icon: Package, path: "/admin/categories" },
-    {id : "events", label: "Events", icon: Calendar, path: "/admin/events"},
+    {
+      id: "catagories",
+      label: "Categories",
+      icon: Package,
+      path: "/admin/categories",
+    },
+    { id: "events", label: "Events", icon: Calendar, path: "/admin/events" },
     { id: "tickets", label: "Tickets", icon: Ticket, path: "/admin/tickets" },
+    { id: "back", label: "Back", icon: Forward, path: "/" },
     // add more
   ];
 
@@ -57,7 +63,8 @@ const AdminLayout = ({ children }) => {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 transition-all duration-300 ease-in-out fixed lg:static inset-y-0 left-0 z-50 ${
           sidebarCollapsed ? "w-16" : "w-64"
-        } bg-white shadow-lg`}>
+        } bg-white shadow-lg`}
+      >
         <div className={`flex items-center justify-between h-16 border-b px-4`}>
           {!sidebarCollapsed && (
             <h1 className="text-xl font-bold text-gray-800">{user.name}</h1>
@@ -65,7 +72,8 @@ const AdminLayout = ({ children }) => {
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex p-2 rounded-md hover:bg-gray-100">
+              className="hidden lg:flex p-2 rounded-md hover:bg-gray-100"
+            >
               {sidebarCollapsed ? (
                 <ChevronRight className="w-5 h-5 text-gray-600" />
               ) : (
@@ -74,7 +82,8 @@ const AdminLayout = ({ children }) => {
             </button>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 rounded-md hover:bg-gray-100">
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+            >
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -94,7 +103,8 @@ const AdminLayout = ({ children }) => {
                 activeTab === item.id
                   ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
                   : "text-gray-700"
-              }`}>
+              }`}
+            >
               <item.icon
                 className={`w-5 h-5 ${sidebarCollapsed ? "" : "mr-3"}`}
               />
@@ -118,38 +128,31 @@ const AdminLayout = ({ children }) => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-md hover:bg-gray-100">
+                className="lg:hidden p-2 rounded-md hover:bg-gray-100"
+              >
                 <Menu className="w-5 h-5" />
               </button>
               <h2 className="text-xl font-semibold text-gray-800 capitalize">
                 {activeTab}
               </h2>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
+            <div className="flex items-center space-x-6">
+              <div className="text-right">
+                <div className="font-medium text-gray-800">{user.name}</div>
+                <div className="text-sm text-gray-500">{user.email}</div>
               </div>
-              <button className="relative p-2 rounded-lg hover:bg-gray-100">
-                <Bell className="w-5 h-5 text-gray-600" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  3
-                </span>
-              </button>
-              <div>{user.email}</div>
+
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 border border-red-600 text-red-600 rounded-md hover:bg-red-600 hover:text-white transition">
+                className="flex items-center gap-2 px-4 py-2 border border-red-600 text-red-600 rounded-md hover:bg-red-600 hover:text-white transition"
+              >
                 <svg
                   className="w-4 h-4"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  viewBox="0 0 24 24">
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
