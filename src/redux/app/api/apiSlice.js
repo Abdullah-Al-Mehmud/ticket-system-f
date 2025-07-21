@@ -6,7 +6,7 @@ export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl:
-       'http://192.168.68.115:8000/api' ,  
+       'http://192.168.68.113:8000/api' ,  
     prepareHeaders: (headers, { getState }) => {
       let token = localStorage.getItem('token');
       try {
