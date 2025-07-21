@@ -16,7 +16,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Alert, AlertDescription } from "../../components/ui/alert";
+
+import { useGetDashboardQuery } from "../../redux/features/user/userApiSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
@@ -24,6 +25,11 @@ const AdminDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [animatedBars, setAnimatedBars] = useState(false);
+
+  // fetch dashboard data
+   const {data,isLoading,isError,error} = useGetDashboardQuery();
+  
+   console.log(data?.data.users.total);
 
   // Get data form localStorage
   const user = localStorage.getItem("data")
@@ -86,20 +92,6 @@ const AdminDashboard = () => {
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {change && (
-            <p
-              className={`text-sm flex items-center mt-1 ${
-                changeType === "positive" ? "text-green-600" : "text-red-600"
-              }`}>
-              <TrendingUp
-                className={`w-4 h-4 mr-1 ${
-                  changeType === "negative" ? "rotate-180" : ""
-                }`}
-              />
-              {changeType === "positive" ? "+" : "-"}
-              {change}% from last month
-            </p>
-          )}
         </div>
         <div className="p-3 bg-blue-50 rounded-full">
           <Icon className="w-6 h-6 text-blue-600" />
@@ -308,30 +300,37 @@ const AdminDashboard = () => {
         <main className="flex-1 overflow-y-auto p-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard
+            {/* <StatCard
               title="Total Revenue"
               value="$45,231"
               icon={DollarSign}
               change="20.1"
               changeType="positive"
-            />
+            /> */}
             <StatCard
               title="Total Users"
-              value="2,350"
+              value={data?.data?.users?.total}
               icon={Users}
               change="4.3"
               changeType="positive"
             />
             <StatCard
-              title="Total Orders"
-              value="1,234"
+              title="Total Admin"
+              value={data?.data?.users.admins}
               icon={ShoppingCart}
               change="2.1"
               changeType="negative"
             />
             <StatCard
-              title="Active Users"
-              value="573"
+              title="Total Organizer"
+              value={data?.data?.users.organizers}
+              icon={UserCheck}
+              change="8.2"
+              changeType="positive"
+            />
+            <StatCard
+              title="Users"
+              value={data?.data?.users.users}
               icon={UserCheck}
               change="8.2"
               changeType="positive"
