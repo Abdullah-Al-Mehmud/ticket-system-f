@@ -48,12 +48,12 @@ const Navbar = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-8">
-            <a
-              href="#"
+            <Link
+              to={"/event"}
               className="text-gray-900 hover:text-blue-600 font-medium"
             >
               Events
-            </a>
+            </Link>
             <a
               href="#"
               className="text-gray-500 hover:text-blue-600 font-medium"
