@@ -21,6 +21,9 @@ import CategoryForm from "./pages/Categories/CategoryForm";
 import ViewCategoryDetails from "./pages/Categories/ViewCategoryDetails";
 import CategoryUpdate from "./pages/Categories/CategoryUpdate";
 import TicketsList from "./pages/Tickets/TicketsList";
+import TicketsForm from "./pages/Tickets/TicketsForm";
+import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
+import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
 
 function App() {
   return (
@@ -52,6 +55,9 @@ function App() {
           <Route path="categories/:id" element={<ViewCategoryDetails />} />
           <Route path="categories/edit/:id" element={<CategoryUpdate />} />
           <Route path="tickets" element={<TicketsList />} />
+          <Route path="tickets/create-ticket" element={<TicketsForm />} />
+          <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
+          <Route path="tickets/:id" element={<ViewTicketsDetails />} />
         </Route>
 
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
