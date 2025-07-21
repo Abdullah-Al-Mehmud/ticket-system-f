@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, Edit, Trash2, Plus, Search, Filter, Download, MoreVertical, Calendar, MapPin, Users, Clock } from 'lucide-react';
 import { useGetEventsQuery } from '../../redux/features/event/EventApiSlice';
+import { Link } from 'react-router-dom';
 
 const AllEventslist = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,8 +12,9 @@ const AllEventslist = () => {
 
     const { data, isLoading, isError } = useGetEventsQuery();
     const events = data?.data || [];
-    
 
+    
+    
 
   const getStatusBadge = (status) => {
     const statusStyles = {
@@ -77,10 +79,10 @@ const AllEventslist = () => {
               <h1 className="text-3xl font-semibold text-gray-900">All Events</h1>
               <p className="mt-2 text-gray-600">Manage and track all your events in one place</p>
             </div>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+            <Link to="/admin/create-event" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
               <Plus size={20} />
               Create Event
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -112,7 +114,8 @@ const AllEventslist = () => {
               <div className="ml-4">
                 <p className="text-sm text-gray-600">Total Attendees</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {events.reduce((sum, event) => sum + event.attendees, 0)}
+                  {/* {events.reduce((sum, event) => sum + event.attendees, 0)} */}
+                  0
                 </p>
               </div>
             </div>
@@ -225,6 +228,13 @@ const AllEventslist = () => {
                   </th>
                   <th 
                     className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                    onClick={() => handleSort('category')}
+                  >
+                    Organizer
+                    
+                  </th>
+                  <th 
+                    className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
                     onClick={() => handleSort('status')}
                   >
                     Status
@@ -243,15 +253,6 @@ const AllEventslist = () => {
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Location
-                  </th>
-                  <th 
-                    className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleSort('attendees')}
-                  >
-                    Attendance
-                    {sortBy === 'attendees' && (
-                      <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                    )}
                   </th>
                   <th 
                     className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
@@ -280,6 +281,9 @@ const AllEventslist = () => {
                       {getCategoryBadge(event.category.name)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {getStatusBadge(event.organizer.name)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {getStatusBadge(event.status)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -291,22 +295,7 @@ const AllEventslist = () => {
                         {event.location}
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <div className="flex-1">
-                          {/* <div className="flex items-center justify-between text-xs">
-                            <span>{event.attendees}/{event.max_capacity}</span>
-                            <span>{getAttendancePercentage(event.attendees, event.max_capacity)}%</span>
-                          </div> */}
-                          <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                            {/* <div 
-                              className="bg-blue-600 h-2 rounded-full" 
-                              style={{ width: `${getAttendancePercentage(event.attendees, event.max_capacity)}%` }}
-                            ></div> */}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
+                   
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <span className="font-medium text-green-600">{event.ticket_price}</span>
                     </td>

@@ -18,7 +18,7 @@ export const eventApiSlice = apiSlice.injectEndpoints({
     
     createEvent: builder.mutation({
       query: (newEvent) => ({
-        url: "/events",
+        url: "/event",
         method: "POST",
         body: newEvent,
       }),

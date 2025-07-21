@@ -6,6 +6,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: () => 'admin/dashboard',
       providesTags: ['User'],
     }),
+
     getUserList: builder.query({
       query: () => '/user', 
       providesTags: ['User'],
@@ -37,10 +38,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ['User'],
-    }),
-    getDashboard: builder.query({
-        query: () => "admin/dashboard",
-        providesTags: ["Dashboard"],
     }),
   }),
 });
