@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, MapPin, DollarSign, Upload } from "lucide-react";
-import { useCreateEventMutation } from "../../redux/features/event/EventApiSlice";
-import { useGetCategoriesQuery } from "../../redux/features/categories/categoriesApiSlice";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useUpdateEventMutation,
+  useGetEventByIdQuery,
+} from "../../redux/features/event/EventApiSlice";
+import { useGetCategoriesQuery } from "../../redux/features/categories/categoriesApiSlice";
 
-const EventForm = () => {
+const EventEditForm = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     category_id: "",
     title: "",
@@ -14,47 +19,70 @@ const EventForm = () => {
     location: "",
     start_date: "",
     end_date: "",
-    ticket_price: 0,
+    ticket_price: "",
     status: "draft",
     privacy_policy: "",
     image_url: "",
   });
 
   const [errors, setErrors] = useState({});
-  const [createEvent, { isLoading }] = useCreateEventMutation();
+
+  const { data: eventData, isLoading: loadingEvent } = useGetEventByIdQuery(id);
+  const [updateEvent, { isLoading }] = useUpdateEventMutation();
   const { data: categories } = useGetCategoriesQuery();
-  // console.log("Categories:", categories?.data );
+
   const CategoriesList = categories?.data || [];
 
-  // CategoriesList.map((category) => {
+  useEffect(() => {
+    if (eventData?.data) {
+      const {
+        category_id,
+        title,
+        event_description,
+        location,
+        start_date,
+        end_date,
+        ticket_price,
+        status,
+        privacy_policy,
+        image_url,
+      } = eventData.data;
 
-  //      console.log("Category:", category.name);
-  // });
+      setFormData({
+        category_id: String(category_id),
+        title,
+        event_description,
+        location,
+        start_date: start_date?.slice(0, 10),
+        end_date: end_date?.slice(0, 10),
+        ticket_price: String(ticket_price),
+        status,
+        privacy_policy,
+        image_url,
+      });
+    }
+  }, [eventData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        name === "ticket_price" || name === "category_id"
-          ? Number(value)
-          : value,
+      [name]: value,
     }));
   };
 
   const validateForm = () => {
     const newErrors = {};
     if (!formData.title.trim()) newErrors.title = "Title is required";
-    if (!formData.category_id.trim()) newErrors.category_id = "ID is required";
+    if (!formData.category_id) newErrors.category_id = "Category is required";
     if (!formData.event_description.trim())
       newErrors.event_description = "Description is required";
     if (!formData.location.trim()) newErrors.location = "Location is required";
     if (!formData.start_date) newErrors.start_date = "Start date is required";
     if (!formData.end_date) newErrors.end_date = "End date is required";
-    if (!formData.ticket_price)
-      newErrors.ticket_price = "Ticket price is required";
-    if (!formData.privacy_policy)
+    if (formData.ticket_price === "" || isNaN(Number(formData.ticket_price)))
+      newErrors.ticket_price = "Valid ticket price is required";
+    if (!formData.privacy_policy.trim())
       newErrors.privacy_policy = "Accept the privacy policy";
 
     if (
@@ -69,17 +97,38 @@ const EventForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const formatDateTime = (dateStr, hour = "10", minute = "00", second = "00") =>
+    `${dateStr} ${hour}:${minute}:${second}`;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
+    const formattedData = {
+      id,
+      category_id: Number(formData.category_id),
+      title: formData.title.trim(),
+      event_description: formData.event_description.trim(),
+      location: formData.location.trim(),
+      start_date: formatDateTime(formData.start_date),
+      end_date: formatDateTime(formData.end_date, "16", "00", "00"),
+      ticket_price: parseFloat(formData.ticket_price),
+      status: formData.status,
+      privacy_policy: formData.privacy_policy.trim(),
+      image_url: formData.image_url.trim(),
+    };
+
     try {
-      await createEvent(formData).unwrap();
-      toast.success("Event created successfully!");
+      await updateEvent(formattedData).unwrap();
+      toast.success("Event updated successfully!");
       navigate("/admin/events");
     } catch (err) {
-      toast.error("Failed to create event. Please check the form.");
-      console.error("Error:", err);
+      toast.error("Failed to update event. Please check the form.");
+      console.error("Update error:", err);
     }
   };
+
+  if (loadingEvent) return <p className="text-center p-8">Loading event...</p>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 flex items-center justify-center">
@@ -87,45 +136,50 @@ const EventForm = () => {
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
-            <h1 className="text-2xl font-bold text-white mb-2">
-              Create New Event
-            </h1>
-            <p className="text-blue-100">
-              Fill out the details for your upcoming event
-            </p>
+            <h1 className="text-2xl font-bold text-white mb-2">Edit Event</h1>
+            <p className="text-blue-100">Update the details for your event</p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
-            {/* Category_id */}
-            <select
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              required
-              className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500">
-              <option value="">Select Categories</option>
-              {CategoriesList.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-
-            {/* Event Title */}
+            {/* Category */}
             <div>
               <label className="block text-sm font-semibold text-gray-700">
-                Event Title
+                Category
+              </label>
+              <select
+                name="category_id"
+                value={formData.category_id}
+                onChange={handleChange}
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2">
+                <option value="">Select Category</option>
+                {CategoriesList.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              {errors.category_id && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.category_id}
+                </p>
+              )}
+            </div>
+
+            {/* Title */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Title
               </label>
               <input
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+                <p className="text-red-500 text-sm">{errors.title}</p>
               )}
             </div>
 
@@ -139,10 +193,10 @@ const EventForm = () => {
                 value={formData.event_description}
                 onChange={handleChange}
                 rows="4"
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.event_description && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-sm">
                   {errors.event_description}
                 </p>
               )}
@@ -150,7 +204,7 @@ const EventForm = () => {
 
             {/* Location */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
+              <label className="block text-sm font-semibold text-gray-700 flex items-center gap-1">
                 <MapPin size={16} /> Location
               </label>
               <input
@@ -158,10 +212,10 @@ const EventForm = () => {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.location && (
-                <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+                <p className="text-red-500 text-sm">{errors.location}</p>
               )}
             </div>
 
@@ -176,17 +230,15 @@ const EventForm = () => {
                   name="start_date"
                   value={formData.start_date}
                   onChange={handleChange}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
                 />
                 {errors.start_date && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.start_date}
-                  </p>
+                  <p className="text-red-500 text-sm">{errors.start_date}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
+                <label className="block text-sm font-semibold text-gray-700 flex items-center gap-1">
                   <Calendar size={16} /> End Date
                 </label>
                 <input
@@ -194,44 +246,50 @@ const EventForm = () => {
                   name="end_date"
                   value={formData.end_date}
                   onChange={handleChange}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                  className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
                 />
                 {errors.end_date && (
-                  <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>
+                  <p className="text-red-500 text-sm">{errors.end_date}</p>
                 )}
               </div>
             </div>
 
             {/* Ticket Price */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
-                <DollarSign size={16} /> Ticket Price (BDT)
+              <label className="block text-sm font-semibold text-gray-700 flex items-center gap-1">
+                <DollarSign size={16} /> Ticket Price
               </label>
               <input
                 type="number"
                 name="ticket_price"
                 value={formData.ticket_price}
                 onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.ticket_price && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.ticket_price}
-                </p>
+                <p className="text-red-500 text-sm">{errors.ticket_price}</p>
               )}
             </div>
 
-            {/* Image Upload */}
+            {/* Image URL + Preview */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
-                <Upload size={16} /> Upload Image
+              <label className="block text-sm font-semibold text-gray-700 flex items-center gap-1">
+                <Upload size={16} /> Image URL
               </label>
               <input
                 type="text"
                 name="image_url"
+                value={formData.image_url}
                 onChange={handleChange}
                 className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               />
+              {formData.image_url && (
+                <img
+                  src={formData.image_url}
+                  alt="Event"
+                  className="mt-3 w-full max-h-60 object-cover rounded-md"
+                />
+              )}
             </div>
 
             {/* Privacy Policy */}
@@ -244,15 +302,14 @@ const EventForm = () => {
                 name="privacy_policy"
                 value={formData.privacy_policy}
                 onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.privacy_policy && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.privacy_policy}
-                </p>
+                <p className="text-red-500 text-sm">{errors.privacy_policy}</p>
               )}
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
@@ -260,8 +317,8 @@ const EventForm = () => {
                 isLoading
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              } text-white py-3 px-6 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]`}>
-              {isLoading ? "Creating..." : "Create Event"}
+              } text-white py-3 px-6 rounded-lg font-medium`}>
+              {isLoading ? "Updating..." : "Update Event"}
             </button>
           </form>
         </div>
@@ -270,4 +327,4 @@ const EventForm = () => {
   );
 };
 
-export default EventForm;
+export default EventEditForm;

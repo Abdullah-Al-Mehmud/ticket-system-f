@@ -21,6 +21,8 @@ import CategoryForm from "./pages/Categories/CategoryForm";
 import ViewCategoryDetails from "./pages/Categories/ViewCategoryDetails";
 import CategoryUpdate from "./pages/Categories/CategoryUpdate";
 import EventForm from "./pages/Events/EventForm";
+import ViewEventsDetails from "./pages/Events/ViewEventsDetails";
+import EventEditForm from "./pages/Events/EventEditForm";
 
 
 function App() {
@@ -52,7 +54,10 @@ function App() {
           <Route path="create-category" element={<CategoryForm />} />
           <Route path="categories/:id" element={<ViewCategoryDetails />} />
           <Route path="categories/edit/:id" element={<CategoryUpdate />} />
+          <Route path="view-events/:id" element={<ViewCategoryDetails /> } />
           <Route path="create-event" element={<EventForm />} />
+          <Route path="events-details/:id" element={<ViewEventsDetails />} />
+          <Route path="event-edit/:id" element={<EventEditForm />} />
         </Route>
 
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
