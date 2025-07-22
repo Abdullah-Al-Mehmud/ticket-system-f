@@ -8,7 +8,6 @@ import Event from "./pages/Event";
 import Layout from "./components/Layout";
 import EventDetails from "./pages/EventDetails";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
-import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard";
 import NotFound from "./pages/Notfound";
 import UserList from "./pages/User/UserList";
 import AdminLayout from "./Layout/AdminLayout";
@@ -28,6 +27,11 @@ import TicketsForm from "./pages/Tickets/TicketsForm";
 import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
 import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
 import PublicRoute from "./components/PublicRoute";
+import OrganizerLayout from "./Layout/OrganizerLayout";
+import EventManagement from "./pages/Dashboard/OrganizerDashboard/EventManagement";
+import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard/OrganizerDashboard";
+import CreateEventOrganizer from "./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer";
+import EventDetailsDetails from "./pages/Dashboard/OrganizerDashboard/EventDetailsDetails";
 
 function App() {
   return (
@@ -48,7 +52,6 @@ function App() {
       {/* 🔒 Protected routes */}
       <Route element={<PrivateRoute />}>
         <Route path="/user/dashboard" element={<UserDashboard />} />
-        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
@@ -69,6 +72,12 @@ function App() {
           <Route path="tickets/create-ticket" element={<TicketsForm />} />
           <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
           <Route path="tickets/:id" element={<ViewTicketsDetails />} />
+        </Route>
+        <Route path="/organizer" element={<OrganizerLayout />}>
+          <Route path="dashboard" element={<OrganizerDashboard />} />
+          <Route path="event-management" element={<EventManagement />} />
+          <Route path="create-event" element={<CreateEventOrganizer />} />
+          <Route path="events-details/:id" element={<EventDetailsDetails />} />
         </Route>
       </Route>
 

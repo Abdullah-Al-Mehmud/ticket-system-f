@@ -13,7 +13,7 @@ import {
   Heart,
   Shield,
 } from "lucide-react";
-import { useGetEventByIdQuery } from "../../redux/features/event/EventApiSlice";
+import { useGetEventByIdQuery } from "../../../redux/features/event/EventApiSlice";
 import { useParams } from "react-router-dom";
 
 const formatDateTime = (datetime) => {
@@ -34,7 +34,7 @@ const formatDateRange = (start, end) => {
   )}`;
 };
 
-const ViewEventsDetails = () => {
+const EventDetailsDesign = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetEventByIdQuery(id);
 
@@ -246,4 +246,4 @@ const ViewEventsDetails = () => {
   );
 };
 
-export default ViewEventsDetails;
+export default EventDetailsDesign;
