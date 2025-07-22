@@ -5,6 +5,7 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
        'http://192.168.68.113:8000/api' ,  
+      // 'http://127.0.0.1:8000/api',
     prepareHeaders: (headers, { getState }) => {
       let token = localStorage.getItem('token');
       try {
