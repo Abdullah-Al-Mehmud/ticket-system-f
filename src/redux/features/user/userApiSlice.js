@@ -3,9 +3,10 @@ import { apiSlice } from '../../app/api/apiSlice';
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboard: builder.query({
-      query: () => '/dashboard',
+      query: () => 'admin/dashboard',
       providesTags: ['User'],
     }),
+
     getUserList: builder.query({
       query: () => '/user', 
       providesTags: ['User'],
@@ -18,7 +19,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     updateUser: builder.mutation({
       query: ({ id, ...data }) => ({
         url: `/users/${id}`,
-        method: 'PUT',
+        method: 'PATCH',
         body: data,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
@@ -32,7 +33,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     createUser: builder.mutation({
       query: (data) => ({
-        url: '/user',
+        url: '/users',
         method: 'POST',
         body: data,
       }),
