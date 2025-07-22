@@ -2,7 +2,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import Register from "./pages/Register";
-import UserDashboard from "./pages/Dashboard/UserDashboard";
+import UserDashboard from "./pages/Dashboard/UserDashboard/UserDashboard";
 import { Routes, Route } from "react-router-dom";
 import Event from "./pages/Event";
 import Layout from "./components/Layout";
@@ -28,6 +28,8 @@ import TicketsForm from "./pages/Tickets/TicketsForm";
 import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
 import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
 import PublicRoute from "./components/PublicRoute";
+import UserLayout from "./Layout/UserLayout";
+import UserViewTicket from "./pages/Dashboard/UserDashboard/UserViewTicket";
 
 function App() {
   return (
@@ -47,7 +49,7 @@ function App() {
 
       {/* 🔒 Protected routes */}
       <Route element={<PrivateRoute />}>
-        <Route path="/user/dashboard" element={<UserDashboard />} />
+        {/* <Route path="/user/dashboard" element={<UserDashboard />} /> */}
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
 
         <Route path="/admin" element={<AdminLayout />}>
@@ -69,6 +71,12 @@ function App() {
           <Route path="tickets/create-ticket" element={<TicketsForm />} />
           <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
           <Route path="tickets/:id" element={<ViewTicketsDetails />} />
+        </Route>
+
+        
+        <Route path="/user" element={<UserLayout />}>
+          <Route index element={<UserDashboard />} />
+          <Route path="user-view-ticket/:id" element={<UserViewTicket/>} />
         </Route>
       </Route>
 

@@ -53,7 +53,7 @@ const Login = () => {
       } else if (response.data.role === "organizer") {
         navigate("/organizer/dashboard");
       } else {
-        navigate("/admin/dashboard");
+        navigate("/user");
       }
     } catch (error) {
       console.error("Login failed:", error);
