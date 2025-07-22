@@ -1,7 +1,7 @@
 import React from "react";
 import { Calendar, MapPin, Clock, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useGetEventsQuery } from "../redux/features/event/EventApiSlice";
+import { useGetEventsQuery } from "../../redux/features/event/EventApiSlice";
 
 const TrendingEvent = () => {
   const { data, isLoading, isError } = useGetEventsQuery();
