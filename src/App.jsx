@@ -55,7 +55,7 @@ function App() {
       {/* 🔒 Protected routes */}
       <Route element={<PrivateRoute />}>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="user-list" element={<UserList />} />
           <Route path="create-user" element={<CreateUser />} />
