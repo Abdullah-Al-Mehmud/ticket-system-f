@@ -27,7 +27,7 @@ import TicketsList from "./pages/Tickets/TicketsList";
 import TicketsForm from "./pages/Tickets/TicketsForm";
 import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
 import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
-
+import PublicRoute from "./components/PublicRoute";
 
 function App() {
   return (
@@ -35,17 +35,21 @@ function App() {
       {/* Public layout */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="register" element={<Register />} />
-        <Route path="login" element={<Login />} />
         <Route path="event" element={<Event />} />
         <Route path="eventdetails/:id" element={<EventDetails />} />
+
+        {/* 🔐 Only for non-logged-in users */}
+        <Route element={<PublicRoute />}>
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+        </Route>
       </Route>
 
-      {/* Protected routes */}
+      {/* 🔒 Protected routes */}
       <Route element={<PrivateRoute />}>
         <Route path="/user/dashboard" element={<UserDashboard />} />
+        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
 
-        {/* Admin layout covers /admin/* */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -58,7 +62,6 @@ function App() {
           <Route path="create-category" element={<CategoryForm />} />
           <Route path="categories/:id" element={<ViewCategoryDetails />} />
           <Route path="categories/edit/:id" element={<CategoryUpdate />} />
-          <Route path="view-events/:id" element={<ViewCategoryDetails /> } />
           <Route path="create-event" element={<EventForm />} />
           <Route path="events-details/:id" element={<ViewEventsDetails />} />
           <Route path="event-edit/:id" element={<EventEditForm />} />
@@ -67,8 +70,6 @@ function App() {
           <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
           <Route path="tickets/:id" element={<ViewTicketsDetails />} />
         </Route>
-
-        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
