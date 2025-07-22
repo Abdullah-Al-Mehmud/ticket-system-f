@@ -29,7 +29,10 @@ const CreateEventOrganizer = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "ticket_price" || name === "category_id" ? Number(value) : value,
+      [name]:
+        name === "ticket_price" || name === "category_id"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -37,12 +40,15 @@ const CreateEventOrganizer = () => {
     const newErrors = {};
     if (!formData.title.trim()) newErrors.title = "Title is required";
     if (!formData.category_id) newErrors.category_id = "Category is required";
-    if (!formData.event_description.trim()) newErrors.event_description = "Description is required";
+    if (!formData.event_description.trim())
+      newErrors.event_description = "Description is required";
     if (!formData.location.trim()) newErrors.location = "Location is required";
     if (!formData.start_date) newErrors.start_date = "Start date is required";
     if (!formData.end_date) newErrors.end_date = "End date is required";
-    if (formData.ticket_price === "") newErrors.ticket_price = "Ticket price is required";
-    if (!formData.privacy_policy) newErrors.privacy_policy = "Accept the privacy policy";
+    if (formData.ticket_price === "")
+      newErrors.ticket_price = "Ticket price is required";
+    if (!formData.privacy_policy)
+      newErrors.privacy_policy = "Accept the privacy policy";
 
     if (
       formData.start_date &&
@@ -78,7 +84,8 @@ const CreateEventOrganizer = () => {
       navigate("/organizer/event-management");
     } catch (err) {
       console.error("Error creating event:", err);
-      toast.error("Failed to create event.");
+      toast.error(err?.data?.message);
+      toast.error(err?.data?.errors);
     }
   };
 
@@ -88,13 +95,17 @@ const CreateEventOrganizer = () => {
         <div className="bg-white rounded-xl shadow-md border border-slate-200">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6 rounded-t-xl">
             <h1 className="text-2xl font-bold text-white">Create New Event</h1>
-            <p className="text-sm text-blue-100">Fill out the details for your upcoming event</p>
+            <p className="text-sm text-blue-100">
+              Fill out the details for your upcoming event
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Category
+              </label>
               <select
                 name="category_id"
                 value={formData.category_id}
@@ -108,12 +119,18 @@ const CreateEventOrganizer = () => {
                   </option>
                 ))}
               </select>
-              {errors.category_id && <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>}
+              {errors.category_id && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.category_id}
+                </p>
+              )}
             </div>
 
             {/* Title */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Event Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Event Title
+              </label>
               <input
                 type="text"
                 name="title"
@@ -121,12 +138,16 @@ const CreateEventOrganizer = () => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
-              {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              )}
             </div>
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
               <textarea
                 name="event_description"
                 value={formData.event_description}
@@ -135,7 +156,9 @@ const CreateEventOrganizer = () => {
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.event_description && (
-                <p className="text-red-500 text-sm mt-1">{errors.event_description}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.event_description}
+                </p>
               )}
             </div>
 
@@ -151,7 +174,9 @@ const CreateEventOrganizer = () => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
-              {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+              {errors.location && (
+                <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+              )}
             </div>
 
             {/* Dates */}
@@ -167,7 +192,11 @@ const CreateEventOrganizer = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-md px-4 py-2"
                 />
-                {errors.start_date && <p className="text-red-500 text-sm mt-1">{errors.start_date}</p>}
+                {errors.start_date && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.start_date}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -181,7 +210,9 @@ const CreateEventOrganizer = () => {
                   onChange={handleChange}
                   className="w-full border border-gray-300 rounded-md px-4 py-2"
                 />
-                {errors.end_date && <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>}
+                {errors.end_date && (
+                  <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>
+                )}
               </div>
             </div>
 
@@ -199,7 +230,9 @@ const CreateEventOrganizer = () => {
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.ticket_price && (
-                <p className="text-red-500 text-sm mt-1">{errors.ticket_price}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.ticket_price}
+                </p>
               )}
             </div>
 
@@ -219,7 +252,9 @@ const CreateEventOrganizer = () => {
 
             {/* Privacy Policy */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Privacy Policy</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Privacy Policy
+              </label>
               <input
                 type="text"
                 name="privacy_policy"
@@ -228,7 +263,9 @@ const CreateEventOrganizer = () => {
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.privacy_policy && (
-                <p className="text-red-500 text-sm mt-1">{errors.privacy_policy}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.privacy_policy}
+                </p>
               )}
             </div>
 
