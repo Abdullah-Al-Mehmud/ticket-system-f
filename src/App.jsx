@@ -77,7 +77,7 @@ function App() {
 
         
         <Route path="/user" element={<UserLayout />}>
-          <Route index element={<UserDashboard />} />
+          <Route path="dashboard" element={<UserDashboard />} />
           <Route path="user-view-ticket/:id" element={<UserViewTicket/>} />
         </Route>
 
