@@ -1,15 +1,8 @@
-import React, { useState } from "react";
-import {
-  Users,
-  Shield,
-  Award,
-  Zap,
-} from "lucide-react";
 import TrendingEvent from "./Home/TrendingEvent";
 import Hero from "./Home/Hero";
 import Trusted from "./Home/Trusted";
-import Statistics from "./Home/Statistics";
 import Newsletter from "./Home/Newsletter";
+import FAQ from "./Home/FAQ";
 
 const Home = () => {
 
@@ -18,7 +11,7 @@ const Home = () => {
       <Hero />
       <TrendingEvent />
       <Trusted />
-      <Statistics />
+      <FAQ />
       <Newsletter />
     </div>
   );
