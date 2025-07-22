@@ -1,0 +1,39 @@
+/* Custom animations for Newsletter component */
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-15px); 
+  }
+}
+
+.animateFloat {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Loading state for button */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading {
+  animation: spin 1s linear infinite;
+}
+
+/* Fade in animation for success state */
+@keyframes fadeIn {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.9); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+.fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
