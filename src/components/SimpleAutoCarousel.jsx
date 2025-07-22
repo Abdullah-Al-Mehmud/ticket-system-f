@@ -1,6 +1,4 @@
-// src/components/TrustedOrgsCarousel.jsx
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "./ui/card";
+
 
 const categories = [
   { name: "Fashion Shows", icon: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&h=250&fit=crop" },
