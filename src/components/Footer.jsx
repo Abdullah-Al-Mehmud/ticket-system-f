@@ -1,4 +1,5 @@
 import React from 'react';
+import { Facebook, Twitter, Instagram } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -15,18 +16,18 @@ const Footer = () => {
               <div className="flex space-x-4">
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors">
-                  Facebook
+                  className="text-gray-400 hover:text-amber-600 transition-all duration-300 hover:scale-110">
+                  <Facebook className="w-5 h-5" />
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors">
-                  Twitter
+                  className="text-gray-400 hover:text-amber-600 transition-all duration-300 hover:scale-110">
+                  <Twitter className="w-5 h-5" />
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors">
-                  Instagram
+                  className="text-gray-400 hover:text-amber-600 transition-all duration-300 hover:scale-110">
+                  <Instagram className="w-5 h-5" />
                 </a>
               </div>
             </div>

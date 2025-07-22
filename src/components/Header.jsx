@@ -9,11 +9,12 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from '../components/ui/dropdown-menu';
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Mock user data for demonstration
     setUser({
@@ -80,10 +81,10 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {!user ? (
               <div className="flex items-center gap-3">
-                <Button variant="ghost" className="text-slate-600 hover:text-amber-600">
+                <Button onClick={() => navigate("/register")} variant="ghost" className="text-slate-600 hover:text-amber-600">
                   Sign Up
                 </Button>
-                <Button className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+                <Button onClick={() => navigate("/login")} className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
                   Login
                 </Button>
               </div>
