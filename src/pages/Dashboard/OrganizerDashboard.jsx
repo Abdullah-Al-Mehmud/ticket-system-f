@@ -1,629 +1,532 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Calendar,
+  Home,
   Users,
-  DollarSign,
-  Star,
-  Plus,
-  Search,
-  Filter,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Eye,
-  MapPin,
-  Clock,
-  Bell,
-  LogOut ,
-  Settings,
+  ShoppingCart,
   BarChart3,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  MessageCircle,
-  Share2,
-  Download,
+  Settings,
+  Bell,
+  Search,
+  TrendingUp,
+  DollarSign,
+  Package,
+  UserCheck,
+  Menu,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  FolderKanban
 } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useNavigate } from "react-router-dom";
+
+import { Link, useNavigate } from "react-router-dom";
 
 const OrganizerDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedFilter, setSelectedFilter] = useState("all");
-  const [showCreateEvent, setShowCreateEvent] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [animatedBars, setAnimatedBars] = useState(false);
 
   // Get data form localStorage
   const user = localStorage.getItem("data")
     ? JSON.parse(localStorage.getItem("data"))
     : {};
-   
 
   const navigate = useNavigate();
 
   // useEffect(() => {
-  //        const token = localStorage.getItem("token");
-  //        if(!token) {
-  //          navigate("/login");
-  //        }
+  //   const token = localStorage.getItem("token");
+  //   if (!token) {
+  //     navigate("/login");
+  //   }
   // }, []);
 
-  const handleLogout = () => { 
+  const handleLogout = () => {
     localStorage.clear("token");
     navigate("/login");
-  }
-
-  // Sample organizer data
-  const organizerStats = [
-    {
-      title: "My Events",
-      value: "24",
-      change: "+3 this month",
-      icon: Calendar,
-      color: "bg-blue-500",
-    },
-    {
-      title: "Total Attendees",
-      value: "3,247",
-      change: "+234 this week",
-      icon: Users,
-      color: "bg-green-500",
-    },
-    {
-      title: "Revenue",
-      value: "$45,230",
-      change: "+$5,200",
-      icon: DollarSign,
-      color: "bg-purple-500",
-    },
-    {
-      title: "Avg Rating",
-      value: "4.8",
-      change: "+0.2 rating",
-      icon: Star,
-      color: "bg-yellow-500",
-    },
-  ];
-
-  const myEvents = [
-    {
-      id: 1,
-      title: "Web Development Workshop",
-      date: "2024-08-15",
-      time: "09:00 AM",
-      location: "Online",
-      attendees: 45,
-      capacity: 50,
-      status: "active",
-      revenue: "$2,250",
-      category: "Workshop",
-      registrations: "open",
-    },
-    {
-      id: 2,
-      title: "Digital Marketing Bootcamp",
-      date: "2024-07-28",
-      time: "10:00 AM",
-      location: "New York, NY",
-      attendees: 120,
-      capacity: 150,
-      status: "active",
-      revenue: "$12,000",
-      category: "Training",
-      registrations: "open",
-    },
-    {
-      id: 3,
-      title: "Startup Pitch Night",
-      date: "2024-08-05",
-      time: "07:00 PM",
-      location: "San Francisco, CA",
-      attendees: 85,
-      capacity: 100,
-      status: "active",
-      revenue: "$4,250",
-      category: "Networking",
-      registrations: "open",
-    },
-    {
-      id: 4,
-      title: "AI Conference 2024",
-      date: "2024-07-15",
-      time: "09:00 AM",
-      location: "Boston, MA",
-      attendees: 200,
-      capacity: 200,
-      status: "completed",
-      revenue: "$15,000",
-      category: "Conference",
-      registrations: "closed",
-    },
-  ];
-
-  const recentActivity = [
-    {
-      type: "registration",
-      message: "New registration for Web Development Workshop",
-      time: "5 min ago",
-      icon: CheckCircle,
-      color: "text-green-500",
-    },
-    {
-      type: "message",
-      message: "New message from attendee",
-      time: "15 min ago",
-      icon: MessageCircle,
-      color: "text-blue-500",
-    },
-    {
-      type: "cancellation",
-      message: "Cancellation for Digital Marketing Bootcamp",
-      time: "1 hour ago",
-      icon: XCircle,
-      color: "text-red-500",
-    },
-    {
-      type: "reminder",
-      message: "Event reminder sent to 45 attendees",
-      time: "2 hours ago",
-      icon: Bell,
-      color: "text-purple-500",
-    },
-  ];
-
-  const upcomingTasks = [
-    {
-      task: "Send welcome email to new registrants",
-      priority: "high",
-      due: "Today",
-    },
-    {
-      task: "Prepare presentation materials",
-      priority: "medium",
-      due: "Tomorrow",
-    },
-    {
-      task: "Follow up with venue coordinator",
-      priority: "low",
-      due: "Aug 10",
-    },
-    { task: "Update event description", priority: "medium", due: "Aug 12" },
-  ];
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800";
-      case "completed":
-        return "bg-gray-100 text-gray-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-blue-100 text-blue-800";
-    }
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "high":
-        return "text-red-600 bg-red-50";
-      case "medium":
-        return "text-yellow-600 bg-yellow-50";
-      case "low":
-        return "text-green-600 bg-green-50";
-      default:
-        return "text-gray-600 bg-gray-50";
-    }
-  };
+ 
 
-  const StatCard = ({ stat }) => {
-    const IconComponent = stat.icon;
-    return (
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-            <p className="text-3xl font-bold text-gray-900 mt-2">
-              {stat.value}
+
+
+  useEffect(() => {
+    setTimeout(() => setAnimatedBars(true), 500);
+  }, []);
+
+  const sidebarItems = [
+    { id: "dashboard", label: "Dashboard", icon: Home },
+    { id: "event management", label : 'Event Management', icon:FolderKanban}
+ 
+  ];
+
+  const StatCard = ({ title, value, icon: Icon, change, changeType }) => (
+    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          {change && (
+            <p
+              className={`text-sm flex items-center mt-1 ${
+                changeType === "positive" ? "text-green-600" : "text-red-600"
+              }`}>
+              <TrendingUp
+                className={`w-4 h-4 mr-1 ${
+                  changeType === "negative" ? "rotate-180" : ""
+                }`}
+              />
+              {changeType === "positive" ? "+" : "-"}
+              {change}% from last month
             </p>
-            <p className="text-sm text-green-600 mt-1">{stat.change}</p>
+          )}
+        </div>
+        <div className="p-3 bg-blue-50 rounded-full">
+          <Icon className="w-6 h-6 text-blue-600" />
+        </div>
+      </div>
+    </div>
+  );
+
+  const CustomBarChart = ({ data, title }) => (
+    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <h3 className="text-lg font-semibold text-gray-800 mb-6">{title}</h3>
+      <div className="flex items-end justify-between h-64 gap-4">
+        {data.map((item, index) => (
+          <div key={index} className="flex flex-col items-center flex-1">
+            <div
+              className="w-full bg-gray-200 rounded-t-lg relative overflow-hidden"
+              style={{ height: "200px" }}>
+              <div
+                className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg transition-all duration-1000 ease-out ${
+                  animatedBars ? "" : "h-0"
+                }`}
+                style={{
+                  height: animatedBars ? `${item.percentage}%` : "0%",
+                  transitionDelay: `${index * 100}ms`,
+                }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white font-medium text-sm">
+                  {item.sales}
+                </span>
+              </div>
+            </div>
+            <span className="text-sm text-gray-600 mt-2">{item.month}</span>
           </div>
-          <div className={`${stat.color} p-3 rounded-full`}>
-            <IconComponent className="h-6 w-6 text-white" />
+        ))}
+      </div>
+    </div>
+  );
+
+  const CustomLineChart = ({ data, title }) => {
+    const maxValue = Math.max(...data.map((d) => d.value));
+
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-800 mb-6">{title}</h3>
+        <div className="relative h-64">
+          <svg className="w-full h-full" viewBox="0 0 400 200">
+            {/* Grid lines */}
+            <defs>
+              <pattern
+                id="grid"
+                width="40"
+                height="20"
+                patternUnits="userSpaceOnUse">
+                <path
+                  d="M 40 0 L 0 0 0 20"
+                  fill="none"
+                  stroke="#e5e7eb"
+                  strokeWidth="1"
+                />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+
+            {/* Line path */}
+            <path
+              d={`M ${data
+                .map(
+                  (point, index) =>
+                    `${index * 60 + 20} ${200 - (point.value / maxValue) * 160}`
+                )
+                .join(" L ")}`}
+              fill="none"
+              stroke="#10b981"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="animate-pulse"
+            />
+
+            {/* Data points */}
+            {data.map((point, index) => (
+              <circle
+                key={index}
+                cx={index * 60 + 20}
+                cy={200 - (point.value / maxValue) * 160}
+                r="4"
+                fill="#10b981"
+                className="hover:r-6 transition-all"
+              />
+            ))}
+          </svg>
+
+          {/* X-axis labels */}
+          <div className="absolute bottom-0 left-0 right-0 flex justify-between px-4">
+            {data.map((point, index) => (
+              <span key={index} className="text-xs text-gray-500">
+                {point.month}
+              </span>
+            ))}
           </div>
         </div>
       </div>
     );
   };
 
-  const EventCard = ({ event }) => (
-    <div className="bg-white rounded-lg shadow-sm border p-6 hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold text-gray-900">{event.title}</h3>
-          <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {event.date}
+  const CustomPieChart = ({ data, title }) => {
+    let cumulativePercentage = 0;
+
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-800 mb-6">{title}</h3>
+        <div className="flex items-center justify-center">
+          <div className="relative">
+            <svg className="w-48 h-48 transform -rotate-90">
+              <circle
+                cx="96"
+                cy="96"
+                r="80"
+                fill="none"
+                stroke="#e5e7eb"
+                strokeWidth="8"
+              />
+              {data.map((segment, index) => {
+                const strokeDasharray = `${
+                  (segment.value / 100) * 502.4
+                } 502.4`;
+                const strokeDashoffset = -cumulativePercentage * 5.024;
+                cumulativePercentage += segment.value;
+
+                return (
+                  <circle
+                    key={index}
+                    cx="96"
+                    cy="96"
+                    r="80"
+                    fill="none"
+                    stroke={segment.color
+                      .replace("bg-", "#")
+                      .replace("-500", "")}
+                    strokeWidth="8"
+                    strokeDasharray={strokeDasharray}
+                    strokeDashoffset={strokeDashoffset}
+                    className="transition-all duration-500 hover:stroke-8"
+                    style={{
+                      stroke:
+                        segment.color === "bg-blue-500"
+                          ? "#3b82f6"
+                          : segment.color === "bg-green-500"
+                          ? "#10b981"
+                          : segment.color === "bg-yellow-500"
+                          ? "#f59e0b"
+                          : "#ef4444",
+                    }}
+                  />
+                );
+              })}
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-gray-900">100%</div>
+                <div className="text-sm text-gray-500">Total</div>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              {event.time}
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin className="h-4 w-4" />
-              {event.location}
-            </div>
-          </div>
-          <div className="flex items-center gap-4 mt-3">
-            <span
-              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                event.status
-              )}`}>
-              {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
-            </span>
-            <span className="text-sm text-gray-600">
-              {event.attendees}/{event.capacity} attendees
-            </span>
-            <span className="text-sm font-medium text-green-600">
-              {event.revenue}
-            </span>
-          </div>
-          <div className="mt-3">
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full"
-                style={{
-                  width: `${(event.attendees / event.capacity) * 100}%`,
-                }}></div>
-            </div>
-            <p className="text-xs text-gray-500 mt-1">
-              {Math.round((event.attendees / event.capacity) * 100)}% capacity
-            </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-full">
-            <BarChart3 className="h-4 w-4 text-gray-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full">
-            <Share2 className="h-4 w-4 text-gray-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full">
-            <Edit className="h-4 w-4 text-gray-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-full">
-            <MoreHorizontal className="h-4 w-4 text-gray-600" />
-          </button>
+
+        <div className="mt-6 grid grid-cols-2 gap-4">
+          {data.map((segment, index) => (
+            <div key={index} className="flex items-center">
+              <div
+                className={`w-4 h-4 rounded-full mr-2 ${segment.color}`}></div>
+              <div>
+                <div className="text-sm font-medium text-gray-900">
+                  {segment.name}
+                </div>
+                <div className="text-xs text-gray-500">{segment.value}%</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
-  const CreateEventModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Create New Event
-        </h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Event Title
-            </label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Date
-            </label>
-            <input
-              type="date"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Location
-            </label>
-            <input
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Category
-            </label>
-            <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-              <option>Workshop</option>
-              <option>Conference</option>
-              <option>Networking</option>
-              <option>Training</option>
-            </select>
-          </div>
-        </div>
-        <div className="flex gap-3 mt-6">
-          <button
-            onClick={() => setShowCreateEvent(false)}
-            className="flex-1 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
-            Cancel
-          </button>
-          <button
-            onClick={() => setShowCreateEvent(false)}
-            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Create Event
-          </button>
-        </div>
+  const ProgressBar = ({ label, value, color = "bg-blue-500" }) => (
+    <div className="mb-4">
+      <div className="flex justify-between mb-1">
+        <span className="text-sm font-medium text-gray-700">{label}</span>
+        <span className="text-sm text-gray-500">{value}%</span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-2">
+        <div
+          className={`h-2 rounded-full ${color} transition-all duration-1000 ease-out`}
+          style={{ width: animatedBars ? `${value}%` : "0%" }}></div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              {/* <button className="p-2 hover:bg-gray-100 rounded-full relative">
-                <Bell className="h-5 w-5 text-gray-600" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
-              </button> */}
-              <div>
-                <p>{user.email}</p>
-              </div>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div
+        className={`${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 transition-all duration-300 ease-in-out fixed lg:static inset-y-0 left-0 z-50 ${
+          sidebarCollapsed ? "w-16" : "w-64"
+        } bg-white shadow-lg`}>
+        <div
+          className={`flex items-center justify-between h-16 px-6 border-b border-gray-200 ${
+            sidebarCollapsed ? "px-4" : "px-6"
+          }`}>
+          {!sidebarCollapsed && (
+            <h1 className="text-xl font-bold text-gray-800">{user.name}</h1>
+          )}
+          <div className="flex items-center space-x-2">
+            {/* Collapse/Expand Button */}
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex p-2 rounded-md hover:bg-gray-100 transition-colors"
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}>
+              {sidebarCollapsed ? (
+                <ChevronRight className="w-5 h-5 text-gray-600" />
+              ) : (
+                <ChevronLeft className="w-5 h-5 text-gray-600" />
+              )}
+            </button>
+
+            {/* Mobile close button */}
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-2 rounded-md hover:bg-gray-100">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <nav className="mt-6">
+          {sidebarItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center ${
+                sidebarCollapsed ? "justify-center px-4" : "px-6"
+              } py-3 text-left hover:bg-gray-50 transition-colors group relative ${
+                activeTab === item.id
+                  ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
+                  : "text-gray-700"
+              }`}
+              title={sidebarCollapsed ? item.label : ""}>
+              <item.icon
+                className={`w-5 h-5 ${
+                  sidebarCollapsed ? "" : "mr-3"
+                } transition-all`}
+              />
+              {!sidebarCollapsed && (
+                <span className="transition-opacity duration-200">
+                  {item.label}
+                </span>
+              )}
+
+              {/* Tooltip for collapsed state */}
+              {sidebarCollapsed && (
+                <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50">
+                  {item.label}
+                </div>
+              )}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center space-x-4">
               <button
-                onClick={() => setShowCreateEvent(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2">
-                <Plus className="h-4 w-4" />
-                Create Event
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-md hover:bg-gray-100">
+                <Menu className="w-5 h-5" />
               </button>
-              <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm font-medium">JD</span>
+
+              {/* Desktop collapse button (alternative position) */}
+              {/* <button
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                className="hidden lg:flex p-2 rounded-md hover:bg-gray-100 transition-colors"
+                title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                {sidebarCollapsed ? (
+                  <ChevronRight className="w-5 h-5 text-gray-600" />
+                ) : (
+                  <ChevronLeft className="w-5 h-5 text-gray-600" />
+                )}
+              </button> */}
+
+              <h2 className="text-xl font-semibold text-gray-800">Dashboard</h2>
+            </div>
+
+            <div className="flex items-center space-x-6">
+              <div className="text-right">
+                <div className="font-medium text-gray-800">{user.name}</div>
+                <div className="text-sm text-gray-500">{user.email}</div>
               </div>
+
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                <LogOut className="h-4 w-4" />
+                className="flex items-center gap-2 px-4 py-2 border border-red-600 text-red-600 rounded-md hover:bg-red-600 hover:text-white transition"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"
+                  />
+                </svg>
                 Logout
               </button>
             </div>
           </div>
-        </div>
-      </div>
+        </header>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
-            {["dashboard", "events", "attendees", "analytics", "messages"].map(
-              (tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === tab
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700"
-                  }`}>
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              )
-            )}
-          </nav>
-        </div>
-      </div>
+        {/* Dashboard Content */}
+        <main className="flex-1 overflow-y-auto p-6">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <StatCard
+              title="Total Revenue"
+              value="$45,231"
+              icon={DollarSign}
+              change="20.1"
+              changeType="positive"
+            />
+            <StatCard
+              title="Total Users"
+              value="2,350"
+              icon={Users}
+              change="4.3"
+              changeType="positive"
+            />
+            <StatCard
+              title="Total Orders"
+              value="1,234"
+              icon={ShoppingCart}
+              change="2.1"
+              changeType="negative"
+            />
+            <StatCard
+              title="Active Users"
+              value="573"
+              icon={UserCheck}
+              change="8.2"
+              changeType="positive"
+            />
+          </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === "dashboard" && (
-          <div className="space-y-8">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {organizerStats.map((stat, index) => (
-                <StatCard key={index} stat={stat} />
-              ))}
+         
+
+         
+
+          {/* Recent Activity */}
+          <div className="bg-white rounded-lg shadow-md border border-gray-200">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-800">
+                Recent Activity
+              </h3>
             </div>
-
-            {/* Dashboard Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Recent Activity */}
-              <div className="lg:col-span-2">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Recent Activity
-                </h2>
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                  <div className="space-y-4">
-                    {recentActivity.map((activity, index) => {
-                      const IconComponent = activity.icon;
-                      return (
-                        <div key={index} className="flex items-start gap-3">
-                          <IconComponent
-                            className={`h-5 w-5 mt-0.5 ${activity.color}`}
-                          />
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900">
-                              {activity.message}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {activity.time}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Upcoming Tasks */}
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Upcoming Tasks
-                </h2>
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                  <div className="space-y-4">
-                    {upcomingTasks.map((task, index) => (
-                      <div key={index} className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-900">
-                            {task.task}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span
-                              className={`px-2 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(
-                                task.priority
-                              )}`}>
-                              {task.priority}
-                            </span>
-                            <span className="text-xs text-gray-500">
-                              {task.due}
-                            </span>
-                          </div>
-                        </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                {[
+                  {
+                    user: "John Doe",
+                    action: "completed an order",
+                    time: "2 minutes ago",
+                    status: "success",
+                  },
+                  {
+                    user: "Jane Smith",
+                    action: "registered as new user",
+                    time: "5 minutes ago",
+                    status: "info",
+                  },
+                  {
+                    user: "Mike Johnson",
+                    action: "updated profile",
+                    time: "10 minutes ago",
+                    status: "warning",
+                  },
+                  {
+                    user: "Sarah Wilson",
+                    action: "left a review",
+                    time: "15 minutes ago",
+                    status: "success",
+                  },
+                ].map((activity, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                    <div className="flex items-center">
+                      <div
+                        className={`w-2 h-2 rounded-full mr-4 ${
+                          activity.status === "success"
+                            ? "bg-green-500"
+                            : activity.status === "info"
+                            ? "bg-blue-500"
+                            : activity.status === "warning"
+                            ? "bg-yellow-500"
+                            : "bg-red-500"
+                        }`}></div>
+                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-sm font-medium">
+                          {activity.user.charAt(0)}
+                        </span>
                       </div>
-                    ))}
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {activity.user}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {activity.action}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-400">
+                      {activity.time}
+                    </span>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Quick Actions
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <Bell className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm font-medium">Send Reminder</span>
-                </button>
-                <button className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <Download className="h-5 w-5 text-green-600" />
-                  <span className="text-sm font-medium">Export Data</span>
-                </button>
-                <button className="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                  <BarChart3 className="h-5 w-5 text-purple-600" />
-                  <span className="text-sm font-medium">View Analytics</span>
-                </button>
+                ))}
               </div>
             </div>
           </div>
-        )}
-
-        {activeTab === "events" && (
-          <div className="space-y-6">
-            {/* Search and Filters */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search my events..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <select
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)}>
-                  <option value="all">All Events</option>
-                  <option value="active">Active</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Events List */}
-            <div className="space-y-4">
-              {myEvents.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "attendees" && (
-          <div className="space-y-6">
-            <Alert>
-              <Users className="h-4 w-4" />
-              <AlertDescription>
-                Manage attendees across all your events. View registration
-                details, send messages, and track attendance.
-              </AlertDescription>
-            </Alert>
-
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Attendee Management
-              </h3>
-              <div className="text-center py-12">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">
-                  Attendee management interface would be implemented here
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "analytics" && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Event Performance
-                </h3>
-                <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <p className="text-gray-500">
-                    Performance chart would go here
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow-sm border p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Revenue Analytics
-                </h3>
-                <div className="h-64 bg-gray-50 rounded flex items-center justify-center">
-                  <p className="text-gray-500">Revenue chart would go here</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "messages" && (
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Messages & Communications
-              </h3>
-              <div className="text-center py-12">
-                <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">
-                  Messaging interface would be implemented here
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        </main>
       </div>
 
-      {/* Create Event Modal */}
-      {showCreateEvent && <CreateEventModal />}
+      {/* Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 };

@@ -58,7 +58,7 @@ function App() {
           <Route path="create-category" element={<CategoryForm />} />
           <Route path="categories/:id" element={<ViewCategoryDetails />} />
           <Route path="categories/edit/:id" element={<CategoryUpdate />} />
-          <Route path="view-events/:id" element={<ViewCategoryDetails /> } />
+          {/* <Route path="view-events/:id" element={<ViewCategoryDetails /> } /> */}
           <Route path="create-event" element={<EventForm />} />
           <Route path="events-details/:id" element={<ViewEventsDetails />} />
           <Route path="event-edit/:id" element={<EventEditForm />} />
