@@ -8,16 +8,15 @@ import { useNavigate } from "react-router-dom";
 const CreateEventOrganizer = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    category_id: "",
-    title: "",
-    event_description: "",
-    location: "",
-    start_date: "",
-    end_date: "",
-    ticket_price: "",
-    status: "draft",
-    privacy_policy: "",
-    image_url: "",
+    category_id: null,
+    title: null,
+    event_description: null,
+    location: null,
+    start_date: null,
+    end_date: null,
+    ticket_price: null,
+    privacy_policy: null,
+    image_url: null,
   });
 
   const [errors, setErrors] = useState({});
@@ -45,7 +44,7 @@ const CreateEventOrganizer = () => {
     if (!formData.location.trim()) newErrors.location = "Location is required";
     if (!formData.start_date) newErrors.start_date = "Start date is required";
     if (!formData.end_date) newErrors.end_date = "End date is required";
-    if (formData.ticket_price === "")
+    if (formData.ticket_price === "" || formData.ticket_price < 0)
       newErrors.ticket_price = "Ticket price is required";
     if (!formData.privacy_policy)
       newErrors.privacy_policy = "Accept the privacy policy";
@@ -90,12 +89,12 @@ const CreateEventOrganizer = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 flex items-center justify-center">
+    <div className="min-h-screen bg-slate-50 p-4 flex items-center justify-center">
       <div className="w-full max-w-2xl">
         <div className="bg-white rounded-xl shadow-md border border-slate-200">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6 rounded-t-xl">
+          <div className="bg-amber-600 px-8 py-6 rounded-t-xl">
             <h1 className="text-2xl font-bold text-white">Create New Event</h1>
-            <p className="text-sm text-blue-100">
+            <p className="text-sm text-amber-100">
               Fill out the details for your upcoming event
             </p>
           </div>
@@ -276,7 +275,7 @@ const CreateEventOrganizer = () => {
               className={`w-full ${
                 isLoading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  : "bg-amber-600 hover:bg-amber-700"
               } text-white py-3 px-6 rounded-lg font-medium transition-transform duration-150 hover:scale-105`}
             >
               {isLoading ? "Creating..." : "Create Event"}
