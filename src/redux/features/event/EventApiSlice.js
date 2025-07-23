@@ -39,8 +39,8 @@ export const eventApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: (result, error, id) => [{ type: "Event", id }],
     }),
     getOrganizerEvents: builder.query({
-      query: () => `/events`,
-      providesTags: ["Event"],
+      query: () => `/organizer-event`,
+      providesTags: ["OrganizerEvent"],
     }),
   }),
 });
