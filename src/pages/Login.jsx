@@ -75,22 +75,24 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg border border-gray-200 p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <User className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
             Welcome Back
           </h1>
-          <p className="text-gray-600">Sign in to your account to continue</p>
+          <p className="text-gray-500 text-sm">Sign in to your account to continue</p>
         </div>
 
         {/* API error */}
         {apiError && (
-          <p className="mb-4 text-sm text-red-600 text-center">{apiError}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-sm text-red-600 text-center">{apiError}</p>
+          </div>
         )}
 
         {/* Form */}
@@ -107,7 +109,7 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full pl-10 pr-4 py-3 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter your email"
@@ -130,7 +132,7 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full pl-10 pr-12 py-3 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter your password"
@@ -157,48 +159,53 @@ const Login = () => {
             <label className="flex items-center">
               <input
                 type="checkbox"
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
               />
               <span className="ml-2 text-sm text-gray-600">Remember me</span>
             </label>
             <button
               type="button"
-              className="text-sm text-blue-600 hover:text-blue-500"
+              className="text-sm text-amber-600 hover:text-amber-700 transition-colors"
             >
               Forgot password?
             </button>
           </div>
 
           {/* Demo Login Buttons */}
-          <div className="flex justify-between gap-2 mt-4">
-            <button
-              type="button"
-              onClick={() => setFormData(demoCredentials.admin)}
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md"
-            >
-              Demo Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => setFormData(demoCredentials.organizer)}
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md"
-            >
-              Demo Organizer
-            </button>
-            <button
-              type="button"
-              onClick={() => setFormData(demoCredentials.user)}
-              className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md"
-            >
-              Demo User
-            </button>
+          <div className="space-y-3">
+            <div className="text-center">
+              <span className="text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-full">Quick Demo Access</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => setFormData(demoCredentials.admin)}
+                className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
+              >
+                Demo Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData(demoCredentials.organizer)}
+                className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
+              >
+                Demo Organizer
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData(demoCredentials.user)}
+                className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
+              >
+                Demo User
+              </button>
+            </div>
           </div>
 
           {/* Submit */}
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 flex items-center justify-center space-x-2"
+            className="w-full bg-amber-600 text-white py-3 px-4 rounded-md font-medium hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
           >
             {isLoading ? (
               <>

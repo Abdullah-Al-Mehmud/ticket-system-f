@@ -106,16 +106,10 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {!user ? (
               <div className="flex items-center gap-3">
-                <Button
-                  onClick={() => navigate("/register")}
-                  variant="ghost"
-                  className="text-slate-600 hover:text-amber-600"
-                >
-                  Sign Up
-                </Button>
+               
                 <Button
                   onClick={() => navigate("/login")}
-                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white  transition-all duration-200 rounded cursor-pointer"
                 >
                   Login
                 </Button>
