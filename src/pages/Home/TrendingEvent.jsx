@@ -142,20 +142,6 @@ const TrendingEvent = () => {
                           <span className="truncate">{event.location}</span>
                         </div>
                       </div>
-
-                      <div className="flex justify-between items-center pt-4 border-t border-slate-100">
-                        <div>
-                          <span className="text-2xl font-bold text-slate-900">
-                            ৳{event.ticket_price}
-                          </span>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          className="bg-amber-600 hover:bg-amber-700 text-white shadow-sm"
-                        >
-                          Book Now
-                        </Button>
-                      </div>
                     </CardContent>
                   </Card>
                 </Link>
