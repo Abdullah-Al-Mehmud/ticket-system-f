@@ -83,13 +83,28 @@ const TrendingEvent = () => {
                   key={event.id}
                   className="group block"
                 >
-                  <Card className="overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1 bg-white p-0">
+                  <Card className="overflow-hidden border-0 shadow-sm  transition-all duration-300  bg-white p-0">
                     <div className="relative">
-                      <img
-                        src={event.image_url || "https://via.placeholder.com/400x200?text=No+Image"}
-                        alt={event.title}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
+                      {event.image_url ? (
+                        <>
+                          <img
+                            src={event.image_url}
+                            alt={event.title}
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                              e.currentTarget.parentNode.querySelector('.fallback-img').style.display = 'flex';
+                            }}
+                          />
+                          <div className="fallback-img hidden absolute inset-0 bg-gray-200 items-end justify-center pb-4 shadow-md">
+                            <span className="text-xl font-bold text-slate-900 ">TapKori</span>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500 bg-gray-200 flex items-center justify-center">
+                          <span className="text-6xl font-bold text-slate-400">TapKori</span>
+                        </div>
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <Badge 
                         variant="secondary" 
