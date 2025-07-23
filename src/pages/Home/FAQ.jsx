@@ -108,7 +108,7 @@ export default function FAQ() {
                 return (
                   <div 
                     key={faq.id} 
-                    className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300"
+                    className="bg-white rounded-md shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-all duration-300"
                   >
                     <button
                       onClick={() => toggleItem(faq.id)}

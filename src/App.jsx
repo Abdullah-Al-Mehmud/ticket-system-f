@@ -7,6 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import Event from "./pages/Event";
 import Layout from "./components/Layout";
 import EventDetails from "./pages/EventDetails";
+import Contact from "./pages/Contact";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
 import NotFound from "./pages/Notfound";
 import UserList from "./pages/User/UserList";
@@ -44,6 +45,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="event" element={<Event />} />
         <Route path="eventdetails/:id" element={<EventDetails />} />
+        <Route path="contact" element={<Contact />} />
 
         {/* 🔐 Only for non-logged-in users */}
         <Route element={<PublicRoute />}>

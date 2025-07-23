@@ -86,7 +86,7 @@ const Header = () => {
               { name: "Categories", to: "#" },
               { name: "Venues", to: "#" },
               { name: "About", to: "#" },
-              { name: "Contact", to: "#" },
+              { name: "Contact", to: "/contact" },
             ].map((item) => (
               <Link
                 key={item.name}
