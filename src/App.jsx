@@ -44,7 +44,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="event" element={<Event />} />
-        <Route path="eventdetails/:id" element={<EventDetails />} />
+        <Route path="event-details/:id" element={<EventDetails />} />
         <Route path="contact" element={<Contact />} />
 
         {/* 🔐 Only for non-logged-in users */}

@@ -3,7 +3,6 @@ import { Calendar, MapPin, Clock, ChevronRight, Star, Loader2, CalendarDays } fr
 import { Link } from "react-router-dom";
 import { useGetEventsQuery } from "../../redux/features/event/EventApiSlice";
 import { Card, CardContent } from '../../components/ui/card';
-import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Skeleton } from '../../components/ui/skeleton';
 import { Alert, AlertDescription } from '../../components/ui/alert';
@@ -79,11 +78,11 @@ const TrendingEvent = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {upcomingEvents.slice(0, 6).map((event) => (
                 <Link
-                  to={`/eventdetails/${event.id}`}
+                  to={`/event-details/${event.id}`}
                   key={event.id}
                   className="group block"
                 >
-                  <Card className="overflow-hidden border-0 shadow-sm  transition-all duration-300  bg-white p-0">
+                  <Card className="overflow-hidden border-0 shadow-sm rounded-md  transition-all duration-300  bg-white p-0 gap-3">
                     <div className="relative">
                       {event.image_url ? (
                         <>
@@ -126,7 +125,7 @@ const TrendingEvent = () => {
                       </Badge>
                     </div>
                     
-                    <CardContent className="p-5">
+                    <CardContent className="px-5">
                       <h3 className="text-lg font-semibold text-slate-900 mb-3 line-clamp-2 group-hover:text-amber-700 transition-colors">
                         {event.title}
                       </h3>
