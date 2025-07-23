@@ -9,12 +9,29 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "../components/ui/dropdown-menu";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Navigation items
+  const navigationItems = [
+    { name: "Home", to: "/" },
+    { name: "Events", to: "/event" },
+    { name: "About", to: "/about" },
+    { name: "Contact", to: "/contact" },
+  ];
+
+  // Function to determine if a nav item is active
+  const isActiveRoute = (path) => {
+    if (path === "/" && location.pathname === "/") {
+      return true;
+    }
+    return path !== "/" && location.pathname.startsWith(path);
+  };
 
   useEffect(() => {
     const storedUser = localStorage.getItem("data");
@@ -81,18 +98,12 @@ const Header = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-1">
-            {[
-              { name: "Events", to: "/event", active: true },
-              { name: "Categories", to: "#" },
-              { name: "Venues", to: "#" },
-              { name: "About", to: "#" },
-              { name: "Contact", to: "/contact" },
-            ].map((item) => (
+            {navigationItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.to}
                 className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  item.active
+                  isActiveRoute(item.to)
                     ? "bg-amber-50 text-amber-700 border border-amber-200"
                     : "text-slate-600 hover:text-amber-600 hover:bg-amber-50"
                 }`}
@@ -214,21 +225,16 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-lg border-t border-amber-100">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {[
-              { name: "Events", to: "/event", active: true },
-              { name: "Categories", to: "#" },
-              { name: "Venues", to: "#" },
-              { name: "About", to: "#" },
-              { name: "Contact", to: "#" },
-            ].map((item) => (
+            {navigationItems.map((item) => (
               <Link
                 key={item.name}
-                to={item.to} // ✅ Corrected from item.href to item.to
+                to={item.to}
                 className={`block px-3 py-2 rounded-lg font-medium transition-colors ${
-                  item.active
+                  isActiveRoute(item.to)
                     ? "bg-amber-50 text-amber-700 border border-amber-200"
                     : "text-slate-600 hover:text-amber-600 hover:bg-amber-50"
                 }`}
+                onClick={() => setIsMenuOpen(false)} // Close mobile menu when item is clicked
               >
                 {item.name}
               </Link>
@@ -238,12 +244,22 @@ const Header = () => {
               {!user ? (
                 <div className="space-y-2">
                   <Button
+                    onClick={() => {
+                      navigate("/register");
+                      setIsMenuOpen(false);
+                    }}
                     variant="outline"
                     className="w-full border-amber-200 text-amber-700 hover:bg-amber-50"
                   >
                     Sign Up
                   </Button>
-                  <Button className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
+                  <Button 
+                    onClick={() => {
+                      navigate("/login");
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white"
+                  >
                     Login
                   </Button>
                 </div>
