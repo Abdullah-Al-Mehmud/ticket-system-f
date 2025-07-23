@@ -17,7 +17,7 @@ import {
 
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 
-const OrganizerLayout = ({ children }) => {
+const OrganizerLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const navigate = useNavigate();

@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import {
   Eye,
-  Edit,
-  Search,
-  Filter,
-  Download,
-  MoreVertical,
   Plus,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -101,70 +96,6 @@ const EventManagement = () => {
           </Link>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              {/* Search Box */}
-              <div className="relative flex-1 max-w-md">
-                <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-                <input
-                  type="text"
-                  placeholder="Search events..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              {/* Dropdowns */}
-              <div className="flex gap-2">
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="all">All Status</option>
-                  <option value="active">Active</option>
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
-                  <option value="upcoming">Upcoming</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-
-                <select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg"
-                >
-                  <option value="all">All Categories</option>
-                  <option value="Sports">Sports</option>
-                  <option value="Music">Music</option>
-                  <option value="Business">Business</option>
-                  <option value="Education">Education</option>
-                  <option value="Tech">Tech</option>
-                </select>
-
-                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                  <Filter size={16} /> Filter
-                </button>
-              </div>
-            </div>
-
-            {/* Export Buttons */}
-            <div className="flex gap-2">
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                <Download size={16} /> Export
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                <MoreVertical size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* Table Content */}
         {isLoading ? (
@@ -239,13 +170,6 @@ const EventManagement = () => {
                         >
                           <Eye size={16} />
                         </Link>
-                        {/* <Link
-                          to={`/admin/event-edit/${event.id}`}
-                          className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                          title="Edit"
-                        >
-                          <Edit size={16} />
-                        </Link> */}
                       </div>
                     </td>
                   </tr>
