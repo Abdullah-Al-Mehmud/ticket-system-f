@@ -36,7 +36,6 @@ import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard/OrganizerDa
 import CreateEventOrganizer from "./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer";
 import EventDetailsDetails from "./pages/Dashboard/OrganizerDashboard/EventDetailsDetails";
 
-
 function App() {
   return (
     <Routes>
@@ -47,15 +46,15 @@ function App() {
         <Route path="event-details/:id" element={<EventDetails />} />
         <Route path="contact" element={<Contact />} />
 
-        {/* 🔐 Only for non-logged-in users */}
+
         <Route element={<PublicRoute />}>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
         </Route>
       </Route>
 
-      {/* 🔒 Protected routes */}
-      <Route element={<PrivateRoute />}>
+
+      <Route element={<PrivateRoute allowRole="admin" />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -76,20 +75,20 @@ function App() {
           <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
           <Route path="tickets/:id" element={<ViewTicketsDetails />} />
         </Route>
-
-        
+      </Route>
+      <Route element={<PrivateRoute allowRole="user" />}>
         <Route path="/user" element={<UserLayout />}>
           <Route path="dashboard" element={<UserDashboard />} />
-          <Route path="user-view-ticket/:id" element={<UserViewTicket/>} />
+          <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
         </Route>
-
+      </Route>
+      <Route element={<PrivateRoute allowRole="organizer" />}>
         <Route path="/organizer" element={<OrganizerLayout />}>
           <Route path="dashboard" element={<OrganizerDashboard />} />
           <Route path="event-management" element={<EventManagement />} />
           <Route path="create-event" element={<CreateEventOrganizer />} />
           <Route path="events-details/:id" element={<EventDetailsDetails />} />
         </Route>
-
       </Route>
 
       <Route path="*" element={<NotFound />} />
