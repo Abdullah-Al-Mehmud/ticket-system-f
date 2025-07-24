@@ -11,7 +11,8 @@ import {
   Package,
   Calendar,
   Ticket,
-  Forward
+  Forward,
+  ChartBarStacked
 } from "lucide-react";
 
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
@@ -41,6 +42,7 @@ const AdminLayout = ({ children }) => {
       path: "/admin/categories",
     },
     { id: "events", label: "Events", icon: Calendar, path: "/admin/events" },
+    { id: "ticket categories", label: "Ticket Categories", icon: ChartBarStacked, path: "/admin/ticket-categories" },
     { id: "tickets", label: "Tickets", icon: Ticket, path: "/admin/tickets" },
     { id: "back", label: "Back", icon: Forward, path: "/" },
     // add more
