@@ -12,12 +12,12 @@ import {
   Calendar,
   Ticket,
   Forward,
-  FolderKanban
+  FolderKanban,
 } from "lucide-react";
 
 import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 
-const OrganizerLayout = ({ children }) => {
+const OrganizerLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -34,8 +34,13 @@ const OrganizerLayout = ({ children }) => {
       icon: Home,
       path: "/organizer/dashboard",
     },
-   
-    { id: "event management", label: "Event Management", icon: FolderKanban, path: "/organizer/event-management" },
+
+    {
+      id: "event management",
+      label: "Event Management",
+      icon: FolderKanban,
+      path: "/organizer/event-management",
+    },
     { id: "back", label: "Back", icon: Forward, path: "/" },
     // add more
   ];
@@ -55,11 +60,11 @@ const OrganizerLayout = ({ children }) => {
       <div
         className={`${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 transition-all duration-300 ease-in-out fixed lg:static inset-y-0 left-0 z-50 ${
+        } lg:translate-x-0 transition-all duration-300 ease-in-out fixed  inset-y-0 left-0 z-50 ${
           sidebarCollapsed ? "w-16" : "w-64"
-        } bg-white shadow-lg`}
+        } bg-white border-r`}
       >
-        <div className={`flex items-center justify-between h-16 border-b px-4`}>
+        <div className={`flex items-center justify-between h-19 border-b px-4`}>
           {!sidebarCollapsed && (
             <h1 className="text-xl font-bold text-gray-800">{user.name}</h1>
           )}
@@ -126,9 +131,7 @@ const OrganizerLayout = ({ children }) => {
               >
                 <Menu className="w-5 h-5" />
               </button>
-              <h2 className="text-xl font-semibold text-gray-800 capitalize">
-                {activeTab}
-              </h2>
+             
             </div>
             <div className="flex items-center space-x-6">
               <div className="text-right">

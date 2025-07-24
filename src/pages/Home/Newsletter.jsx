@@ -44,7 +44,7 @@ export default function Newsletter() {
     <section className="py-16 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Main Content */}
-        <div className="bg-white rounded-xl p-8 md:p-12 shadow-lg">
+        <div className="bg-white rounded-xl p-8 md:p-12 shadow">
           {/* Icon */}
           <div className="inline-flex items-center justify-center w-12 h-12 bg-amber-600 rounded-lg mb-6">
             <Mail className="w-6 h-6 text-white" />
