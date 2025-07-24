@@ -28,7 +28,6 @@ import TicketsForm from "./pages/Tickets/TicketsForm";
 import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
 import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
 import PublicRoute from "./components/PublicRoute";
-import UserLayout from "./Layout/UserLayout";
 import UserViewTicket from "./pages/Dashboard/UserDashboard/UserViewTicket";
 import OrganizerLayout from "./Layout/OrganizerLayout";
 import EventManagement from "./pages/Dashboard/OrganizerDashboard/EventManagement";
@@ -77,7 +76,7 @@ function App() {
         </Route>
       </Route>
       <Route element={<PrivateRoute allowRole="user" />}>
-        <Route path="/user" element={<UserLayout />}>
+        <Route path="/user" element={<Layout />}>
           <Route path="dashboard" element={<UserDashboard />} />
           <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
         </Route>
