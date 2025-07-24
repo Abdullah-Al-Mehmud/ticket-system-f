@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Calendar,
@@ -12,18 +12,23 @@ import {
 } from "lucide-react";
 
 import { Alert, AlertDescription } from "../../components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { useGetEventByIdQuery } from "../../redux/features/event/EventApiSlice";
 
+import EventModalForm from "./EventModalForm";
 
 const ViewEventsDetails = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   const { id } = useParams();
-  const { data, isLoading, isError } = useGetEventByIdQuery(id);
+  const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const event = data?.data;
-
- 
 
   const handleLike = () => setIsLiked(!isLiked);
 
@@ -69,11 +74,20 @@ const ViewEventsDetails = () => {
       ? descriptionText.slice(0, maxLength) + "..."
       : descriptionText;
 
+  // const availableQuantity = event.total_quantity - event.sold_quantity;
+  // const soldPercentage = Math.round(
+  //   (event.sold_quantity / event.total_quantity) * 100
+  // );
+
+  // Handle Modal
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-teal-50 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Hero */}
+        <div className="flex justify-end">
+          <EventModalForm tcid={id} onSuccess={refetch} />
+        </div>
         <div className="bg-white rounded-2xl shadow overflow-hidden mb-6">
           <div className="relative h-80">
             <img
@@ -86,14 +100,12 @@ const ViewEventsDetails = () => {
                 onClick={handleLike}
                 className={`p-3 rounded-full backdrop-blur-sm ${
                   isLiked ? "bg-red-500" : "bg-white/20"
-                } text-white`}
-              >
+                } text-white`}>
                 <Heart className="w-5 h-5" />
               </button>
               <button
                 onClick={handleShare}
-                className="p-3 rounded-full bg-white/20 text-white"
-              >
+                className="p-3 rounded-full bg-white/20 text-white">
                 <Share2 className="w-5 h-5" />
               </button>
             </div>
@@ -155,11 +167,61 @@ const ViewEventsDetails = () => {
               {descriptionText.length > maxLength && (
                 <button
                   onClick={toggleDescription}
-                  className="text-amber-600 hover:underline text-sm mt-1"
-                >
+                  className="text-amber-600 hover:underline text-sm mt-1">
                   {showFullDescription ? "See less" : "See more"}
                 </button>
               )}
+            </div>
+
+            {/* Card */}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {event.ticket_categories?.map((ticket) => {
+                const soldPercentage = Math.round(
+                  (ticket.sold_quantity / ticket.total_quantity) * 100
+                );
+                const availableQuantity =
+                  ticket.total_quantity - ticket.sold_quantity;
+
+                return (
+                  <Card
+                    key={ticket.id}
+                    className="shadow-lg rounded-xl border border-gray-200 overflow-hidden">
+                    <CardHeader className="pb-2 pt-4 px-4">
+                      <div className="flex justify-between items-start">
+                        <CardTitle className="text-lg font-semibold text-gray-800">
+                          {ticket.name}
+                        </CardTitle>
+
+                        <div className="bg-gray-100 text-gray-700 text-sm px-3 py-1 gap-1 rounded-md flex flex-row items-end">
+                          <span className="font-medium">৳{ticket.price}</span>
+                          <span className="text-sm text-gray-400">/price</span>
+                        </div>
+                      </div>
+                    </CardHeader>
+
+                    <CardContent className="px-4 pb-4 space-y-3">
+                      <div className="flex justify-between text-sm text-gray-600">
+                        <span>Sold</span>
+                        <span className="font-medium">
+                          {ticket.sold_quantity}/{ticket.total_quantity}
+                        </span>
+                      </div>
+
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-green-500 h-2 rounded-full transition-all duration-300 ease-in-out"
+                          style={{ width: `${soldPercentage}%` }}></div>
+                      </div>
+
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>{soldPercentage}% sold</span>
+                        <span>{availableQuantity} remaining</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
 
