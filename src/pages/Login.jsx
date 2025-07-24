@@ -48,13 +48,7 @@ const Login = () => {
       localStorage.setItem("token", JSON.stringify(response.token));
       localStorage.setItem("data", JSON.stringify(response.data));
 
-      if (response.data.role === "user") {
-        navigate("/user/dashboard");
-      } else if (response.data.role === "organizer") {
-        navigate("/organizer/dashboard");
-      } else {
-        navigate("/admin/dashboard");
-      }
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
       if (error?.data?.message) {
@@ -85,7 +79,9 @@ const Login = () => {
           <h1 className="text-2xl font-semibold text-gray-900 mb-2">
             Welcome Back
           </h1>
-          <p className="text-gray-500 text-sm">Sign in to your account to continue</p>
+          <p className="text-gray-500 text-sm">
+            Sign in to your account to continue
+          </p>
         </div>
 
         {/* API error */}
@@ -174,7 +170,9 @@ const Login = () => {
           {/* Demo Login Buttons */}
           <div className="space-y-3">
             <div className="text-center">
-              <span className="text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-full">Quick Demo Access</span>
+              <span className="text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
+                Quick Demo Access
+              </span>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <button

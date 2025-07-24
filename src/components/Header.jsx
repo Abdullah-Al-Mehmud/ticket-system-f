@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Menu, X, LogOut, User, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -11,13 +11,11 @@ import {
 } from "../components/ui/dropdown-menu";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ user }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Navigation items
   const navigationItems = [
     { name: "Home", to: "/" },
     { name: "Events", to: "/event" },
@@ -25,59 +23,30 @@ const Header = () => {
     { name: "Contact", to: "/contact" },
   ];
 
-  // Function to determine if a nav item is active
   const isActiveRoute = (path) => {
-    if (path === "/" && location.pathname === "/") {
-      return true;
-    }
+    if (path === "/" && location.pathname === "/") return true;
     return path !== "/" && location.pathname.startsWith(path);
   };
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("data");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser({
-          name: parsedUser.name,
-          email: parsedUser.email,
-          role: parsedUser.role,
-        });
-      } catch (e) {
-        console.error("Invalid user data in localStorage:", e);
-        setUser(null);
-      }
-    } else {
-      setUser(null);
-    }
-  }, []);
-
   const handleProfileClick = () => {
-    if (!user?.role) return; // or navigate somewhere else if role missing
-
-    if (user.role === "admin") {
-      navigate("/admin/dashboard");
-    } else if (user.role === "organizer") {
-      navigate("/organizer/dashboard");
-    } else {
-      navigate("/user/dashboard");
-    }
+    if (!user?.role) return;
+    if (user.role === "admin") navigate("/admin/dashboard");
+    else if (user.role === "organizer") navigate("/organizer/dashboard");
+    else navigate("/user/dashboard");
   };
 
   const handleLogout = () => {
     localStorage.clear();
-    setUser(null);
     navigate("/login");
   };
 
-  const getInitials = (name) => {
-    return name
-      .split(" ")
+  const getInitials = (name) =>
+    name
+      ?.split(" ")
       .map((word) => word[0])
       .join("")
       .toUpperCase()
       .substring(0, 2);
-  };
 
   return (
     <header className="bg-white/95 backdrop-blur-lg shadow-sm border-b border-amber-100 sticky top-0 z-50">
@@ -117,7 +86,6 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {!user ? (
               <div className="flex items-center gap-3">
-               
                 <Button
                   onClick={() => navigate("/login")}
                   className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white  transition-all duration-200 rounded cursor-pointer"
@@ -253,7 +221,7 @@ const Header = () => {
                   >
                     Sign Up
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => {
                       navigate("/login");
                       setIsMenuOpen(false);
