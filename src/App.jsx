@@ -28,14 +28,12 @@ import TicketsForm from "./pages/Tickets/TicketsForm";
 import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
 import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
 import PublicRoute from "./components/PublicRoute";
-import UserLayout from "./Layout/UserLayout";
 import UserViewTicket from "./pages/Dashboard/UserDashboard/UserViewTicket";
 import OrganizerLayout from "./Layout/OrganizerLayout";
 import EventManagement from "./pages/Dashboard/OrganizerDashboard/EventManagement";
 import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard/OrganizerDashboard";
 import CreateEventOrganizer from "./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer";
 import EventDetailsDetails from "./pages/Dashboard/OrganizerDashboard/EventDetailsDetails";
-
 
 function App() {
   return (
@@ -47,15 +45,15 @@ function App() {
         <Route path="event-details/:id" element={<EventDetails />} />
         <Route path="contact" element={<Contact />} />
 
-        {/* 🔐 Only for non-logged-in users */}
+
         <Route element={<PublicRoute />}>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
         </Route>
       </Route>
 
-      {/* 🔒 Protected routes */}
-      <Route element={<PrivateRoute />}>
+
+      <Route element={<PrivateRoute allowRole="admin" />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -76,20 +74,20 @@ function App() {
           <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
           <Route path="tickets/:id" element={<ViewTicketsDetails />} />
         </Route>
-
-        
-        <Route path="/user" element={<UserLayout />}>
+      </Route>
+      <Route element={<PrivateRoute allowRole="user" />}>
+        <Route path="/user" element={<Layout />}>
           <Route path="dashboard" element={<UserDashboard />} />
-          <Route path="user-view-ticket/:id" element={<UserViewTicket/>} />
+          <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
         </Route>
-
-        <Route path="/organizer" element={<OrganizerLayout />}>
+      </Route>
+      <Route element={<PrivateRoute allowRole="organizer" />}>
+        <Route path="/organizer" element={<Layout />}>
           <Route path="dashboard" element={<OrganizerDashboard />} />
           <Route path="event-management" element={<EventManagement />} />
           <Route path="create-event" element={<CreateEventOrganizer />} />
           <Route path="events-details/:id" element={<EventDetailsDetails />} />
         </Route>
-
       </Route>
 
       <Route path="*" element={<NotFound />} />
