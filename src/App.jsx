@@ -82,7 +82,7 @@ function App() {
         </Route>
       </Route>
       <Route element={<PrivateRoute allowRole="organizer" />}>
-        <Route path="/organizer" element={<OrganizerLayout />}>
+        <Route path="/organizer" element={<Layout />}>
           <Route path="dashboard" element={<OrganizerDashboard />} />
           <Route path="event-management" element={<EventManagement />} />
           <Route path="create-event" element={<CreateEventOrganizer />} />
