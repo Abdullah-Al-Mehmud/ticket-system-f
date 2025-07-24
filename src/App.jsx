@@ -34,6 +34,7 @@ import EventManagement from "./pages/Dashboard/OrganizerDashboard/EventManagemen
 import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard/OrganizerDashboard";
 import CreateEventOrganizer from "./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer";
 import EventDetailsDetails from "./pages/Dashboard/OrganizerDashboard/EventDetailsDetails";
+import TicketCategories from "./pages/TicketCategories/TicketCategories";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
           <Route path="tickets/create-ticket" element={<TicketsForm />} />
           <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
           <Route path="tickets/:id" element={<ViewTicketsDetails />} />
+          <Route path="ticket-categories" element={<TicketCategories />} />
         </Route>
       </Route>
       <Route element={<PrivateRoute allowRole="user" />}>

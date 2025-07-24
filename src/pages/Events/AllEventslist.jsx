@@ -274,9 +274,6 @@ const AllEventslist = () => {
                         {getCategoryBadge(event.category.name)}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        {event.organizer.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
                         {getStatusBadge(event.status)}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">

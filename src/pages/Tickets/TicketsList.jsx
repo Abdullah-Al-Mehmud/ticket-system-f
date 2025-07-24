@@ -222,9 +222,7 @@ export const TicketsList = () => {
                         <td className="px-6 py-4 text-sm text-gray-900">
                           {ticket.user.name}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          {ticket.event.title}
-                        </td>
+                       
                         <td className="px-6 py-4 text-sm text-gray-900">
                           {ticket.ticket_quantity}
                         </td>
