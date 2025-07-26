@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetUserTicketsQuery } from "../../../redux/features/tickets/ticketsApiSlice";
+// import UserModelForm from "./UserModelTicketForm";
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -44,10 +45,9 @@ const UserDashboard = () => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-
-
       {/* Dashboard Table */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* <UserModelForm /> */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <div className="max-h-[500px] overflow-y-auto">
@@ -55,11 +55,11 @@ const UserDashboard = () => {
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Event
+                      Title
                     </th>
-                    <th className="px-6 py-3">Ticket</th>
-                    <th className="px-6 py-3">Order Total</th>
-                    <th className="px-6 py-3">Booked On</th>
+                    <th className="px-6 py-3">Ticket Per Price</th>
+                    <th className="px-6 py-3">Ticket Quantity</th>
+                    <th className="px-6 py-3">Total Cost</th>
                     <th className="px-6 py-3">Status</th>
                     <th className="px-6 py-3">Actions</th>
                   </tr>
@@ -71,8 +71,7 @@ const UserDashboard = () => {
                     <tr>
                       <td
                         colSpan="9"
-                        className="text-center py-6 text-gray-500"
-                      >
+                        className="text-center py-6 text-gray-500">
                         Loading...
                       </td>
                     </tr>
@@ -92,8 +91,7 @@ const UserDashboard = () => {
                     <tr>
                       <td
                         colSpan="9"
-                        className="text-center py-6 text-gray-500"
-                      >
+                        className="text-center py-6 text-gray-500">
                         No bookings found.
                       </td>
                     </tr>
@@ -106,9 +104,10 @@ const UserDashboard = () => {
                       <tr key={booking.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {booking.event?.title || "Untitled Event"}
+                            {booking?.ticket_category?.event?.title ||
+                              "Untitled Event"}
                           </div>
-                          <div className="flex flex-col text-sm text-gray-500 gap-1">
+                          {/* <div className="flex flex-col text-sm text-gray-500 gap-1">
                             <div className="flex items-center gap-1">
                               <ChartBarStacked className="w-4 h-4" />
                               <span>{booking.event?.category_name}</span>
@@ -117,23 +116,23 @@ const UserDashboard = () => {
                               <MapPinCheck className="w-4 h-4" />
                               <span>{booking.event?.location}</span>
                             </div>
-                          </div>
+                          </div> */}
 
                           <div className="text-sm text-green-600 font-medium">
                             Booking ID: {booking.id}
                           </div>
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          x {booking.ticket_quantity}
+                          {booking?.ticket_category?.price}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          x {booking.quantity}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           {(
-                            booking.ticket_quantity * booking.price_per_ticket
+                            booking?.quantity * booking?.ticket_category?.price
                           ).toFixed(2)}{" "}
-                          USD
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          {new Date(booking.purchased_at).toLocaleDateString()}
+                          taka
                         </td>
 
                         <td className="px-6 py-4 text-sm text-gray-900">
@@ -146,14 +145,12 @@ const UserDashboard = () => {
                               to={`/user/user-view-ticket/${booking.id}`}
                               onClick={() => setSelectedBooking(booking)}
                               className="text-blue-600 hover:text-blue-800 p-1"
-                              title="View Details"
-                            >
+                              title="View Details">
                               <Eye className="w-4 h-4" />
                             </Link>
                             <button
                               className="text-green-600 hover:text-green-800 p-1"
-                              title="Download"
-                            >
+                              title="Download">
                               <Download className="w-4 h-4" />
                             </button>
                             {/* <button

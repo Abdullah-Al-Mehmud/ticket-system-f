@@ -53,7 +53,7 @@ function App() {
         </Route>
       </Route>
 
-
+     {/* For Admin Layout */}
       <Route element={<PrivateRoute allowRole="admin" />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -77,6 +77,7 @@ function App() {
           <Route path="ticket-categories" element={<TicketCategories />} />
         </Route>
       </Route>
+      {/* For User Layout */}
       <Route element={<PrivateRoute allowRole="user" />}>
         <Route path="/user" element={<Layout />}>
           <Route path="dashboard" element={<UserDashboard />} />
