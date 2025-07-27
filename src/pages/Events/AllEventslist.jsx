@@ -22,6 +22,7 @@ const AllEventslist = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("event_name");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   const { data, isLoading, isError, refetch } = useGetEventsQuery();
   const events = data?.data || [];
@@ -122,6 +123,20 @@ const AllEventslist = () => {
     refetch();
   }, [refetch]);
 
+  const statusOptions = [];
+  events.forEach((event) => {
+    if (!statusOptions.includes(event.status)) {
+      statusOptions.push(event.status);
+    }
+  });
+
+  const categoryOptions = [];
+  events.forEach((event) => {
+    if (!categoryOptions.includes(event.category)) {
+      categoryOptions.push(event.category.name);
+    }
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -163,10 +178,11 @@ const AllEventslist = () => {
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                   <option value="all">All Status</option>
-                  <option value="active">Active</option>
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
-                  <option value="upcoming">Upcoming</option>
+                  {statusOptions.map((status) => (
+                    <option key={status} value={status}>
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </option>
+                  ))}
                 </select>
 
                 <select
@@ -174,16 +190,12 @@ const AllEventslist = () => {
                   onChange={(e) => setCategoryFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                   <option value="all">All Categories</option>
-                  <option value="Sports">Sports</option>
-                  <option value="Music">Music</option>
-                  <option value="Business">Business</option>
-                  <option value="Education">Education</option>
-                  <option value="Tech">Tech</option>
+                  {categoryOptions.map((category, index) => (
+                    <option key={index} value={category}>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
                 </select>
-
-                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                  <Filter size={16} /> Filter
-                </button>
               </div>
             </div>
 
@@ -200,28 +212,17 @@ const AllEventslist = () => {
 
         {/* Table or Loading State */}
         {isLoading ? (
-          <div className="bg-white rounded-lg shadow-sm border p-6 text-center">
-            <div className="flex flex-col items-center justify-center space-y-2">
-              <svg
-                className="animate-spin h-6 w-6 text-blue-500"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"></path>
-              </svg>
-              <p className="text-gray-500 text-sm">Loading events...</p>
-            </div>
-          </div>
+         
+          
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-dashed border-amber-600 rounded-full animate-spin"></div>
+          <div className="absolute inset-4 bg-amber-600 rounded-full animate-ping"></div>
+        </div>
+        <p className="text-white text-lg font-semibold animate-pulse">Loading...</p>
+      </div>
+    </div>
         ) : isError ? (
           <div className="bg-white rounded-lg shadow-sm border p-6 text-center text-red-500">
             Failed to load events. Please try again later.
@@ -253,9 +254,6 @@ const AllEventslist = () => {
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Location
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Price
-                    </th>
                     <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
                       Actions
                     </th>
@@ -274,6 +272,9 @@ const AllEventslist = () => {
                         {getCategoryBadge(event.category.name)}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
+                        {getStatusBadge(event.organizer.name)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
                         {getStatusBadge(event.status)}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
@@ -285,9 +286,7 @@ const AllEventslist = () => {
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {event.location}
                       </td>
-                      <td className="px-6 py-4 text-sm text-green-600">
-                        {event.ticket_price}
-                      </td>
+
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <Link
