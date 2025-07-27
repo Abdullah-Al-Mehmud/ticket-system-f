@@ -287,21 +287,21 @@ const UserList = () => {
                       <td className="px-6 py-4">
                         {formatDate(user.created_at)}
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-2">
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
                           <Link
                             to={`/admin/user-profile/${user.id}`}
-                            className="text-blue-600 hover:text-blue-800">
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded">
                             <Eye size={16} />
                           </Link>
                           <Link
                             to={`/admin/edit/${user.id}`}
-                            className="text-green-600 hover:text-green-800">
+                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded">
                             <Edit size={16} />
                           </Link>
                           <button
                             onClick={() => handleDelete(user.id)}
-                            className="text-red-600 hover:text-red-800">
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded">
                             <Trash2 size={16} />
                           </button>
                         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { User } from "lucide-react";
+import { User, ArrowRight } from "lucide-react";
 // import { Link } from 'react-router-dom';
 import { toast } from "react-hot-toast";
 import {
@@ -99,7 +99,7 @@ export default function UserEditForm() {
   if (isFetching) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-6 bg-white shadow-md border rounded-lg">
+    <div className="max-w-2xl mx-auto py-8 px-6 mt-8 bg-white shadow-md border rounded-lg">
       <div className="flex items-center mb-6 space-x-2">
         <User className="w-5 h-5 text-gray-600" />
         <h1 className="text-xl font-semibold">Edit User</h1>
@@ -159,8 +159,12 @@ export default function UserEditForm() {
       <button
         onClick={handleSave}
         disabled={isLoading}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md disabled:opacity-50">
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-800 text-white rounded-xl text-base font-medium disabled:opacity-50 transition-all duration-300 ease-in-out group shadow-md hover:shadow-lg">
         {isLoading ? "Saving..." : "Save"}
+        <ArrowRight
+          size={16}
+          className="transition-transform duration-300 group-hover:translate-x-1"
+        />
       </button>
 
       {isError && (
