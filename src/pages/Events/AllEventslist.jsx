@@ -149,7 +149,7 @@ const AllEventslist = () => {
           </div>
           <Link
             to="/admin/create-event"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
             <Plus size={20} /> Create Event
           </Link>
         </div>

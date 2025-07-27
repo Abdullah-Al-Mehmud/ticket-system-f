@@ -48,7 +48,7 @@ const UserList = () => {
     console.log("Deleting user:", userId);
 
     try {
-      const res =  await deleteUser(userId).unwrap();
+      const res = await deleteUser(userId).unwrap();
       toast.success(res.message);
       refetch(); // Refetch the user list after deletion
       fetch(); // Refetch dashboard data
@@ -117,7 +117,6 @@ const UserList = () => {
     }
   };
 
-
   if (error)
     return <p className="p-8 text-center text-red-600">Error loading users.</p>;
 
@@ -137,7 +136,7 @@ const UserList = () => {
             </div>
             <Link
               to="/admin/create-user"
-              className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2 font-medium">
+              className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
               <Plus size={16} />
               <span>Add User</span>
             </Link>
