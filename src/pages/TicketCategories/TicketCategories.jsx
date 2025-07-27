@@ -10,10 +10,27 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { useGetTicketCategoriesQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+import {
+  useDeleteTicketCategoryMutation,
+  useGetTicketCategoriesQuery,
+} from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();
+  const [deleteTicketCategory, { isLoading: isDeleting }] =
+    useDeleteTicketCategoryMutation();
+
+  const handleDeleteEvent = async (id) => {
+    try {
+      await deleteTicketCategory(id).unwrap();
+      toast.success("Ticket category deleted successfully!");
+    } catch (error) {
+      alert("Failed to delete the ticket category.");
+      toast.error("Failed to delete the ticket category.");
+    }
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -66,7 +83,8 @@ export default function TicketCategories() {
               {fetchData?.data.map((event, index) => (
                 <tr
                   key={event?.id}
-                  className="hover:bg-gray-50 transition-colors">
+                  className="hover:bg-gray-50 transition-colors"
+                >
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     #{event?.id}
                   </td>
@@ -93,22 +111,25 @@ export default function TicketCategories() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleViewEvent(event.id)}
+                      <Link
+                        to={`/admin/ticket-categories/${event.id}`}
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="View">
+                        title="View"
+                      >
                         <Eye size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleEditEvent(event.id)}
+                      </Link>
+                      <Link
+                        to={`/admin/ticket-categories/${event.id}/edit`}
                         className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
-                        title="Edit">
+                        title="Edit"
+                      >
                         <Edit size={16} />
-                      </button>
+                      </Link>
                       <button
                         onClick={() => handleDeleteEvent(event.id)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Delete">
+                        title="Delete"
+                      >
                         <Trash2 size={16} />
                       </button>
                     </div>
