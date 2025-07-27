@@ -15,7 +15,7 @@ import { useGetTicketCategoriesQuery } from "../../redux/features/ticketcategori
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();
 
-  // IsLoading 
+  // IsLoading
   if (isLoading) {
     return (
       <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
@@ -24,10 +24,21 @@ export default function TicketCategories() {
             <div className="absolute inset-0 border-4 border-dashed border-amber-600 rounded-full animate-spin"></div>
             <div className="absolute inset-4 bg-amber-600 rounded-full animate-ping"></div>
           </div>
-          <p className="text-white text-lg font-semibold animate-pulse">Loading...</p>
+          <p className="text-white text-lg font-semibold animate-pulse">
+            Loading...
+          </p>
         </div>
       </div>
     );
+  }
+
+  function formatDateOnlyPretty(dateString) {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   }
 
   if (isError) {
@@ -103,10 +114,10 @@ export default function TicketCategories() {
                     {event?.price}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {event?.sales_start}
+                    {formatDateOnlyPretty(event?.sales_start)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {event?.sales_end}
+                    {formatDateOnlyPretty(event?.sales_end)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {event?.total_quantity}
