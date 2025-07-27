@@ -35,6 +35,8 @@ import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard/OrganizerDa
 import CreateEventOrganizer from "./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer";
 import EventDetailsDetails from "./pages/Dashboard/OrganizerDashboard/EventDetailsDetails";
 import TicketCategories from "./pages/TicketCategories/TicketCategories";
+import TicketCategoriesDetails from "./pages/TicketCategories/TicketCategoriesDetails";
+import TicketCategoriesUpdate from "./pages/TicketCategories/TicketCategoriesUpdate";
 
 function App() {
   return (
@@ -75,6 +77,9 @@ function App() {
           <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
           <Route path="tickets/:id" element={<ViewTicketsDetails />} />
           <Route path="ticket-categories" element={<TicketCategories />} />
+          <Route path="ticket-categories/:id" element={<TicketCategoriesDetails />} />
+          <Route path="ticket-categories/:id/edit" element={<TicketCategoriesUpdate />} />
+          
         </Route>
       </Route>
       {/* For User Layout */}
