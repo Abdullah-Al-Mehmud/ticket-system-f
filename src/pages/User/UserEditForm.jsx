@@ -99,7 +99,7 @@ export default function UserEditForm() {
   if (isFetching) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-6 mt-7 bg-white shadow-md border rounded-lg">
+    <div className="max-w-2xl mx-auto py-8 px-6 mt-8 bg-white shadow-md border rounded-lg">
       <div className="flex items-center mb-6 space-x-2">
         <User className="w-5 h-5 text-gray-600" />
         <h1 className="text-xl font-semibold">Edit User</h1>
