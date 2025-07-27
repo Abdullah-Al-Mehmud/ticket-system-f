@@ -123,7 +123,7 @@ const UserList = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="  ">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
@@ -211,32 +211,40 @@ const UserList = () => {
       </div>
       {/* Filters */}
 
-      <div className="max-w-7xl   mx-auto px-8 py-6">
-        <div className="flex flex-col top-3  md:flex-row gap-5 justify-between items-center">
-          <div className="relative w-full md:w-1/2">
-            <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Filter className="text-gray-500" />
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-              <option value="all">All Roles</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-              <option value="organizer">Organizer</option>
-            </select>
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-8 mb-6">
+  <div className="bg-white rounded-lg border shadow-sm p-6">
+    <div className="flex flex-col sm:flex-row items-center gap-4">
+
+      {/* Search Input (Big) */}
+      <div className="flex-1 w-full relative">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
+
+      {/* Role Filter (Small) */}
+      <div className="w-full sm:w-48">
+        <select
+          value={filterRole}
+          onChange={(e) => setFilterRole(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="all">All Roles</option>
+          <option value="admin">Admin</option>
+          <option value="organizer">Organizer</option>
+          <option value="user">User</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
       {/* User Table */}
 
       <div className="max-w-7xl mx-auto px-8 pb-10">
