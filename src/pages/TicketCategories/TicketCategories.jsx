@@ -1,19 +1,25 @@
-import React, { useState, useMemo } from "react";
+import React from "react";
+import { Eye, Edit, Trash2 } from "lucide-react";
 import {
-  Search,
-  Plus,
-  Filter,
-  Download,
-  MoreHorizontal,
-  Eye,
-  Edit,
-  Trash2,
-} from "lucide-react";
-
-import { useGetTicketCategoriesQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+  useDeleteTicketCategoryMutation,
+  useGetTicketCategoriesQuery,
+} from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();
+  const [deleteTicketCategory, { isLoading: isDeleting }] =
+    useDeleteTicketCategoryMutation();
+
+  const handleDeleteEvent = async (id) => {
+    try {
+      await deleteTicketCategory(id).unwrap();
+      toast.success("Ticket category deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete the ticket category.");
+    }
+  };
 
   // IsLoading
   if (isLoading) {
@@ -52,16 +58,11 @@ export default function TicketCategories() {
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              All Ticket Categories
-            </h1>
-          </div>
-        </div>
+      <div className="mb-6 flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900">
+          All Ticket Categories
+        </h1>
       </div>
-
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -148,10 +149,83 @@ export default function TicketCategories() {
                     </div>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {fetchData?.data.map((event) => (
+                  <tr
+                    key={event?.id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm text-gray-800 font-medium">
+                      <Link to={`/admin/ticket-categories/${event.id}`}>
+                        #{event?.id}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      <Link to={`/admin/ticket-categories/${event.id}`}>
+                        {event?.name}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      {event?.event?.title}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      ${event?.price}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.sales_start}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.sales_end}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.total_quantity}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.sold_quantity}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <Link
+                          to={`/admin/ticket-categories/${event.id}`}
+                          className="p-2 text-blue-600 hover:bg-blue-100 rounded-md"
+                          title="View"
+                        >
+                          <Eye size={16} />
+                        </Link>
+                        <Link
+                          to={`/admin/ticket-categories/${event.id}/edit`}
+                          className="p-2 text-green-600 hover:bg-green-100 rounded-md"
+                          title="Edit"
+                        >
+                          <Edit size={16} />
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteEvent(event.id)}
+                          className="p-2 text-red-600 hover:bg-red-100 rounded-md"
+                          title="Delete"
+                          disabled={isDeleting}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {fetchData?.data?.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="9"
+                      className="text-center py-6 text-sm text-gray-500"
+                    >
+                      No ticket categories found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
