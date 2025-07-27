@@ -198,12 +198,6 @@ const Event = () => {
 
       {/* Events Section */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {isLoading && (
-          <div className="text-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
-            <p className="text-gray-500">Loading amazing events...</p>
-          </div>
-        )}
 
         {isError && (
           <div className="text-center py-20">

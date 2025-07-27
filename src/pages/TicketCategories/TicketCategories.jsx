@@ -7,6 +7,7 @@ import {
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import DataLoadingLoader from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();
@@ -33,7 +34,7 @@ export default function TicketCategories() {
 
   if (isLoading) {
     return (
-      <DataLoadingLoader />
+      <PageLoading />
     );
   }
 

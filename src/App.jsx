@@ -1,105 +1,124 @@
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import PrivateRoute from "./components/PrivateRoute";
-import Register from "./pages/Register";
-import UserDashboard from "./pages/Dashboard/UserDashboard/UserDashboard";
 import { Routes, Route } from "react-router-dom";
-import Event from "./pages/Event";
+import { lazy, Suspense } from "react";
+
+// Layouts
 import Layout from "./components/Layout";
-import EventDetails from "./pages/EventDetails";
-import Contact from "./pages/Contact";
-import AdminDashboard from "./pages/Dashboard/AdminDashboard";
-import NotFound from "./pages/Notfound";
-import UserList from "./pages/User/UserList";
 import AdminLayout from "./Layout/AdminLayout";
-import CreateUser from "./pages/User/CreateUser";
-import CategoriesList from "./pages/Categories/CategoriesList";
-import AllEventslist from "./pages/Events/AllEventslist";
-import UserProfilePage from "./pages/User/UserProfilePage";
-import UserEditForm from "./pages/User/UserEditForm";
-import CategoryForm from "./pages/Categories/CategoryForm";
-import ViewCategoryDetails from "./pages/Categories/ViewCategoryDetails";
-import CategoryUpdate from "./pages/Categories/CategoryUpdate";
-import EventForm from "./pages/Events/EventForm";
-import ViewEventsDetails from "./pages/Events/ViewEventsDetails";
-import EventEditForm from "./pages/Events/EventEditForm";
-import TicketsList from "./pages/Tickets/TicketsList";
-import TicketsForm from "./pages/Tickets/TicketsForm";
-import TicketsUpdate from "./pages/Tickets/TicketsUpdate";
-import ViewTicketsDetails from "./pages/Tickets/ViewTicketsDetails";
+
+// Auth wrappers
+import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
-import UserViewTicket from "./pages/Dashboard/UserDashboard/UserViewTicket";
-import OrganizerLayout from "./Layout/OrganizerLayout";
-import EventManagement from "./pages/Dashboard/OrganizerDashboard/EventManagement";
-import OrganizerDashboard from "./pages/Dashboard/OrganizerDashboard/OrganizerDashboard";
-import CreateEventOrganizer from "./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer";
-import EventDetailsDetails from "./pages/Dashboard/OrganizerDashboard/EventDetailsDetails";
-import TicketCategories from "./pages/TicketCategories/TicketCategories";
-import TicketCategoriesDetails from "./pages/TicketCategories/TicketCategoriesDetails";
-import TicketCategoriesUpdate from "./pages/TicketCategories/TicketCategoriesUpdate";
+import PageLoading from "./components/LoderComponent/PageLoading";
+
+
+// Lazy-loaded pages
+const Home = lazy(() => import("./pages/Home"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Event = lazy(() => import("./pages/Event"));
+const EventDetails = lazy(() => import("./pages/EventDetails"));
+
+const NotFound = lazy(() => import("./pages/Notfound"));
+
+const AdminDashboard = lazy(() => import("./pages/Dashboard/AdminDashboard"));
+const UserList = lazy(() => import("./pages/User/UserList"));
+const CreateUser = lazy(() => import("./pages/User/CreateUser"));
+const UserProfilePage = lazy(() => import("./pages/User/UserProfilePage"));
+const UserEditForm = lazy(() => import("./pages/User/UserEditForm"));
+
+const CategoriesList = lazy(() => import("./pages/Categories/CategoriesList"));
+const CategoryForm = lazy(() => import("./pages/Categories/CategoryForm"));
+const ViewCategoryDetails = lazy(() => import("./pages/Categories/ViewCategoryDetails"));
+const CategoryUpdate = lazy(() => import("./pages/Categories/CategoryUpdate"));
+
+const AllEventslist = lazy(() => import("./pages/Events/AllEventslist"));
+const EventForm = lazy(() => import("./pages/Events/EventForm"));
+const ViewEventsDetails = lazy(() => import("./pages/Events/ViewEventsDetails"));
+const EventEditForm = lazy(() => import("./pages/Events/EventEditForm"));
+
+const TicketsList = lazy(() => import("./pages/Tickets/TicketsList"));
+const TicketsForm = lazy(() => import("./pages/Tickets/TicketsForm"));
+const TicketsUpdate = lazy(() => import("./pages/Tickets/TicketsUpdate"));
+const ViewTicketsDetails = lazy(() => import("./pages/Tickets/ViewTicketsDetails"));
+
+const TicketCategories = lazy(() => import("./pages/TicketCategories/TicketCategories"));
+const TicketCategoriesDetails = lazy(() => import("./pages/TicketCategories/TicketCategoriesDetails"));
+const TicketCategoriesUpdate = lazy(() => import("./pages/TicketCategories/TicketCategoriesUpdate"));
+
+const UserDashboard = lazy(() => import("./pages/Dashboard/UserDashboard/UserDashboard"));
+const UserViewTicket = lazy(() => import("./pages/Dashboard/UserDashboard/UserViewTicket"));
+
+const OrganizerDashboard = lazy(() => import("./pages/Dashboard/OrganizerDashboard/OrganizerDashboard"));
+const EventManagement = lazy(() => import("./pages/Dashboard/OrganizerDashboard/EventManagement"));
+const CreateEventOrganizer = lazy(() => import("./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer"));
+const EventDetailsDetails = lazy(() => import("./pages/Dashboard/OrganizerDashboard/EventDetailsDetails"));
 
 function App() {
   return (
-    <Routes>
-      {/* Public layout */}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="event" element={<Event />} />
-        <Route path="event-details/:id" element={<EventDetails />} />
-        <Route path="contact" element={<Contact />} />
+    <Suspense fallback={<PageLoading />}>
+      <Routes>
+        {/* Public layout */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="event" element={<Event />} />
+          <Route path="event-details/:id" element={<EventDetails />} />
+          <Route path="contact" element={<Contact />} />
 
+          <Route element={<PublicRoute />}>
+            <Route path="register" element={<Register />} />
+            <Route path="login" element={<Login />} />
+          </Route>
+        </Route>
 
-        <Route element={<PublicRoute />}>
-          <Route path="register" element={<Register />} />
-          <Route path="login" element={<Login />} />
+        {/* Admin Layout */}
+        <Route element={<PrivateRoute allowRole="admin" />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="user-list" element={<UserList />} />
+            <Route path="create-user" element={<CreateUser />} />
+            <Route path="user-profile/:id" element={<UserProfilePage />} />
+            <Route path="edit/:id" element={<UserEditForm />} />
+            <Route path="categories" element={<CategoriesList />} />
+            <Route path="create-category" element={<CategoryForm />} />
+            <Route path="categories/:id" element={<ViewCategoryDetails />} />
+            <Route path="categories/edit/:id" element={<CategoryUpdate />} />
+            <Route path="events" element={<AllEventslist />} />
+            <Route path="create-event" element={<EventForm />} />
+            <Route path="events-details/:id" element={<ViewEventsDetails />} />
+            <Route path="event-edit/:id" element={<EventEditForm />} />
+            <Route path="tickets" element={<TicketsList />} />
+            <Route path="tickets/create-ticket" element={<TicketsForm />} />
+            <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
+            <Route path="tickets/:id" element={<ViewTicketsDetails />} />
+            <Route path="ticket-categories" element={<TicketCategories />} />
+            <Route path="ticket-categories/:id" element={<TicketCategoriesDetails />} />
+            <Route path="ticket-categories/:id/edit" element={<TicketCategoriesUpdate />} />
+          </Route>
         </Route>
-      </Route>
 
-     {/* For Admin Layout */}
-      <Route element={<PrivateRoute allowRole="admin" />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="user-list" element={<UserList />} />
-          <Route path="create-user" element={<CreateUser />} />
-          <Route path="categories" element={<CategoriesList />} />
-          <Route path="events" element={<AllEventslist />} />
-          <Route path="user-profile/:id" element={<UserProfilePage />} />
-          <Route path="edit/:id" element={<UserEditForm />} />
-          <Route path="create-category" element={<CategoryForm />} />
-          <Route path="categories/:id" element={<ViewCategoryDetails />} />
-          <Route path="categories/edit/:id" element={<CategoryUpdate />} />
-          <Route path="create-event" element={<EventForm />} />
-          <Route path="events-details/:id" element={<ViewEventsDetails />} />
-          <Route path="event-edit/:id" element={<EventEditForm />} />
-          <Route path="tickets" element={<TicketsList />} />
-          <Route path="tickets/create-ticket" element={<TicketsForm />} />
-          <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
-          <Route path="tickets/:id" element={<ViewTicketsDetails />} />
-          <Route path="ticket-categories" element={<TicketCategories />} />
-          <Route path="ticket-categories/:id" element={<TicketCategoriesDetails />} />
-          <Route path="ticket-categories/:id/edit" element={<TicketCategoriesUpdate />} />
-          
+        {/* User Layout */}
+        <Route element={<PrivateRoute allowRole="user" />}>
+          <Route path="/user" element={<Layout />}>
+            <Route path="dashboard" element={<UserDashboard />} />
+            <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
+          </Route>
         </Route>
-      </Route>
-      {/* For User Layout */}
-      <Route element={<PrivateRoute allowRole="user" />}>
-        <Route path="/user" element={<Layout />}>
-          <Route path="dashboard" element={<UserDashboard />} />
-          <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
-        </Route>
-      </Route>
-      <Route element={<PrivateRoute allowRole="organizer" />}>
-        <Route path="/organizer" element={<Layout />}>
-          <Route path="dashboard" element={<OrganizerDashboard />} />
-          <Route path="event-management" element={<EventManagement />} />
-          <Route path="create-event" element={<CreateEventOrganizer />} />
-          <Route path="events-details/:id" element={<EventDetailsDetails />} />
-        </Route>
-      </Route>
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* Organizer Layout */}
+        <Route element={<PrivateRoute allowRole="organizer" />}>
+          <Route path="/organizer" element={<Layout />}>
+            <Route path="dashboard" element={<OrganizerDashboard />} />
+            <Route path="event-management" element={<EventManagement />} />
+            <Route path="create-event" element={<CreateEventOrganizer />} />
+            <Route path="events-details/:id" element={<EventDetailsDetails />} />
+          </Route>
+        </Route>
+
+        {/* Not found */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Suspense>
   );
 }
 
