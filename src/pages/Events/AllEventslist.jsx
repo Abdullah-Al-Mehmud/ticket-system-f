@@ -22,6 +22,7 @@ const AllEventslist = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("event_name");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   const { data, isLoading, isError, refetch } = useGetEventsQuery();
   const events = data?.data || [];
@@ -122,6 +123,20 @@ const AllEventslist = () => {
     refetch();
   }, [refetch]);
 
+  const statusOptions = [];
+  events.forEach((event) => {
+    if (!statusOptions.includes(event.status)) {
+      statusOptions.push(event.status);
+    }
+  });
+
+  const categoryOptions = [];
+  events.forEach((event) => {
+    if (!categoryOptions.includes(event.category)) {
+      categoryOptions.push(event.category.name);
+    }
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -163,10 +178,11 @@ const AllEventslist = () => {
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                   <option value="all">All Status</option>
-                  <option value="active">Active</option>
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
-                  <option value="upcoming">Upcoming</option>
+                  {statusOptions.map((status) => (
+                    <option key={status} value={status}>
+                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </option>
+                  ))}
                 </select>
 
                 <select
@@ -174,16 +190,12 @@ const AllEventslist = () => {
                   onChange={(e) => setCategoryFilter(e.target.value)}
                   className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                   <option value="all">All Categories</option>
-                  <option value="Sports">Sports</option>
-                  <option value="Music">Music</option>
-                  <option value="Business">Business</option>
-                  <option value="Education">Education</option>
-                  <option value="Tech">Tech</option>
+                  {categoryOptions.map((category, index) => (
+                    <option key={index} value={category}>
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
                 </select>
-
-                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                  <Filter size={16} /> Filter
-                </button>
               </div>
             </div>
 
@@ -253,9 +265,6 @@ const AllEventslist = () => {
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Location
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Price
-                    </th>
                     <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
                       Actions
                     </th>
@@ -274,6 +283,9 @@ const AllEventslist = () => {
                         {getCategoryBadge(event.category.name)}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
+                        {getStatusBadge(event.organizer.name)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
                         {getStatusBadge(event.status)}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
@@ -285,9 +297,7 @@ const AllEventslist = () => {
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {event.location}
                       </td>
-                      <td className="px-6 py-4 text-sm text-green-600">
-                        {event.ticket_price}
-                      </td>
+
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <Link
