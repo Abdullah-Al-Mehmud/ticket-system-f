@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Calendar,
   MapPin,
@@ -12,6 +12,7 @@ import {
   Settings,
 } from "lucide-react";
 import {
+  useDeleteEventMutation,
   useGetEventByIdQuery,
   useUpdateEventMutation,
 } from "../../redux/features/event/EventApiSlice";
@@ -20,17 +21,23 @@ import toast from "react-hot-toast";
 
 const EventDetailsAdmin = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const [updateEvent] = useUpdateEventMutation();
+  const [deleteEvent] = useDeleteEventMutation();
+
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
   const [eventStatus, setEventStatus] = useState("");
   const [showFullDescription, setShowFullDescription] = useState(false);
+
   useEffect(() => {
     if (event?.status) {
       setEventStatus(event.status);
     }
   }, [event]);
+
   const maxLength = 300;
   const descriptionText = event?.event_description || "";
   const shortDescription =
@@ -86,6 +93,18 @@ const EventDetailsAdmin = () => {
     toast.success("Event status updated successfully!");
     refetch();
   };
+
+  const handleDeleteEvent = async () => {
+    try {
+      await deleteEvent(event?.id).unwrap();
+      navigate("/admin/events");
+      toast.success("Event deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete event.");
+      console.error(error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -452,7 +471,10 @@ const EventDetailsAdmin = () => {
                     <p className="text-red-700 text-sm mb-4">
                       Once deleted, this cannot be undone.
                     </p>
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                    <button
+                      onClick={handleDeleteEvent}
+                      className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                    >
                       Delete Event Permanently
                     </button>
                   </div>
