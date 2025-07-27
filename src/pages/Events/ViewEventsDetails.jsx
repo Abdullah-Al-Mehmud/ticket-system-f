@@ -1,255 +1,445 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Calendar,
-  Clock,
   MapPin,
-  Heart,
-  Share2,
-  Ticket,
-  SquareUserRound,
-  Mail,
+  User,
+  Tag,
+  Eye,
+  Users,
+  TrendingUp,
+  DollarSign,
+  Settings,
 } from "lucide-react";
-
-import { Alert, AlertDescription } from "../../components/ui/alert";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
 import { useGetEventByIdQuery } from "../../redux/features/event/EventApiSlice";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
-import EventModalForm from "./EventModalForm";
-
-const ViewEventsDetails = () => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [showFullDescription, setShowFullDescription] = useState(false);
-
+const EventDetailsAdmin = () => {
   const { id } = useParams();
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const event = data?.data;
+  const [activeTab, setActiveTab] = useState("overview");
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
-  const handleLike = () => setIsLiked(!isLiked);
+  const maxLength = 300;
+  const descriptionText = event?.event_description || "";
+  const shortDescription =
+    descriptionText.length > maxLength
+      ? descriptionText.slice(0, maxLength) + "…"
+      : descriptionText;
 
-  const handleShare = () => navigator.clipboard.writeText(window.location.href);
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
-  if (isLoading)
-    return <div className="text-center p-6">Loading event details...</div>;
-
-  if (isError || !event)
+  if (isLoading) {
     return (
-      <div className="text-center p-6 text-red-500">
+      <div className="p-6 text-center">
+        <PageLoading />
+      </div>
+    );
+  }
+  if (isError || !event) {
+    return (
+      <div className="p-6 text-center text-red-500">
         Failed to load event details.
       </div>
     );
+  }
 
-  const start = new Date(event.start_date);
-  const end = new Date(event.end_date);
+  const totalTickets = event.ticket_categories.reduce(
+    (sum, t) => sum + t.total_quantity,
+    0
+  );
+  const soldTickets = event.ticket_categories.reduce(
+    (sum, t) => sum + t.sold_quantity,
+    0
+  );
+  const totalRevenue = event.ticket_categories.reduce(
+    (sum, t) => sum + t.sold_quantity * parseFloat(t.price),
+    0
+  );
 
-  const dateOptions = { day: "numeric", month: "short", year: "numeric" };
-  const timeOptions = { hour: "numeric", minute: "2-digit", hour12: true };
-
-  const formatDateTimeRange = (start, end) => {
-    const formattedStartTime = start.toLocaleTimeString("en-US", timeOptions);
-    const formattedEndTime = end.toLocaleTimeString("en-US", timeOptions);
-    return `${formattedStartTime} - ${formattedEndTime}`;
-  };
-
-  const formatDate = (start, end) => {
-    const formattedStartDate = start.toLocaleDateString("en-US", dateOptions);
-    const formattedEndDate = end.toLocaleDateString("en-US", dateOptions);
-    return `${formattedStartDate} - ${formattedEndDate}`;
-  };
-
-  const toggleDescription = () => {
-    setShowFullDescription(!showFullDescription);
-  };
-
-  const maxLength = 300;
-  const descriptionText = event.event_description || "";
-
-  const shortDescription =
-    descriptionText.length > maxLength
-      ? descriptionText.slice(0, maxLength) + "..."
-      : descriptionText;
-
-  // const availableQuantity = event.total_quantity - event.sold_quantity;
-  // const soldPercentage = Math.round(
-  //   (event.sold_quantity / event.total_quantity) * 100
-  // );
-
-  // Handle Modal
+  const daysUntil = Math.ceil(
+    (new Date(event.start_date) - new Date()) / (1000 * 60 * 60 * 24)
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-teal-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Hero */}
-        <div className="flex justify-end">
-          <EventModalForm tcid={id} onSuccess={refetch} />
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {event.title}
+              </h1>
+              <div className="flex items-center space-x-4 mt-1">
+                <span
+                  className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                    event.status === "Live"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {event.status}
+                </span>
+                <span className="text-sm text-gray-500">ID: #{event.id}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="bg-white rounded-2xl shadow overflow-hidden mb-6">
-          <div className="relative h-80">
-            <img
-              src={event.image_url}
-              alt={event.title}
-              className="object-cover w-full h-full"
-            />
-            <div className="absolute top-4 right-4 flex gap-2">
-              <button
-                onClick={handleLike}
-                className={`p-3 rounded-full backdrop-blur-sm ${
-                  isLiked ? "bg-red-500" : "bg-white/20"
-                } text-white`}>
-                <Heart className="w-5 h-5" />
-              </button>
-              <button
-                onClick={handleShare}
-                className="p-3 rounded-full bg-white/20 text-white">
-                <Share2 className="w-5 h-5" />
-              </button>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          {/* ... same stats cards as before */}
+          <div className="bg-white rounded-lg shadow p-6 flex items-center">
+            <Users className="h-8 w-8 text-blue-600" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Total Tickets</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {totalTickets}
+              </p>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 flex items-center">
+            <TrendingUp className="h-8 w-8 text-green-600" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Sold Tickets</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {soldTickets}
+              </p>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 flex items-center">
+            <DollarSign className="h-8 w-8 text-yellow-600" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Revenue</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                ${totalRevenue.toFixed(2)}
+              </p>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg shadow p-6 flex items-center">
+            <Calendar className="h-8 w-8 text-purple-600" />
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">
+                Days Until Event
+              </p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {daysUntil}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl shadow p-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <Calendar className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">{formatDate(start, end)}</p>
-                      <p className="text-sm text-gray-500">Event Date</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <Clock className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">
-                        {formatDateTimeRange(start, end)}
-                      </p>
-                      <p className="text-sm text-gray-500">Event Time</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <MapPin className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">{event.location}</p>
-                      <p className="text-sm text-gray-500">Location</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <Ticket className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">
-                        <span className="text-2xl">৳</span> {event.ticket_price}
-                      </p>
-                      <p className="text-sm text-gray-500">Ticket Price</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                About This Event
-              </h2>
-              <p className="text-gray-600">
-                {showFullDescription ? descriptionText : shortDescription}
-              </p>
-              {descriptionText.length > maxLength && (
+        {/* Tab Navigation */}
+        <div className="bg-white rounded-lg shadow">
+          <div className="border-b border-gray-200">
+            <nav className="flex space-x-8 px-6 -mb-px">
+              {[
+                { id: "overview", name: "Overview", icon: Eye },
+                { id: "tickets", name: "Tickets", icon: Tag },
+                { id: "settings", name: "Settings", icon: Settings },
+              ].map((tab) => (
                 <button
-                  onClick={toggleDescription}
-                  className="text-amber-600 hover:underline text-sm mt-1">
-                  {showFullDescription ? "See less" : "See more"}
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === tab.id
+                      ? "border-blue-500 text-blue-600"
+                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  }`}
+                >
+                  <tab.icon className="w-4 h-4 mr-2" />
+                  {tab.name}
                 </button>
-              )}
-            </div>
-
-            {/* Card */}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {event.ticket_categories?.map((ticket) => {
-                const soldPercentage = Math.round(
-                  (ticket.sold_quantity / ticket.total_quantity) * 100
-                );
-                const availableQuantity =
-                  ticket.total_quantity - ticket.sold_quantity;
-
-                return (
-                  <Card
-                    key={ticket.id}
-                    className="shadow-lg rounded-xl border border-gray-200 overflow-hidden">
-                    <CardHeader className="pb-2 pt-4 px-4">
-                      <div className="flex justify-between items-start">
-                        <CardTitle className="text-lg font-semibold text-gray-800">
-                          {ticket.name}
-                        </CardTitle>
-
-                        <div className="bg-gray-100 text-gray-700 text-sm px-3 py-1 gap-1 rounded-md flex flex-row items-end">
-                          <span className="font-medium">৳{ticket.price}</span>
-                          <span className="text-sm text-gray-400">/price</span>
-                        </div>
+              ))}
+            </nav>
+          </div>
+          <div className="p-6">
+            {/* Overview Tab */}
+            {activeTab === "overview" && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Left: Info + Description */}
+                <div className="space-y-6">
+                  <div>
+                    {/* Date / Time */}
+                    <div className="flex items-start mb-4">
+                      <Calendar className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          Date & Time
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {formatDate(event.start_date)} –{" "}
+                          {formatDate(event.end_date)}
+                        </p>
                       </div>
-                    </CardHeader>
-
-                    <CardContent className="px-4 pb-4 space-y-3">
-                      <div className="flex justify-between text-sm text-gray-600">
-                        <span>Sold</span>
-                        <span className="font-medium">
-                          {ticket.sold_quantity}/{ticket.total_quantity}
+                    </div>
+                    {/* Location */}
+                    <div className="flex items-start mb-4">
+                      <MapPin className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          Location
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {event.location}
+                        </p>
+                      </div>
+                    </div>
+                    {/* Organizer */}
+                    <div className="flex items-start mb-4">
+                      <User className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          Organizer
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {event.organizer.name}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {event.organizer.email}
+                        </p>
+                      </div>
+                    </div>
+                    {/* Category */}
+                    <div className="flex items-start">
+                      <Tag className="w-5 h-5 text-gray-400 mr-3 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          Category
+                        </p>
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                            event.category.status === "active"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {event.category.name}
                         </span>
                       </div>
+                    </div>
+                  </div>
 
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-green-500 h-2 rounded-full transition-all duration-300 ease-in-out"
-                          style={{ width: `${soldPercentage}%` }}></div>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      Description
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {showFullDescription ? descriptionText : shortDescription}
+                    </p>
+                    {descriptionText.length > maxLength && (
+                      <button
+                        onClick={() =>
+                          setShowFullDescription(!showFullDescription)
+                        }
+                        className="text-amber-600 hover:underline text-sm mt-1"
+                      >
+                        {showFullDescription ? "See less" : "See more"}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right column: Banner + Metadata */}
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      Event Banner
+                    </h3>
+                    {event.image_url ? (
+                      <img
+                        src={event.image_url}
+                        alt={event.title}
+                        className="rounded-lg object-cover w-full aspect-w-16 aspect-h-9"
+                      />
+                    ) : (
+                      <div className="h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <p className="text-gray-500">No Banner</p>
                       </div>
-
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>{soldPercentage}% sold</span>
-                        <span>{availableQuantity} remaining</span>
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      Metadata
+                    </h3>
+                    <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Created:</span>
+                        <span className="text-gray-900">
+                          {formatDate(event.created_at)}
+                        </span>
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Organizer */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-xl font-bold mb-4 text-gray-800">
-                Organizer
-              </h3>
-              <div className="flex items-center gap-3 text-gray-700">
-                <SquareUserRound className="w-4 h-4" />
-                <span>{event.organizer?.name || "Unknown Organizer"}</span>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Last Updated:</span>
+                        <span className="text-gray-900">
+                          {formatDate(event.updated_at)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Event ID:</span>
+                        <span className="text-gray-900">#{event.id}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-gray-600 mt-1">
-                <Mail className="w-4 h-4" />
-                <span className="text-sm">
-                  {event.organizer?.email || "No email provided"}
-                </span>
-              </div>
-            </div>
+            )}
 
-            {/* Privacy Note */}
-            <Alert className="border-amber-200 bg-amber-50">
-              <AlertDescription className="text-amber-800">
-                <strong>Note:</strong> {event.privacy_policy}
-              </AlertDescription>
-            </Alert>
+            {/* Tickets Tab */}
+            {activeTab === "tickets" && (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    Ticket Categories
+                  </h3>
+                  <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Add New Ticket Type
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {event.ticket_categories.map((t) => {
+                    const percent = (t.sold_quantity / t.total_quantity) * 100;
+                    return (
+                      <div key={t.id} className="bg-gray-50 rounded-lg p-6">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="text-lg font-medium text-gray-900">
+                            {t.name}
+                          </h4>
+                          <span className="text-2xl font-bold text-green-600">
+                            ${t.price}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase">
+                              Total Quantity
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {t.total_quantity}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase">
+                              Sold
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {t.sold_quantity}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase">
+                              Available
+                            </p>
+                            <p className="text-lg font-semibold">
+                              {t.total_quantity - t.sold_quantity}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500 uppercase">
+                              Revenue
+                            </p>
+                            <p className="text-lg font-semibold text-green-600">
+                              $
+                              {(t.sold_quantity * parseFloat(t.price)).toFixed(
+                                2
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="mt-4">
+                          <div className="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Sales Progress</span>
+                            <span>{percent.toFixed(1)}%</span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${percent}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                        <div className="mt-4 flex justify-between text-sm text-gray-600">
+                          <span>
+                            Sales: {formatDate(t.sales_start)} –{" "}
+                            {formatDate(t.sales_end)}
+                          </span>
+                          <div className="space-x-2">
+                            <button className="text-blue-600 hover:text-blue-800">
+                              Edit
+                            </button>
+                            <button className="text-red-600 hover:text-red-800">
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Settings Tab */}
+            {activeTab === "settings" && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    Privacy Policy
+                  </h3>
+                  <p className="text-sm text-gray-700 bg-gray-50 p-4 rounded-lg">
+                    {event.privacy_policy}
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    Event Status
+                  </h3>
+                  <div className="flex items-center space-x-4">
+                    <select
+                      value={event.status}
+                      className="block w-48 px-3 py-2 border rounded-md"
+                    >
+                      <option value="Upcoming">Upcoming</option>
+                      <option value="Live">Live</option>
+                      <option value="Done">Done</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                      Update Status
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    Danger Zone
+                  </h3>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h4 className="text-red-800 font-medium mb-2">
+                      Delete Event
+                    </h4>
+                    <p className="text-red-700 text-sm mb-4">
+                      Once deleted, this cannot be undone.
+                    </p>
+                    <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                      Delete Event Permanently
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -257,4 +447,4 @@ const ViewEventsDetails = () => {
   );
 };
 
-export default ViewEventsDetails;
+export default EventDetailsAdmin;
