@@ -1,0 +1,30 @@
+.progress-circle {
+  animation: dash 2s ease-in-out infinite;
+  transform-origin: 60px 60px;
+}
+
+.ticket-icon {
+  animation: pulse 2s ease-in-out infinite;
+  transform-origin: 60px 60px;
+}
+
+.circle-border {
+  animation: rotate 2s linear infinite;
+  transform-origin: 60px 60px;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes dash {
+  0% { stroke-dasharray: 0 283; }
+  50% { stroke-dasharray: 141 142; }
+  100% { stroke-dasharray: 283 0; }
+}

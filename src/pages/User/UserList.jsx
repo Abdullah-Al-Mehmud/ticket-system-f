@@ -117,17 +117,7 @@ const UserList = () => {
     }
   };
 
-  if (isLoading)
-      return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="relative w-16 h-16">
-          <div className="absolute inset-0 border-4 border-dashed border-amber-600 rounded-full animate-spin"></div>
-          <div className="absolute inset-4 bg-amber-600 rounded-full animate-ping"></div>
-        </div>
-        <p className="text-white text-lg font-semibold animate-pulse">Loading...</p>
-      </div>
-    </div>)
+
   if (error)
     return <p className="p-8 text-center text-red-600">Error loading users.</p>;
 
