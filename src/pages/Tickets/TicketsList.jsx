@@ -32,6 +32,8 @@ export const TicketsList = () => {
     if (data?.data) setTickets(data.data);
   }, [data]);
 
+  console.log(data?.data)
+
   useEffect(() => {
     if (location.state?.refresh) {
       refetch();
@@ -206,9 +208,7 @@ export const TicketsList = () => {
                           )}
                         </th>
                       ))}
-                      <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
-                        Actions
-                      </th>
+                      
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -221,48 +221,28 @@ export const TicketsList = () => {
                         </Link>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           {ticket.user.name}
+                           
                         </td>
                        
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          {ticket.ticket_quantity}
+                          {ticket.ticket_category.event.title}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          ${ticket.price_per_ticket}
+                          {ticket.quantity}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          ${ticket.price_per_ticket * ticket.ticket_quantity}
+                          {ticket.ticket_category.price}
                         </td>
                         <td className="px-6 py-4 text-sm">
+                         ${ticket.quantity * ticket.ticket_category.price }
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
                           {getStatusBadge(ticket.status)}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
-                          {formatDate(ticket.purchased_at)}
+                          {formatDate(ticket.created_at)}
                         </td>
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <Link
-                              to={`/admin/tickets/${ticket.id}`}
-                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                              title="View"
-                            >
-                              <Eye size={16} />
-                            </Link>
-                            <Link
-                              to={`/admin/tickets/edit/${ticket.id}`}
-                              className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                              title="Edit"
-                            >
-                              <Edit size={16} />
-                            </Link>
-                            <button
-                              onClick={() => handleDelete(ticket.id)}
-                              className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
-                              title="Delete"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
+                      
                       </tr>
                     ))}
                   </tbody>
