@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Calendar,
@@ -19,8 +19,13 @@ const EventDetailsAdmin = () => {
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
+  const [eventStatus, setEventStatus] = useState("");
   const [showFullDescription, setShowFullDescription] = useState(false);
-
+  useEffect(() => {
+    if (data?.data?.status) {
+      setEventStatus(data.data.status);
+    }
+  }, [data]);
   const maxLength = 300;
   const descriptionText = event?.event_description || "";
   const shortDescription =
@@ -409,7 +414,8 @@ const EventDetailsAdmin = () => {
                   </h3>
                   <div className="flex items-center space-x-4">
                     <select
-                      value={event.status}
+                      value={eventStatus}
+                      onChange={(e) => setEventStatus(e.target.value)}
                       className="block w-48 px-3 py-2 border rounded-md"
                     >
                       <option value="Upcoming">Upcoming</option>
