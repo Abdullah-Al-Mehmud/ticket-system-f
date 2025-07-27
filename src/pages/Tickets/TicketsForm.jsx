@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import {ArrowRight} from 'lucide-react'
+import { Button } from "@/components/ui/button";
 
 import { useCreateTicketMutation } from "../../redux/features/tickets/ticketsApiSlice";
 import { useGetUserQuery } from "../../redux/features/auth/AuthApiSlice";
@@ -111,13 +113,17 @@ const TicketsForm = () => {
           </div>
 
           {/* Submit Button */}
-          <button
+          <Button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-800 transition-colors duration-300 ease-in-out group"
           >
             {isLoading ? "Creating..." : "Create Ticket"}
-          </button>
+            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+          </Button>
+
+       
+
         </form>
       </div>
     </div>
