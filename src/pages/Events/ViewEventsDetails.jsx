@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Calendar,
   MapPin,
@@ -386,13 +386,19 @@ const EventDetailsAdmin = () => {
                     return (
                       <div key={t.id} className="bg-gray-50 rounded-lg p-6">
                         <div className="flex justify-between items-center mb-2">
-                          <h4 className="text-lg font-medium text-gray-900">
-                            {t.name}
-                          </h4>
+                          <div>
+                            <h4 className="text-lg font-medium text-gray-900">
+                              <Link to={`/admin/ticket-categories/${t.id}`}>
+                                {t.name}
+                              </Link>
+                            </h4>
+                            <p className="text-xs text-gray-500">ID: {t.id}</p>
+                          </div>
                           <span className="text-2xl font-bold text-green-600">
                             ${t.price}
                           </span>
                         </div>
+
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
                           <div>
                             <p className="text-xs text-gray-500 uppercase">
