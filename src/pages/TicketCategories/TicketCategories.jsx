@@ -6,6 +6,7 @@ import {
 } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import DataLoadingLoader from "../../components/LoderComponent/PageLoading";
 
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();
@@ -21,83 +22,65 @@ export default function TicketCategories() {
     }
   };
 
+  const formatDateOnly = (dateString) => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <DataLoadingLoader />
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 text-red-600 text-center font-medium">
+        Failed to load ticket categories.
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Header */}
       <div className="mb-6 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">
-          All Ticket Categories
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">All Ticket Categories</h1>
       </div>
 
-      <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
-        {isLoading ? (
-          <div className="p-6 text-center text-gray-500">
-            Loading ticket categories...
-          </div>
-        ) : isError ? (
-          <div className="p-6 text-center text-red-500">
-            Failed to load ticket categories.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-100">
-                <tr>
-                  {[
-                    "ID",
-                    "Category Name",
-                    "Event Title",
-                    "Price",
-                    "Sales Start",
-                    "Sales End",
-                    "Total Qty",
-                    "Sold Qty",
-                    "Actions",
-                  ].map((heading, idx) => (
-                    <th
-                      key={idx}
-                      className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
-                    >
-                      {heading}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {fetchData?.data.map((event) => (
-                  <tr
-                    key={event?.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">ID</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Category Name</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Event Title</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Price</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Sales Start</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Sales End</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Total Qty</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Sold Qty</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {fetchData?.data?.length > 0 ? (
+                fetchData.data.map((event) => (
+                  <tr key={event?.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm text-gray-800 font-medium">
-                      <Link to={`/admin/ticket-categories/${event.id}`}>
-                        #{event?.id}
-                      </Link>
+                      <Link to={`/admin/ticket-categories/${event.id}`}>#{event?.id}</Link>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-800">
-                      <Link to={`/admin/ticket-categories/${event.id}`}>
-                        {event?.name}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-800">
-                      {event?.event?.title}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-800">
-                      ${event?.price}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {event?.sales_start}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {event?.sales_end}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {event?.total_quantity}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {event?.sold_quantity}
-                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">{event?.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-800">{event?.event?.title}</td>
+                    <td className="px-6 py-4 text-sm text-gray-800">${event?.price}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{formatDateOnly(event?.sales_start)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{formatDateOnly(event?.sales_end)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{event?.total_quantity}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{event?.sold_quantity}</td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
                         <Link
@@ -125,21 +108,17 @@ export default function TicketCategories() {
                       </div>
                     </td>
                   </tr>
-                ))}
-                {fetchData?.data?.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan="9"
-                      className="text-center py-6 text-sm text-gray-500"
-                    >
-                      No ticket categories found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9" className="text-center py-6 text-sm text-gray-500">
+                    No ticket categories found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

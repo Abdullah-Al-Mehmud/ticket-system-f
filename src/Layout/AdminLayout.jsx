@@ -49,7 +49,7 @@ const AdminLayout = ({ children }) => {
       icon: ChartBarStacked,
       path: "/admin/ticket-categories",
     },
-    { id: "tickets", label: "Tickets", icon: Ticket, path: "/admin/tickets" },
+    { id: "purchase tickets", label: "Purchase Tickets", icon: Ticket, path: "/admin/tickets" },
     // { id: "back", label: "Back", icon: Forward, path: "/" },
     // { id: "back", label: "Back", icon: Forward, path: "/admin/user-list" }
   ];

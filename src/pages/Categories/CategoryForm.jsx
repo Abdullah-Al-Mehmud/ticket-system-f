@@ -69,7 +69,9 @@ const CategoryForm = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-transform duration-150 ${
+              isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-amber-600 hover:bg-amber-700"
+            }`}
           >
             {isLoading ? "Creating..." : "Create Category"}
           </button>

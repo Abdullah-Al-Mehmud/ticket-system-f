@@ -32,6 +32,8 @@ export const TicketsList = () => {
     if (data?.data) setTickets(data.data);
   }, [data]);
 
+  console.log(data?.data)
+
   useEffect(() => {
     if (location.state?.refresh) {
       refetch();
@@ -170,9 +172,16 @@ export const TicketsList = () => {
 
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
           {isLoading ? (
-            <div className="text-center py-12 text-gray-500">
-              Loading tickets...
-            </div>
+             
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-dashed border-amber-600 rounded-full animate-spin"></div>
+          <div className="absolute inset-4 bg-amber-600 rounded-full animate-ping"></div>
+        </div>
+        <p className="text-white text-lg font-semibold animate-pulse">Loading...</p>
+      </div>
+    </div>
           ) : isError ? (
             <div className="text-center py-12 text-red-500">
               Failed to load tickets.
@@ -206,9 +215,7 @@ export const TicketsList = () => {
                           )}
                         </th>
                       ))}
-                      <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
-                        Actions
-                      </th>
+                      
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -221,48 +228,28 @@ export const TicketsList = () => {
                         </Link>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           {ticket.user.name}
+                           
                         </td>
                        
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          {ticket.ticket_quantity}
+                          {ticket.ticket_category.event.title}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          ${ticket.price_per_ticket}
+                          {ticket.quantity}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          ${ticket.price_per_ticket * ticket.ticket_quantity}
+                          {ticket.ticket_category.price}
                         </td>
                         <td className="px-6 py-4 text-sm">
+                         ${ticket.quantity * ticket.ticket_category.price }
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
                           {getStatusBadge(ticket.status)}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
-                          {formatDate(ticket.purchased_at)}
+                          {formatDate(ticket.created_at)}
                         </td>
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <Link
-                              to={`/admin/tickets/${ticket.id}`}
-                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                              title="View"
-                            >
-                              <Eye size={16} />
-                            </Link>
-                            <Link
-                              to={`/admin/tickets/edit/${ticket.id}`}
-                              className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                              title="Edit"
-                            >
-                              <Edit size={16} />
-                            </Link>
-                            <button
-                              onClick={() => handleDelete(ticket.id)}
-                              className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
-                              title="Delete"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
+                      
                       </tr>
                     ))}
                   </tbody>
