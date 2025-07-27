@@ -123,7 +123,7 @@ const EventDetailsPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       <div className="max-w-6xl mx-auto p-6">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+        <div className="bg-white rounded-2xl  overflow-hidden mb-8">
           <div className="relative h-96">
             <img
               src={eventData.image_url}
@@ -152,7 +152,7 @@ const EventDetailsPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white rounded-2xl  p-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 About This Event
               </h2>
@@ -161,7 +161,7 @@ const EventDetailsPage = () => {
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white rounded-2xl  p-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
                 Event Details
               </h2>
@@ -188,7 +188,7 @@ const EventDetailsPage = () => {
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-6">
+            <div className="bg-white rounded-2xl  p-8 sticky top-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <Ticket className="w-6 h-6 mr-2 text-purple-500" />
                 Select Tickets
@@ -201,7 +201,7 @@ const EventDetailsPage = () => {
                   return (
                     <div
                       key={ticket.id}
-                      className="border rounded-xl p-4 hover:shadow-md"
+                      className="border rounded-xl p-4"
                     >
                       <div className="flex justify-between items-start mb-3">
                         <div>
@@ -273,7 +273,7 @@ const EventDetailsPage = () => {
       {/* Modal */}
       {showBookingModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none backdrop-blur-sm  bg-opacity-30">
-          <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-lg pointer-events-auto">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md  pointer-events-auto">
             <h3 className="text-2xl font-bold mb-4">Booking Confirmation</h3>
             <p className="mb-6 text-gray-600">
               You're about to book <strong>{getTotalTickets()}</strong>{" "}
