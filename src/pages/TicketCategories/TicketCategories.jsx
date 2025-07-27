@@ -15,6 +15,29 @@ import { useGetTicketCategoriesQuery } from "../../redux/features/ticketcategori
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();
 
+  // IsLoading 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="relative w-16 h-16">
+            <div className="absolute inset-0 border-4 border-dashed border-amber-600 rounded-full animate-spin"></div>
+            <div className="absolute inset-4 bg-amber-600 rounded-full animate-ping"></div>
+          </div>
+          <p className="text-white text-lg font-semibold animate-pulse">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="p-6 text-red-600 text-center font-medium">
+        Failed to load ticket categories.
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}

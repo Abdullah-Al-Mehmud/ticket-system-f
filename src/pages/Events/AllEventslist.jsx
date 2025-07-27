@@ -212,28 +212,17 @@ const AllEventslist = () => {
 
         {/* Table or Loading State */}
         {isLoading ? (
-          <div className="bg-white rounded-lg shadow-sm border p-6 text-center">
-            <div className="flex flex-col items-center justify-center space-y-2">
-              <svg
-                className="animate-spin h-6 w-6 text-blue-500"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8H4z"></path>
-              </svg>
-              <p className="text-gray-500 text-sm">Loading events...</p>
-            </div>
-          </div>
+         
+          
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-dashed border-amber-600 rounded-full animate-spin"></div>
+          <div className="absolute inset-4 bg-amber-600 rounded-full animate-ping"></div>
+        </div>
+        <p className="text-white text-lg font-semibold animate-pulse">Loading...</p>
+      </div>
+    </div>
         ) : isError ? (
           <div className="bg-white rounded-lg shadow-sm border p-6 text-center text-red-500">
             Failed to load events. Please try again later.
