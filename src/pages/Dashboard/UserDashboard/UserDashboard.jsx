@@ -44,11 +44,11 @@ const UserDashboard = () => {
   const sidebarItems = [{ id: "dashboard", label: "Dashboard", icon: Home }];
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen  bg-gray-100">
       {/* Dashboard Table */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* <UserModelForm /> */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg  shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <div className="max-h-[500px] overflow-y-auto">
               <table className="w-full min-w-[1000px] divide-y divide-gray-200">
@@ -107,16 +107,7 @@ const UserDashboard = () => {
                             {booking?.ticket_category?.event?.title ||
                               "Untitled Event"}
                           </div>
-                          {/* <div className="flex flex-col text-sm text-gray-500 gap-1">
-                            <div className="flex items-center gap-1">
-                              <ChartBarStacked className="w-4 h-4" />
-                              <span>{booking.event?.category_name}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <MapPinCheck className="w-4 h-4" />
-                              <span>{booking.event?.location}</span>
-                            </div>
-                          </div> */}
+                      
 
                           <div className="text-sm text-green-600 font-medium">
                             Booking ID: {booking.id}
@@ -153,12 +144,7 @@ const UserDashboard = () => {
                               title="Download">
                               <Download className="w-4 h-4" />
                             </button>
-                            {/* <button
-                                className="text-purple-600 hover:text-purple-800 p-1"
-                                title="Share"
-                              >
-                                <Share2 className="w-4 h-4" />
-                              </button> */}
+                         
                           </div>
                         </td>
                       </tr>

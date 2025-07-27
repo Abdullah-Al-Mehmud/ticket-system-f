@@ -8,32 +8,24 @@ import { useNavigate } from "react-router-dom";
 const EventForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    category_id: "",
-    title: "",
-    event_description: "",
-    location: "",
-    start_date: "",
-    end_date: "",
-    ticket_price: 0,
-    status: "draft",
-    privacy_policy: "",
-    image_url: "",
+    category_id: null,
+    title: null,
+    event_description: null,
+    location: null,
+    start_date: null,
+    end_date: null,
+    ticket_price: null,
+    privacy_policy: null,
+    image_url: null,
   });
 
   const [errors, setErrors] = useState({});
   const [createEvent, { isLoading }] = useCreateEventMutation();
   const { data: categories } = useGetCategoriesQuery();
-  // console.log("Categories:", categories?.data );
   const CategoriesList = categories?.data || [];
-
-  // CategoriesList.map((category) => {
-
-  //      console.log("Category:", category.name);
-  // });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -46,13 +38,13 @@ const EventForm = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.title.trim()) newErrors.title = "Title is required";
-    if (!formData.category_id.trim()) newErrors.category_id = "ID is required";
+    if (!formData.category_id) newErrors.category_id = "Category is required";
     if (!formData.event_description.trim())
       newErrors.event_description = "Description is required";
     if (!formData.location.trim()) newErrors.location = "Location is required";
     if (!formData.start_date) newErrors.start_date = "Start date is required";
     if (!formData.end_date) newErrors.end_date = "End date is required";
-    if (!formData.ticket_price)
+    if (formData.ticket_price === "" || formData.ticket_price < 0)
       newErrors.ticket_price = "Ticket price is required";
     if (!formData.privacy_policy)
       newErrors.privacy_policy = "Accept the privacy policy";
@@ -69,202 +61,193 @@ const EventForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const formatDateTime = (date) => {
+    const d = new Date(date);
+    return d.toISOString().slice(0, 19).replace("T", " ");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
+    const payload = {
+      ...formData,
+      start_date: formatDateTime(formData.start_date),
+      end_date: formatDateTime(formData.end_date),
+      ticket_price: parseFloat(formData.ticket_price),
+    };
+
     try {
-      await createEvent(formData).unwrap();
+      await createEvent(payload).unwrap();
       toast.success("Event created successfully!");
-      navigate("/admin/events");
+      navigate("/organizer/event-management");
     } catch (err) {
-      toast.error("Failed to create event. Please check the form.");
-      console.error("Error:", err);
+      console.error("Error creating event:", err);
+      toast.error(err?.data?.message);
+      toast.error(err?.data?.errors);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 flex items-center justify-center">
-      <div className="w-full max-w-2xl">
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
-            <h1 className="text-2xl font-bold text-white mb-2">
-              Create New Event
-            </h1>
-            <p className="text-blue-100">
-              Fill out the details for your upcoming event
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-50 p-8 flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-8">
+        <h1 className="text-2xl font-semibold text-gray-800">Create New Event</h1>
+        <p className="text-sm text-gray-600 mb-6">Fill out the details for your upcoming event</p>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="p-8 space-y-6">
-            {/* Category_id */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
             <select
               name="category_id"
               value={formData.category_id}
               onChange={handleChange}
-              required
-              className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500">
-              <option value="">Select Categories</option>
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            >
+              <option value="">Select Category</option>
               {CategoriesList.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}
             </select>
+            {errors.category_id && (
+              <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>
+            )}
+          </div>
 
-            {/* Event Title */}
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Event Title</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+            {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea
+              name="event_description"
+              value={formData.event_description}
+              onChange={handleChange}
+              rows="4"
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+            {errors.event_description && (
+              <p className="text-red-500 text-sm mt-1">{errors.event_description}</p>
+            )}
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+              <MapPin size={16} /> Location
+            </label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+            {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+          </div>
+
+          {/* Dates */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700">
-                Event Title
+              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+                <Calendar size={16} /> Start Date
               </label>
               <input
-                type="text"
-                name="title"
-                value={formData.title}
+                type="datetime-local"
+                name="start_date"
+                value={formData.start_date}
                 onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-              )}
+              {errors.start_date && <p className="text-red-500 text-sm mt-1">{errors.start_date}</p>}
             </div>
 
-            {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700">
-                Description
-              </label>
-              <textarea
-                name="event_description"
-                value={formData.event_description}
-                onChange={handleChange}
-                rows="4"
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
-              />
-              {errors.event_description && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.event_description}
-                </p>
-              )}
-            </div>
-
-            {/* Location */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
-                <MapPin size={16} /> Location
+              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+                <Calendar size={16} /> End Date
               </label>
               <input
-                type="text"
-                name="location"
-                value={formData.location}
+                type="datetime-local"
+                name="end_date"
+                value={formData.end_date}
                 onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
-              {errors.location && (
-                <p className="text-red-500 text-sm mt-1">{errors.location}</p>
-              )}
+              {errors.end_date && <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>}
             </div>
+          </div>
 
-            {/* Dates */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 flex items-center gap-1">
-                  <Calendar size={16} /> Start Date
-                </label>
-                <input
-                  type="date"
-                  name="start_date"
-                  value={formData.start_date}
-                  onChange={handleChange}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                />
-                {errors.start_date && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.start_date}
-                  </p>
-                )}
-              </div>
+          {/* Ticket Price */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+              <DollarSign size={16} /> Ticket Price (BDT)
+            </label>
+            <input
+              type="number"
+              name="ticket_price"
+              step="0.01"
+              value={formData.ticket_price}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+            {errors.ticket_price && (
+              <p className="text-red-500 text-sm mt-1">{errors.ticket_price}</p>
+            )}
+          </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
-                  <Calendar size={16} /> End Date
-                </label>
-                <input
-                  type="date"
-                  name="end_date"
-                  value={formData.end_date}
-                  onChange={handleChange}
-                  className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
-                />
-                {errors.end_date && (
-                  <p className="text-red-500 text-sm mt-1">{errors.end_date}</p>
-                )}
-              </div>
-            </div>
+          {/* Image URL */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+              <Upload size={16} /> Image URL
+            </label>
+            <input
+              type="text"
+              name="image_url"
+              value={formData.image_url}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+          </div>
 
-            {/* Ticket Price */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
-                <DollarSign size={16} /> Ticket Price (BDT)
-              </label>
-              <input
-                type="number"
-                name="ticket_price"
-                value={formData.ticket_price}
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
-              />
-              {errors.ticket_price && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.ticket_price}
-                </p>
-              )}
-            </div>
+          {/* Privacy Policy */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Privacy Policy</label>
+            <input
+              type="text"
+              name="privacy_policy"
+              value={formData.privacy_policy}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
+            {errors.privacy_policy && (
+              <p className="text-red-500 text-sm mt-1">{errors.privacy_policy}</p>
+            )}
+          </div>
 
-            {/* Image Upload */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700  items-center gap-1">
-                <Upload size={16} /> Upload Image
-              </label>
-              <input
-                type="text"
-                name="image_url"
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2"
-              />
-            </div>
-
-            {/* Privacy Policy */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">
-                Privacy Policy
-              </label>
-              <input
-                type="text"
-                name="privacy_policy"
-                value={formData.privacy_policy}
-                onChange={handleChange}
-                className="mt-1 w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-blue-500"
-              />
-              {errors.privacy_policy && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.privacy_policy}
-                </p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full ${
-                isLoading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              } text-white py-3 px-6 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]`}>
-              {isLoading ? "Creating..." : "Create Event"}
-            </button>
-          </form>
-        </div>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-transform duration-150 ${
+              isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-amber-600 hover:bg-amber-700"
+            }`}
+          >
+            {isLoading ? "Creating..." : "Create Event"}
+          </button>
+        </form>
       </div>
     </div>
   );
