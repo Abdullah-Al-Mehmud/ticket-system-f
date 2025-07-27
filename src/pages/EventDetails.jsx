@@ -4,194 +4,303 @@ import {
   Calendar,
   Clock,
   MapPin,
-  Heart,
-  Share2,
+  User,
   Ticket,
-  SquareUserRound,
-  Mail,
+  ShoppingCart,
+  Plus,
+  Minus,
 } from "lucide-react";
-import { Alert, AlertDescription } from "../components/ui/alert";
 import { useGetEventByIdQuery } from "../redux/features/event/EventApiSlice";
+import { useCreateTicketMutation } from "../redux/features/tickets/ticketsApiSlice";
+import toast from "react-hot-toast";
 
-
-const EventDetails = () => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [showFullDescription, setShowFullDescription] = useState(false);
-
+const EventDetailsPage = () => {
   const { id } = useParams();
-  const { data, isLoading, isError } = useGetEventByIdQuery(id);
-  const event = data?.data;
+  const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
+  const [createTicket, { isLoading: bookingLoading }] =
+    useCreateTicketMutation();
+  const [ticketQuantities, setTicketQuantities] = useState({});
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
- 
-
-  const handleLike = () => setIsLiked(!isLiked);
-
-  const handleShare = () => navigator.clipboard.writeText(window.location.href);
-
-  if (isLoading)
-    return <div className="text-center p-6">Loading event details...</div>;
-
-  if (isError || !event)
+  if (isLoading) return <div className="text-center p-10">Loading...</div>;
+  if (isError || !data?.data)
     return (
-      <div className="text-center p-6 text-red-500">
-        Failed to load event details.
-      </div>
+      <div className="text-center p-10 text-red-500">Error loading event.</div>
     );
 
-  const start = new Date(event.start_date);
-  const end = new Date(event.end_date);
+  const eventData = data.data;
 
-  const dateOptions = { day: "numeric", month: "short", year: "numeric" };
-  const timeOptions = { hour: "numeric", minute: "2-digit", hour12: true };
-
-  const formatDateTimeRange = (start, end) => {
-    const formattedStartTime = start.toLocaleTimeString("en-US", timeOptions);
-    const formattedEndTime = end.toLocaleTimeString("en-US", timeOptions);
-    return `${formattedStartTime} - ${formattedEndTime}`;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
-  const formatDate = (start, end) => {
-    const formattedStartDate = start.toLocaleDateString("en-US", dateOptions);
-    const formattedEndDate = end.toLocaleDateString("en-US", dateOptions);
-    return `${formattedStartDate} - ${formattedEndDate}`;
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
-  const toggleDescription = () => {
-    setShowFullDescription(!showFullDescription);
+  const updateQuantity = (ticketId, change) => {
+    setTicketQuantities((prev) => {
+      const currentQty = prev[ticketId] || 0;
+      const newQty = Math.max(0, Math.min(10, currentQty + change));
+      if (newQty === 0) {
+        const { [ticketId]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [ticketId]: newQty };
+    });
   };
 
-  const maxLength = 300;
-  const descriptionText = event.event_description || "";
+  const getTotalAmount = () => {
+    return Object.entries(ticketQuantities).reduce(
+      (total, [ticketId, quantity]) => {
+        const ticket = eventData.ticket_categories.find(
+          (t) => t.id === parseInt(ticketId)
+        );
+        return total + (ticket ? parseFloat(ticket.price) * quantity : 0);
+      },
+      0
+    );
+  };
 
-  const shortDescription =
-    descriptionText.length > maxLength
-      ? descriptionText.slice(0, maxLength) + "..."
-      : descriptionText;
+  const getTotalTickets = () => {
+    return Object.values(ticketQuantities).reduce(
+      (total, qty) => total + qty,
+      0
+    );
+  };
 
+  const handleBooking = () => {
+    if (getTotalTickets() > 0) {
+      setShowBookingModal(true);
+    }
+  };
+
+  const isTicketAvailable = (ticket) => {
+    const now = new Date();
+    const start = new Date(ticket.sales_start);
+    const end = new Date(ticket.sales_end);
+    return (
+      now >= start &&
+      now <= end &&
+      ticket.total_quantity - ticket.sold_quantity > 0
+    );
+  };
+  const handleConfirmBooking = async () => {
+    try {
+      const bookings = Object.entries(ticketQuantities).map(
+        ([ticketCategoryId, quantity]) => ({
+          ticket_category_id: parseInt(ticketCategoryId),
+          quantity,
+          status: "Confirmed",
+        })
+      );
+
+      for (const booking of bookings) {
+        await createTicket(booking).unwrap();
+      }
+
+      toast.success("Booking successful!");
+      setShowBookingModal(false);
+      setTicketQuantities({});
+      refetch();
+    } catch (error) {
+      alert("Booking failed. Please try again.");
+      console.error("Booking error:", error);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-teal-50 p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Hero */}
-        <div className="bg-white rounded-2xl shadow overflow-hidden mb-6">
-          <div className="relative h-80">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Header */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+          <div className="relative h-96">
             <img
-              src={event.image_url}
-              alt={event.title}
-              className="object-cover w-full h-full"
+              src={eventData.image_url}
+              alt={eventData.title}
+              className="w-full h-full object-cover"
             />
-            <div className="absolute top-4 right-4 flex gap-2">
-              <button
-                onClick={handleLike}
-                className={`p-3 rounded-full backdrop-blur-sm ${
-                  isLiked ? "bg-red-500" : "bg-white/20"
-                } text-white`}
-              >
-                <Heart className="w-5 h-5" />
-              </button>
-              <button
-                onClick={handleShare}
-                className="p-3 rounded-full bg-white/20 text-white"
-              >
-                <Share2 className="w-5 h-5" />
-              </button>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+            <div className="absolute bottom-6 left-6 text-white">
+              <h1 className="text-4xl font-bold mb-2">{eventData.title}</h1>
+              <div className="flex items-center space-x-4 text-lg opacity-90">
+                <div className="flex items-center">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  {formatDate(eventData.start_date)}
+                </div>
+                <div className="flex items-center">
+                  <Clock className="w-5 h-5 mr-2" />
+                  {formatTime(eventData.start_date)} -{" "}
+                  {formatTime(eventData.end_date)}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-xl shadow p-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <Calendar className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">{formatDate(start, end)}</p>
-                      <p className="text-sm text-gray-500">Event Date</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <Clock className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">
-                        {formatDateTimeRange(start, end)}
-                      </p>
-                      <p className="text-sm text-gray-500">Event Time</p>
-                    </div>
+        {/* Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                About This Event
+              </h2>
+              <p className="text-gray-600 text-lg">
+                {eventData.event_description}
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Event Details
+              </h2>
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <MapPin className="w-6 h-6 text-blue-500 mr-4" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">Location</h3>
+                    <p className="text-gray-600">{eventData.location}</p>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <MapPin className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">{event.location}</p>
-                      <p className="text-sm text-gray-500">Location</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-700">
-                    <Ticket className="w-5 h-5 text-amber-600" />
-                    <div>
-                      <p className="font-semibold">
-                        <span className="text-2xl">৳</span> {event.ticket_price}
-                      </p>
-                      <p className="text-sm text-gray-500">Ticket Price</p>
-                    </div>
+                <div className="flex items-center">
+                  <User className="w-6 h-6 text-green-500 mr-4" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Organized by
+                    </h3>
+                    <p className="text-gray-600">{eventData.organizer.name}</p>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Description */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                About This Event
-              </h2>
-              <p className="text-gray-600">
-                {showFullDescription ? descriptionText : shortDescription}
-              </p>
-              {descriptionText.length > maxLength && (
-                <button
-                  onClick={toggleDescription}
-                  className="text-amber-600 hover:underline text-sm mt-1"
-                >
-                  {showFullDescription ? "See less" : "See more"}
-                </button>
-              )}
             </div>
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Organizer */}
-            <div className="bg-white rounded-xl shadow p-6">
-              <h3 className="text-xl font-bold mb-4 text-gray-800">
-                Organizer
-              </h3>
-              <div className="flex items-center gap-3 text-gray-700">
-                <SquareUserRound className="w-4 h-4" />
-                <span>{event.organizer?.name || "Unknown Organizer"}</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-600 mt-1">
-                <Mail className="w-4 h-4" />
-                <span className="text-sm">
-                  {event.organizer?.email || "No email provided"}
-                </span>
-              </div>
-            </div>
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-2xl shadow-lg p-8 sticky top-6">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <Ticket className="w-6 h-6 mr-2 text-purple-500" />
+                Select Tickets
+              </h2>
 
-            {/* Privacy Note */}
-            <Alert className="border-amber-200 bg-amber-50">
-              <AlertDescription className="text-amber-800">
-                <strong>Note:</strong> {event.privacy_policy}
-              </AlertDescription>
-            </Alert>
+              <div className="space-y-4">
+                {eventData.ticket_categories.map((ticket) => {
+                  const available =
+                    ticket.total_quantity - ticket.sold_quantity;
+                  return (
+                    <div
+                      key={ticket.id}
+                      className="border rounded-xl p-4 hover:shadow-md"
+                    >
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <h3 className="font-semibold text-gray-800">
+                            {ticket.name}
+                          </h3>
+                          <p className="text-2xl font-bold text-purple-600">
+                            ${parseFloat(ticket.price).toFixed(2)}
+                          </p>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {available} available
+                        </span>
+                      </div>
+                      {isTicketAvailable(ticket) ? (
+                        <div className="flex items-center space-x-3">
+                          <button
+                            onClick={() => updateQuantity(ticket.id, -1)}
+                            className="w-8 h-8 rounded-full bg-orange-200 hover:bg-orange-300 flex items-center justify-center"
+                            disabled={!ticketQuantities[ticket.id]}
+                          >
+                            <Minus className="w-4 h-4 text-orange-700" />
+                          </button>
+                          <span className="w-8 text-center font-semibold text-orange-800">
+                            {ticketQuantities[ticket.id] || 0}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(ticket.id, 1)}
+                            className="w-8 h-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
+                            disabled={(ticketQuantities[ticket.id] || 0) >= 10}
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="text-red-500 font-medium text-center">
+                          Not Available
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {getTotalTickets() > 0 && (
+                <div className="mt-6 pt-6 border-t">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="font-semibold">
+                      Total ({getTotalTickets()} tickets)
+                    </span>
+                    <span className="text-2xl font-bold text-purple-600">
+                      ${getTotalAmount().toFixed(2)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleBooking}
+                    className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-200"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Book Now
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {showBookingModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none backdrop-blur-sm  bg-opacity-30">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-lg pointer-events-auto">
+            <h3 className="text-2xl font-bold mb-4">Booking Confirmation</h3>
+            <p className="mb-6 text-gray-600">
+              You're about to book <strong>{getTotalTickets()}</strong>{" "}
+              ticket(s) for
+              <strong> ${getTotalAmount().toFixed(2)}</strong>.
+            </p>
+
+            <div className="flex space-x-4">
+              <button
+                onClick={() => setShowBookingModal(false)}
+                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-xl"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleConfirmBooking}
+                className="flex-1 bg-gradient-to-r from-orange-500 to-blue-500 hover:from-orange-600 hover:to-orange-600 text-white py-3 px-6 rounded-xl"
+              >
+                {bookingLoading ? "Processing..." : "Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default EventDetails;
+export default EventDetailsPage;
