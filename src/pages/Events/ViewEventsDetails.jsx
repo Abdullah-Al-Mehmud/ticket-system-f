@@ -18,6 +18,8 @@ import {
 } from "../../redux/features/event/EventApiSlice";
 import PageLoading from "../../components/LoderComponent/PageLoading";
 import toast from "react-hot-toast";
+import { useDeleteTicketCategoryMutation } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+import TicketCategoryModal from "./TicketCategoryModal";
 
 const EventDetailsAdmin = () => {
   const { id } = useParams();
@@ -26,6 +28,10 @@ const EventDetailsAdmin = () => {
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const [updateEvent] = useUpdateEventMutation();
   const [deleteEvent] = useDeleteEventMutation();
+
+  const [deleteTicketCategory] = useDeleteTicketCategoryMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
@@ -87,6 +93,27 @@ const EventDetailsAdmin = () => {
   const daysUntil = Math.ceil(
     (new Date(event.start_date) - new Date()) / (1000 * 60 * 60 * 24)
   );
+
+  const openCreateModal = () => {
+    setSelectedCategory(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (category) => {
+    setSelectedCategory(category);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    refetch();
+  };
+
+  const handleDeleteCategory = async (id) => {
+    await deleteTicketCategory(id);
+    toast.success("Ticket category deleted");
+    refetch();
+  };
 
   const handleStatusUpdate = async () => {
     await updateEvent({ id: event.id, status: eventStatus });
@@ -339,10 +366,20 @@ const EventDetailsAdmin = () => {
                   <h3 className="text-lg font-medium text-gray-900">
                     Ticket Categories
                   </h3>
-                  <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                  <button
+                    onClick={openCreateModal}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
                     Add New Ticket Type
                   </button>
                 </div>
+
+                {/* Modal */}
+                <TicketCategoryModal
+                  isOpen={isModalOpen}
+                  onClose={handleModalClose}
+                  initialData={selectedCategory}
+                />
                 <div className="space-y-4">
                   {event.ticket_categories.map((t) => {
                     const percent = (t.sold_quantity / t.total_quantity) * 100;
@@ -411,10 +448,16 @@ const EventDetailsAdmin = () => {
                             {formatDate(t.sales_end)}
                           </span>
                           <div className="space-x-2">
-                            <button className="text-blue-600 hover:text-blue-800">
+                            <button
+                              className="text-blue-600 hover:text-blue-800"
+                              onClick={() => openEditModal(t)}
+                            >
                               Edit
                             </button>
-                            <button className="text-red-600 hover:text-red-800">
+                            <button
+                              className="text-red-600 hover:text-red-800"
+                              onClick={() => handleDeleteCategory(t.id)}
+                            >
                               Delete
                             </button>
                           </div>
