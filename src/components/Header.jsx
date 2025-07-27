@@ -110,9 +110,7 @@ const Header = ({ user }) => {
                         <div className="font-medium text-slate-800 text-sm">
                           {user.name}
                         </div>
-                        <div className="text-xs text-slate-500">
-                          {user.email}
-                        </div>
+
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
