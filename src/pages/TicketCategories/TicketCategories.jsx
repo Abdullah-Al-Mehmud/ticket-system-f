@@ -32,9 +32,13 @@ export default function TicketCategories() {
 
       <div className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
         {isLoading ? (
-          <div className="p-6 text-center text-gray-500">Loading ticket categories...</div>
+          <div className="p-6 text-center text-gray-500">
+            Loading ticket categories...
+          </div>
         ) : isError ? (
-          <div className="p-6 text-center text-red-500">Failed to load ticket categories.</div>
+          <div className="p-6 text-center text-red-500">
+            Failed to load ticket categories.
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -62,15 +66,38 @@ export default function TicketCategories() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {fetchData?.data.map((event) => (
-                  <tr key={event?.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-gray-800 font-medium">#{event?.id}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">{event?.name}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">{event?.event?.title}</td>
-                    <td className="px-6 py-4 text-sm text-gray-800">${event?.price}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{event?.sales_start}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{event?.sales_end}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{event?.total_quantity}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{event?.sold_quantity}</td>
+                  <tr
+                    key={event?.id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm text-gray-800 font-medium">
+                      <Link to={`/admin/ticket-categories/${event.id}`}>
+                        #{event?.id}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      <Link to={`/admin/ticket-categories/${event.id}`}>
+                        {event?.name}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      {event?.event?.title}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      ${event?.price}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.sales_start}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.sales_end}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.total_quantity}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.sold_quantity}
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
                         <Link
