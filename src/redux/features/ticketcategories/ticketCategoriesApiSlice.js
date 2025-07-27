@@ -31,11 +31,11 @@ export const ticketCategoriesApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["TicketCategory"],
     }),
 
-    // PUT: Update a category
+
     updateTicketCategory: builder.mutation({
       query: ({ id, ...updatedData }) => ({
         url: `/ticket-category/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: updatedData,
       }),
       invalidatesTags: (result, error, { id }) => [

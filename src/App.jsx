@@ -79,6 +79,7 @@ function App() {
           <Route path="ticket-categories" element={<TicketCategories />} />
           <Route path="ticket-categories/:id" element={<TicketCategoriesDetails />} />
           <Route path="ticket-categories/:id/edit" element={<TicketCategoriesUpdate />} />
+          
         </Route>
       </Route>
       {/* For User Layout */}
