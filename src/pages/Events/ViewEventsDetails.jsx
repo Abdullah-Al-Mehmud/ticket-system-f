@@ -11,21 +11,26 @@ import {
   DollarSign,
   Settings,
 } from "lucide-react";
-import { useGetEventByIdQuery } from "../../redux/features/event/EventApiSlice";
+import {
+  useGetEventByIdQuery,
+  useUpdateEventMutation,
+} from "../../redux/features/event/EventApiSlice";
 import PageLoading from "../../components/LoderComponent/PageLoading";
+import toast from "react-hot-toast";
 
 const EventDetailsAdmin = () => {
   const { id } = useParams();
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
+  const [updateEvent] = useUpdateEventMutation();
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
   const [eventStatus, setEventStatus] = useState("");
   const [showFullDescription, setShowFullDescription] = useState(false);
   useEffect(() => {
-    if (data?.data?.status) {
-      setEventStatus(data.data.status);
+    if (event?.status) {
+      setEventStatus(event.status);
     }
-  }, [data]);
+  }, [event]);
   const maxLength = 300;
   const descriptionText = event?.event_description || "";
   const shortDescription =
@@ -76,6 +81,11 @@ const EventDetailsAdmin = () => {
     (new Date(event.start_date) - new Date()) / (1000 * 60 * 60 * 24)
   );
 
+  const handleStatusUpdate = async () => {
+    await updateEvent({ id: event.id, status: eventStatus });
+    toast.success("Event status updated successfully!");
+    refetch();
+  };
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -423,7 +433,10 @@ const EventDetailsAdmin = () => {
                       <option value="Done">Done</option>
                       <option value="Cancelled">Cancelled</option>
                     </select>
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    <button
+                      onClick={handleStatusUpdate}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
                       Update Status
                     </button>
                   </div>
