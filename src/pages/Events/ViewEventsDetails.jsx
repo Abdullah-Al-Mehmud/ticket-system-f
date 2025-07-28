@@ -13,6 +13,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
+
 import {
   useDeleteEventMutation,
   useGetEventByIdQuery,
@@ -39,7 +40,7 @@ const EventDetailsAdmin = () => {
   const [showConfirmInput, setShowConfirmInput] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
 
-   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
   const event = data?.data;
@@ -117,7 +118,6 @@ const EventDetailsAdmin = () => {
     setIsModalOpen(false);
     refetch();
   };
-
 
   const handleDeleteClick = (userId) => {
     setUserToDelete(userId);
@@ -411,118 +411,139 @@ const EventDetailsAdmin = () => {
                   onClose={handleModalClose}
                   initialData={selectedCategory}
                 />
-                <div className="space-y-4">
-                  {event.ticket_categories.map((t) => {
-                    const percent = (t.sold_quantity / t.total_quantity) * 100;
-                    return (
-                      <div key={t.id} className="bg-gray-50 rounded-lg p-6">
-                        <div className="flex justify-between items-center mb-2">
-                          <div>
-                            <Link
-                              to={`/admin/ticket-categories/${t.id}`}
-                              className="flex items-center gap-1 underline text-lg font-medium text-gray-900">
-                              {t.name}
-                              <Eye className="w-4 h-4 text-gray-500" />
-                            </Link>
-                            <p className="text-xs text-gray-500 mt-1">
-                              ID: {t.id}
-                            </p>
-                          </div>
 
-                          <span className="text-2xl font-bold text-green-600">
-                            ${t.price}
-                          </span>
-                        </div>
+                <div className="bg-white rounded-lg shadow">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Ticket Category
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Price
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Sold / Total
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Progress
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Revenue
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Sales Period
+                          </th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {event.ticket_categories.map((t) => {
+                          const percent =
+                            (t.sold_quantity / t.total_quantity) * 100;
+                          const available = t.total_quantity - t.sold_quantity;
+                          const revenue = (
+                            t.sold_quantity * parseFloat(t.price)
+                          ).toFixed(2);
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Total Quantity
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {t.total_quantity}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Sold
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {t.sold_quantity}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Available
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {t.total_quantity - t.sold_quantity}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Revenue
-                            </p>
-                            <p className="text-lg font-semibold text-green-600">
-                              $
-                              {(t.sold_quantity * parseFloat(t.price)).toFixed(
-                                2
-                              )}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <div className="flex justify-between text-sm text-gray-600 mb-1">
-                            <span>Sales Progress</span>
-                            <span>{percent.toFixed(1)}%</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full"
-                              style={{ width: `${percent}%` }}></div>
-                          </div>
-                        </div>
+                          return (
+                            <tr key={t.id} className="hover:bg-gray-50">
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div>
+                                  <div className="flex items-center">
+                                    <a
+                                      href={`/admin/ticket-categories/${t.id}`}
+                                      className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900">
+                                      {t.name}
+                                      <Eye className="w-4 h-4 text-amber-600" />
+                                    </a>
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    ID: {t.id}
+                                  </div>
+                                </div>
+                              </td>
 
-                        <div className="mt-4 flex justify-between items-center text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-4 py-2">
-                          <span className="flex items-center space-x-2">
-                            <Calendar className="w-5 h-5 text-blue-500" />
-                            <span>
-                              <strong>Sales:</strong>{" "}
-                              <time dateTime={t.sales_start}>
-                                {formatDate(t.sales_start)}
-                              </time>{" "}
-                              –{" "}
-                              <time dateTime={t.sales_end}>
-                                {formatDate(t.sales_end)}
-                              </time>
-                            </span>
-                          </span>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className="text-lg font-semibold text-amber-600">
+                                  ${t.price}
+                                </span>
+                              </td>
 
-                          <div className="space-x-3">
-                            <button
-                              className="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                              onClick={() => openEditModal(t)}>
-                              <Edit className="w-4 h-4 mr-1" />
-                              Edit
-                            </button>
-                            <button
-                              className="flex items-center text-red-600 hover:text-red-800 transition-colors duration-200"
-                              onClick={() => handleDeleteClick(t.id)}>
-                              <Trash2 className="w-4 h-4 mr-1" />
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">
+                                  <span className="font-medium">
+                                    {t.sold_quantity}
+                                  </span>{" "}
+                                  / {t.total_quantity}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {available} available
+                                </div>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center">
+                                  <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                    <div
+                                      className="bg-amber-600 h-2 rounded-full"
+                                      style={{ width: `${percent}%` }}></div>
+                                  </div>
+                                  <span className="text-sm text-gray-600">
+                                    {percent.toFixed(1)}%
+                                  </span>
+                                </div>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className="text-sm font-semibold text-amber-600">
+                                  ${revenue}
+                                </span>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center text-xs text-gray-500">
+                                  <Calendar className="w-4 h-4 mr-1" />
+                                  <div>
+                                    <div>{formatDate(t.sales_start)}</div>
+                                    <div>to {formatDate(t.sales_end)}</div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div className="flex justify-end space-x-2">
+                                  <button
+                                    onClick={() => openEditModal(t)}
+                                    className="text-amber-600 hover:text-amber-800 p-1"
+                                    title="Edit">
+                                    <Edit className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteClick(t.id)}
+                                    className="text-red-600 hover:text-red-800 p-1"
+                                    title="Delete">
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-                  <ConfirmModal
-                    isOpen={isModalOpenDelete}
-                    onClose={closeModal}
-                    onConfirm={confiramDelete}
-                    message="Are you sure you want to delete this Ticket Categories ?"
-                  />
+
+                <ConfirmModal
+                  isOpen={isModalOpenDelete}
+                  onClose={closeModal}
+                  onConfirm={confiramDelete}
+                  message="Are you sure you want to delete this Ticket Categories ?"
+                />
               </div>
             )}
 

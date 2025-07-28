@@ -90,15 +90,15 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 backdrop-blur-md bg-opacity-50 flex justify-center items-center z-50 p-4 animate-in fade-in duration-300">
-      <div className="bg-white rounded-2xl w-full max-w-lg transform animate-in slide-in-from-bottom-4 duration-500 border border-gray-100">
+    <div className="fixed inset-0   flex justify-center items-center z-50 p-4 animate-in fade-in duration-300">
+      <div className="bg-white rounded-2xl w-full max-w-lg transform animate-in slide-in-from-bottom-4 duration-500 ">
         {/* Header */}
         <div className="relative bg-gradient-to-r from-orange-600 via-orange-600 to-orange-600 p-6 rounded-t-2xl">
           <div className="absolute inset-0 bg-opacity-10 rounded-t-2xl"></div>
           <div className="relative flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-white bg-opacity-20 rounded-xl backdrop-blur-sm">
-                <Ticket className="w-6 h-6 text-white" />
+                <Ticket className="w-6 h-6 text-amber-600" />
               </div>
               <h2 className="text-xl font-bold text-white">
                 {initialData ? "Edit" : "Create"} Ticket Category
@@ -106,7 +106,7 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white hover:bg-opacity-20 rounded-xl transition-all duration-200 group"
+              className="p-2 hover:bg-amber-700 hover:bg-opacity-20 rounded-xl transition-all duration-200 group"
             >
               <X className="w-5 h-5 text-white group-hover:rotate-90 transition-transform duration-200" />
             </button>
@@ -271,6 +271,8 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
           </div>
         </form>
       </div>
+
+      <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-50 -z-10"></div>
     </div>
   );
 };
