@@ -557,29 +557,36 @@ const EventDetailsAdmin = () => {
                     <p className="text-red-700 text-sm mb-4">
                       Once deleted, this cannot be undone.
                     </p>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       {!showConfirmInput ? (
                         <button
                           onClick={() => setShowConfirmInput(true)}
-                          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors"
                         >
                           Delete Event Permanently
                         </button>
                       ) : (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Type{" "}
+                            <span className="font-semibold text-red-600">
+                              confirm
+                            </span>{" "}
+                            to permanently delete this event:
+                          </label>
                           <input
                             type="text"
-                            placeholder="Type 'confirm' to delete"
+                            placeholder="confirm"
                             value={confirmationText}
                             onChange={(e) =>
                               setConfirmationText(e.target.value)
                             }
-                            className="border px-3 py-2 rounded-md w-full"
+                            className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
                           />
-                          <div className="flex space-x-2">
+                          <div className="flex gap-3">
                             <button
                               onClick={handleConfirmClick}
-                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
                             >
                               Confirm Delete
                             </button>
@@ -588,7 +595,7 @@ const EventDetailsAdmin = () => {
                                 setShowConfirmInput(false);
                                 setConfirmationText("");
                               }}
-                              className="bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400"
+                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
                             >
                               Cancel
                             </button>
