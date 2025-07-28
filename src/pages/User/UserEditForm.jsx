@@ -159,8 +159,8 @@ export default function UserEditForm() {
       <button
         onClick={handleSave}
         disabled={isLoading}
-        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-800 text-white rounded-xl text-base font-medium disabled:opacity-50 transition-all duration-300 ease-in-out group shadow-md hover:shadow-lg">
-        {isLoading ? "Saving..." : "Save"}
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-800 text-white rounded text-base font-medium disabled:opacity-50 transition-all duration-300 ease-in-out group shadow-md hover:shadow-lg">
+        {isLoading ? "Updating..." : "Update"}
         <ArrowRight
           size={16}
           className="transition-transform duration-300 group-hover:translate-x-1"
