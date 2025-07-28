@@ -69,10 +69,10 @@ const AllEventslist = () => {
 
   const getStatusBadge = (status) => {
     const statusStyles = {
-      active: "bg-green-100 text-green-800 border-green-200",
-      pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      completed: "bg-blue-100 text-blue-800 border-blue-200",
-      cancelled: "bg-red-100 text-red-800 border-red-200",
+      Live: "bg-green-100 text-green-800 border-green-200",
+      Upcoming: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      Done: "bg-blue-100 text-blue-800 border-blue-200",
+      Cancelled: "bg-red-100 text-red-800 border-red-200",
     };
     return (
       <span
@@ -103,10 +103,13 @@ const AllEventslist = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(dateString).toLocaleString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true, // for AM/PM format; use false for 24-hour format
     });
   };
 
@@ -199,19 +202,19 @@ const AllEventslist = () => {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
                 <Download size={16} /> Export
               </button>
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                 <MoreVertical size={16} />
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
         {/* Table or Loading State */}
-        { isError ? (
+        {isError ? (
           <div className="bg-white rounded-lg shadow-sm border p-6 text-center text-red-500">
             Failed to load events. Please try again later.
           </div>
@@ -228,20 +231,24 @@ const AllEventslist = () => {
                       Event Name
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Organizer
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Category
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Organizer
+                      Location
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Status
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Date & Time
+                      Start Date
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Location
+                      End Date
                     </th>
+
                     <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
                       Actions
                     </th>
@@ -257,22 +264,22 @@ const AllEventslist = () => {
                         {event.title}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        {getCategoryBadge(event.category.name)}
+                        {event.organizer.name}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        {getStatusBadge(event.organizer.name)}
+                        {event.category.name}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {event.location}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {getStatusBadge(event.status)}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
                         <div>{formatDate(event.start_date)}</div>
-                        <div className="text-xs text-gray-400">
-                          {event.end_date}
-                        </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
-                        {event.location}
+                        <div>{formatDate(event.end_date)}</div>
                       </td>
 
                       <td className="px-6 py-4 text-center">
