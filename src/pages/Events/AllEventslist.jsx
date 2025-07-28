@@ -281,10 +281,15 @@ const AllEventslist = () => {
                   {filteredEvents.map((event) => (
                     <tr key={event.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                       <Link className="hover:underline" to={`/admin/events-details/${event.id}`}>
+                            
                         #{event.id}
+                        </Link>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                      <Link className="hover:underline" to={`/admin/events-details/${event.id}`}>
                         {event.title}
+                        </Link>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {event.organizer.name}

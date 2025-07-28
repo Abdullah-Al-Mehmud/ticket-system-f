@@ -283,13 +283,19 @@ const UserList = () => {
                 ) : (
                   filteredUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50">
-                      <Link to={`/admin/user-profile/${user.id}`}>
+                     
                         {" "}
                         <td className="px-6 py-4">
+                         <Link className=" hover:underline" to={`/admin/user-profile/${user.id}`}>
                           #{user.id.toString().padStart(3, "0")}
-                        </td>{" "}
                       </Link>
-                      <td className="px-6 py-4">{user.name}</td>
+                        </td>{" "}
+                      
+                      <td className="px-6 py-4">
+                      <Link className=" hover:underline" to={`/admin/user-profile/${user.id}`}>
+                      {user.name}
+                      </Link>
+                      </td>
                       <td className="px-6 py-4">{user.email}</td>
                       <td className="px-6 py-4">
                         <span

@@ -516,13 +516,13 @@ const EventDetailsAdmin = () => {
                       </div>
                     );
                   })}
+                </div>
                   <ConfirmModal
                     isOpen={isModalOpenDelete}
                     onClose={closeModal}
                     onConfirm={confiramDelete}
                     message="Are you sure you want to delete this Ticket Categories ?"
                   />
-                </div>
               </div>
             )}
 
