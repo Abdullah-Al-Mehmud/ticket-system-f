@@ -139,11 +139,7 @@ const AdminLayout = ({ children }) => {
                 className="lg:hidden p-2 rounded-md hover:bg-gray-100">
                 <Menu className="w-5 h-5" />
               </button>
-              <button
-                onClick={() => navigate(-1)}
-                className="text-xl font-semibold text-gray-800 hover:text-white hover:bg-amber-600 transition p-2 rounded-md" >
-                <ChevronLeft />
-              </button>
+              
             </div>
             <div className="flex items-center space-x-6">
               <div className="text-right">

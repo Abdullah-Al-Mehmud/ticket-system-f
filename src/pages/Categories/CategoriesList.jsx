@@ -118,12 +118,12 @@ const CategoriesList = () => {
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">Categories</h1>
             <p className="mt-2 text-gray-600">
-              All available categories from the backend
+              All available categories 
             </p>
           </div>
           <Link
             to="/admin/create-category"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
           >
             <Plus size={20} /> Add Category
           </Link>
