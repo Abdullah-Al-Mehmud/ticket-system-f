@@ -10,6 +10,8 @@ import {
   TrendingUp,
   DollarSign,
   Settings,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import {
   useDeleteEventMutation,
@@ -32,6 +34,9 @@ const EventDetailsAdmin = () => {
   const [deleteTicketCategory] = useDeleteTicketCategoryMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const [showConfirmInput, setShowConfirmInput] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
 
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
@@ -121,6 +126,13 @@ const EventDetailsAdmin = () => {
     refetch();
   };
 
+  const handleConfirmClick = () => {
+    if (confirmationText.toLowerCase() === "confirm") {
+      handleDeleteEvent();
+    } else {
+      toast.error("You must type 'confirm' to delete.");
+    }
+  };
   const handleDeleteEvent = async () => {
     try {
       await deleteEvent(event?.id).unwrap();
@@ -135,7 +147,7 @@ const EventDetailsAdmin = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      {/* <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
@@ -157,7 +169,7 @@ const EventDetailsAdmin = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Overview */}
@@ -205,28 +217,55 @@ const EventDetailsAdmin = () => {
 
         {/* Tab Navigation */}
         <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6 -mb-px">
-              {[
-                { id: "overview", name: "Overview", icon: Eye },
-                { id: "tickets", name: "Tickets", icon: Tag },
-                { id: "settings", name: "Settings", icon: Settings },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === tab.id
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
-                >
-                  <tab.icon className="w-4 h-4 mr-2" />
-                  {tab.name}
-                </button>
-              ))}
-            </nav>
+          <div className="bg-white shadow-sm border-b">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                {/* Navigation Tabs - Left Side */}
+                <nav className="flex space-x-8 -mb-px">
+                  {[
+                    { id: "overview", name: "Overview", icon: Eye },
+                    { id: "tickets", name: "Tickets", icon: Tag },
+                    { id: "settings", name: "Settings", icon: Settings },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
+                        activeTab === tab.id
+                          ? "border-blue-500 text-blue-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
+                    >
+                      <tab.icon className="w-4 h-4 mr-2" />
+                      {tab.name}
+                    </button>
+                  ))}
+                </nav>
+
+                {/* Title + Status - Right Side */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-right">
+                  <h1 className="text-base font-semibold text-gray-900">
+                    {event.title}
+                  </h1>
+                  <div className="flex items-center space-x-2 mt-1 sm:mt-0">
+                    <span
+                      className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${
+                        event.status === "Live"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {event.status}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      ID: #{event.id}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div className="p-6">
             {/* Overview Tab */}
             {activeTab === "overview" && (
@@ -387,13 +426,18 @@ const EventDetailsAdmin = () => {
                       <div key={t.id} className="bg-gray-50 rounded-lg p-6">
                         <div className="flex justify-between items-center mb-2">
                           <div>
-                            <h4 className="text-lg font-medium text-gray-900">
-                              <Link to={`/admin/ticket-categories/${t.id}`}>
-                                {t.name}
-                              </Link>
-                            </h4>
-                            <p className="text-xs text-gray-500">ID: {t.id}</p>
+                            <Link
+                              to={`/admin/ticket-categories/${t.id}`}
+                              className="flex items-center gap-1 underline text-lg font-medium text-gray-900"
+                            >
+                              {t.name}
+                              <Eye className="w-4 h-4 text-gray-500" />
+                            </Link>
+                            <p className="text-xs text-gray-500 mt-1">
+                              ID: {t.id}
+                            </p>
                           </div>
+
                           <span className="text-2xl font-bold text-green-600">
                             ${t.price}
                           </span>
@@ -448,22 +492,35 @@ const EventDetailsAdmin = () => {
                             ></div>
                           </div>
                         </div>
-                        <div className="mt-4 flex justify-between text-sm text-gray-600">
-                          <span>
-                            Sales: {formatDate(t.sales_start)} –{" "}
-                            {formatDate(t.sales_end)}
+
+                        <div className="mt-4 flex justify-between items-center text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-4 py-2">
+                          <span className="flex items-center space-x-2">
+                            <Calendar className="w-5 h-5 text-blue-500" />
+                            <span>
+                              <strong>Sales:</strong>{" "}
+                              <time dateTime={t.sales_start}>
+                                {formatDate(t.sales_start)}
+                              </time>{" "}
+                              –{" "}
+                              <time dateTime={t.sales_end}>
+                                {formatDate(t.sales_end)}
+                              </time>
+                            </span>
                           </span>
-                          <div className="space-x-2">
+
+                          <div className="space-x-3">
                             <button
-                              className="text-blue-600 hover:text-blue-800"
+                              className="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
                               onClick={() => openEditModal(t)}
                             >
+                              <Edit className="w-4 h-4 mr-1" />
                               Edit
                             </button>
                             <button
-                              className="text-red-600 hover:text-red-800"
+                              className="flex items-center text-red-600 hover:text-red-800 transition-colors duration-200"
                               onClick={() => handleDeleteCategory(t.id)}
                             >
+                              <Trash2 className="w-4 h-4 mr-1" />
                               Delete
                             </button>
                           </div>
@@ -520,12 +577,52 @@ const EventDetailsAdmin = () => {
                     <p className="text-red-700 text-sm mb-4">
                       Once deleted, this cannot be undone.
                     </p>
-                    <button
-                      onClick={handleDeleteEvent}
-                      className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                    >
-                      Delete Event Permanently
-                    </button>
+                    <div className="space-y-4">
+                      {!showConfirmInput ? (
+                        <button
+                          onClick={() => setShowConfirmInput(true)}
+                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors"
+                        >
+                          Delete Event Permanently
+                        </button>
+                      ) : (
+                        <div className="space-y-3">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Type{" "}
+                            <span className="font-semibold text-red-600">
+                              confirm
+                            </span>{" "}
+                            to permanently delete this event:
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="confirm"
+                            value={confirmationText}
+                            onChange={(e) =>
+                              setConfirmationText(e.target.value)
+                            }
+                            className="w-full border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                          />
+                          <div className="flex gap-3">
+                            <button
+                              onClick={handleConfirmClick}
+                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                            >
+                              Confirm Delete
+                            </button>
+                            <button
+                              onClick={() => {
+                                setShowConfirmInput(false);
+                                setConfirmationText("");
+                              }}
+                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
