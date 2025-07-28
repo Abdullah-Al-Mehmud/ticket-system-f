@@ -23,6 +23,10 @@ import {
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
+import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
+
+// Skeleton Loader Component for Table Rows
+
 
 const UserList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -274,7 +278,12 @@ const UserList = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {filteredUsers.length === 0 ? (
+                {isLoading ? (
+                  // Show skeleton loader while loading
+                  
+                    <TableRowSkeleton count={4} />
+                  
+                ) : filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-6 text-gray-500">
                       No users found.

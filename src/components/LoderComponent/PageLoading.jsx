@@ -3,7 +3,9 @@ import './style.css'; // Make sure this CSS file is imported
 
 const PageLoading = () => {
   return (
-    <div className="w-full h-screen flex items-center justify-center  backdrop-blur-sm fixed inset-0 z-50">
+    <div className="w-full h-screen flex items-center justify-center  fixed inset-0 z-50">
+          <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-5 -z-10"></div>
+
       <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
         <circle cx="60" cy="60" r="45" fill="none" stroke="#d97706" strokeWidth="2" opacity="0.2" />
 

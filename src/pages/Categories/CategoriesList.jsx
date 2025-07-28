@@ -16,6 +16,7 @@ import {
 } from "../../redux/features/categories/categoriesApiSlice";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
+import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
 
 const CategoriesList = () => {
   const location = useLocation();
@@ -188,38 +189,34 @@ const CategoriesList = () => {
 
         {/* Table */}
         <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
-          {isError ? (
-            <div className="text-center py-12 text-red-500">
-              Failed to load categories.
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b">
-                    <tr>
-                      {["id", "name", "status", "created_at", "updated_at"].map(
-                        (col) => (
-                          <th
-                            key={col}
-                            className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                            onClick={() => handleSort(col)}>
-                            {col.replace("_", " ").toUpperCase()}
-                            {sortBy === col && (
-                              <span className="ml-1">
-                                {sortOrder === "asc" ? "↑" : "↓"}
-                              </span>
-                            )}
-                          </th>
-                        )
-                      )}
-                      <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
-                        Actions
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  {["id", "name", "status", "created_at", "updated_at"].map(
+                    (col) => (
+                      <th
+                        key={col}
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleSort(col)}>
+                        {col.replace("_", " ").toUpperCase()}
+                        {sortBy === col && (
+                          <span className="ml-1">
+                            {sortOrder === "asc" ? "↑" : "↓"}
+                          </span>
+                        )}
                       </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {filteredCategories.map((category) => (
+                    )
+                  )}
+                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {isLoading ? <TableRowSkeleton count={4} /> : <>
+                
+                     {filteredCategories.map((category) => (
                       <tr key={category.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 text-sm font-medium text-gray-900">
                           <Link
@@ -270,25 +267,25 @@ const CategoriesList = () => {
                           </div>
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <ConfirmModal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                onConfirm={confiramDelete}
-                message="Are you sure you want to delete this Categories?"
-              />
+                     ))
+                    }
+                 </>}
+              </tbody>
+            </table>
+          </div>
+          <ConfirmModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onConfirm={confiramDelete}
+            message="Are you sure you want to delete this Categories?"
+          />
 
-              {filteredCategories.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">
-                    No categories found matching your criteria.
-                  </p>
-                </div>
-              )}
-            </>
+          {filteredCategories.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">
+                No categories found matching your criteria.
+              </p>
+            </div>
           )}
         </div>
       </div>
