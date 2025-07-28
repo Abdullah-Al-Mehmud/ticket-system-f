@@ -22,33 +22,43 @@ import {
 } from "../../redux/features/user/userApiSlice";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
 
 const UserList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("all");
+  const [isModalOpen,setIsModalOpen] = useState(false);
+  const [userToDelete,setUserToDelete] = useState(null);
 
   const { data, error, isLoading, refetch } = useGetUserListQuery();
-  // console.log(data);
-  // console.log(data?.total_user);
   const [deleteUser] = useDeleteUserMutation();
-  // const [dashboardData] = useGetDashboardQuery();
   const {
     data: dashboardInfo,
     isLoading: isDashboardLoading,
     refetch: fetch,
   } = useGetDashboardQuery();
-  // console.log(dashboardInfo?.data.users.admins);
 
-  // const filter
+  const handleDeleteClick = (userId)=>{
+    setUserToDelete(userId);
+    setIsModalOpen(true);
+  }
 
-  // filter users based on search term and role
+  const confiramDelete = async () =>{
+       if(!userToDelete) return;
+       await handleDelete(userToDelete);
+       setIsModalOpen(false);
+       setUserToDelete(null);
+  };
+
+  const closeModal = ()=>{
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  }
+
 
   const handleDelete = async (userId) => {
-    const confirmed = window.confirm("Are you sure you want to delete this user?");
-    if(!confirmed) return;
-    console.log("Deleting user:", userId);
-
+   
     try {
       const res = await deleteUser(userId).unwrap();
       toast.success(res.message);
@@ -308,7 +318,7 @@ const UserList = () => {
                             <Edit size={16} />
                           </Link>
                           <button
-                            onClick={() => handleDelete(user.id)}
+                            onClick={() => handleDeleteClick(user.id)}
                             className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded">
                             <Trash2 size={16} />
                           </button>
@@ -384,6 +394,14 @@ const UserList = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal 
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={confiramDelete}
+          message="Are you sure you want to delete this user?"
+
+      />
     </div>
   );
 };
