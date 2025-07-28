@@ -22,6 +22,7 @@ import PageLoading from "../../components/LoderComponent/PageLoading";
 import toast from "react-hot-toast";
 import { useDeleteTicketCategoryMutation } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 import TicketCategoryModal from "./TicketCategoryModal";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
 
 const EventDetailsAdmin = () => {
   const { id } = useParams();
@@ -37,6 +38,9 @@ const EventDetailsAdmin = () => {
 
   const [showConfirmInput, setShowConfirmInput] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
+
+   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
@@ -114,6 +118,24 @@ const EventDetailsAdmin = () => {
     refetch();
   };
 
+
+  const handleDeleteClick = (userId) => {
+    setUserToDelete(userId);
+    setIsModalOpenDelete(true);
+  };
+
+  const confiramDelete = async () => {
+    if (!userToDelete) return;
+    await handleDeleteCategory(userToDelete);
+    setIsModalOpenDelete(false);
+    setUserToDelete(null);
+  };
+
+  const closeModal = () => {
+    setIsModalOpenDelete(false);
+    setUserToDelete(null);
+  };
+
   const handleDeleteCategory = async (id) => {
     await deleteTicketCategory(id);
     toast.success("Ticket category deleted");
@@ -146,8 +168,6 @@ const EventDetailsAdmin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-    
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -211,8 +231,7 @@ const EventDetailsAdmin = () => {
                         activeTab === tab.id
                           ? "border-blue-500 text-blue-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                      }`}
-                    >
+                      }`}>
                       <tab.icon className="w-4 h-4 mr-2" />
                       {tab.name}
                     </button>
@@ -230,8 +249,7 @@ const EventDetailsAdmin = () => {
                         event.status === "Live"
                           ? "bg-green-100 text-green-800"
                           : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
+                      }`}>
                       {event.status}
                     </span>
                     <span className="text-xs text-gray-500">
@@ -302,8 +320,7 @@ const EventDetailsAdmin = () => {
                             event.category.status === "active"
                               ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
+                          }`}>
                           {event.category.name}
                         </span>
                       </div>
@@ -322,8 +339,7 @@ const EventDetailsAdmin = () => {
                         onClick={() =>
                           setShowFullDescription(!showFullDescription)
                         }
-                        className="text-amber-600 hover:underline text-sm mt-1"
-                      >
+                        className="text-amber-600 hover:underline text-sm mt-1">
                         {showFullDescription ? "See less" : "See more"}
                       </button>
                     )}
@@ -384,8 +400,7 @@ const EventDetailsAdmin = () => {
                   </h3>
                   <button
                     onClick={openCreateModal}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                     Add New Ticket Type
                   </button>
                 </div>
@@ -405,8 +420,7 @@ const EventDetailsAdmin = () => {
                           <div>
                             <Link
                               to={`/admin/ticket-categories/${t.id}`}
-                              className="flex items-center gap-1 underline text-lg font-medium text-gray-900"
-                            >
+                              className="flex items-center gap-1 underline text-lg font-medium text-gray-900">
                               {t.name}
                               <Eye className="w-4 h-4 text-gray-500" />
                             </Link>
@@ -465,8 +479,7 @@ const EventDetailsAdmin = () => {
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
                               className="bg-blue-600 h-2 rounded-full"
-                              style={{ width: `${percent}%` }}
-                            ></div>
+                              style={{ width: `${percent}%` }}></div>
                           </div>
                         </div>
 
@@ -488,15 +501,13 @@ const EventDetailsAdmin = () => {
                           <div className="space-x-3">
                             <button
                               className="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                              onClick={() => openEditModal(t)}
-                            >
+                              onClick={() => openEditModal(t)}>
                               <Edit className="w-4 h-4 mr-1" />
                               Edit
                             </button>
                             <button
                               className="flex items-center text-red-600 hover:text-red-800 transition-colors duration-200"
-                              onClick={() => handleDeleteCategory(t.id)}
-                            >
+                              onClick={() => handleDeleteClick(t.id)}>
                               <Trash2 className="w-4 h-4 mr-1" />
                               Delete
                             </button>
@@ -505,6 +516,12 @@ const EventDetailsAdmin = () => {
                       </div>
                     );
                   })}
+                  <ConfirmModal
+                    isOpen={isModalOpenDelete}
+                    onClose={closeModal}
+                    onConfirm={confiramDelete}
+                    message="Are you sure you want to delete this Ticket Categories ?"
+                  />
                 </div>
               </div>
             )}
@@ -528,8 +545,7 @@ const EventDetailsAdmin = () => {
                     <select
                       value={eventStatus}
                       onChange={(e) => setEventStatus(e.target.value)}
-                      className="block w-48 px-3 py-2 border rounded-md"
-                    >
+                      className="block w-48 px-3 py-2 border rounded-md">
                       <option value="Upcoming">Upcoming</option>
                       <option value="Live">Live</option>
                       <option value="Done">Done</option>
@@ -537,8 +553,7 @@ const EventDetailsAdmin = () => {
                     </select>
                     <button
                       onClick={handleStatusUpdate}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                    >
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                       Update Status
                     </button>
                   </div>
@@ -558,8 +573,7 @@ const EventDetailsAdmin = () => {
                       {!showConfirmInput ? (
                         <button
                           onClick={() => setShowConfirmInput(true)}
-                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors"
-                        >
+                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors">
                           Delete Event Permanently
                         </button>
                       ) : (
@@ -583,8 +597,7 @@ const EventDetailsAdmin = () => {
                           <div className="flex gap-3">
                             <button
                               onClick={handleConfirmClick}
-                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-                            >
+                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors">
                               Confirm Delete
                             </button>
                             <button
@@ -592,8 +605,7 @@ const EventDetailsAdmin = () => {
                                 setShowConfirmInput(false);
                                 setConfirmationText("");
                               }}
-                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
-                            >
+                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
                               Cancel
                             </button>
                           </div>

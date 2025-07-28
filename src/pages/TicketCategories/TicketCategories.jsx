@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { Eye, Edit, Trash2 } from "lucide-react";
 import {
   useDeleteTicketCategoryMutation,
@@ -8,11 +8,31 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import DataLoadingLoader from "../../components/LoderComponent/PageLoading";
 import PageLoading from "../../components/LoderComponent/PageLoading";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
 
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();
   const [deleteTicketCategory, { isLoading: isDeleting }] =
     useDeleteTicketCategoryMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+
+    const handleDeleteClick = (userId) => {
+    setUserToDelete(userId);
+    setIsModalOpen(true);
+  };
+
+  const confiramDelete = async () => {
+    if (!userToDelete) return;
+    await handleDeleteEvent(userToDelete);
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
 
   const handleDeleteEvent = async (id) => {
     try {
@@ -99,7 +119,7 @@ export default function TicketCategories() {
                           <Edit size={16} />
                         </Link>
                         <button
-                          onClick={() => handleDeleteEvent(event.id)}
+                          onClick={() => handleDeleteClick(event.id)}
                           className="p-2 text-red-600 hover:bg-red-100 rounded-md"
                           title="Delete"
                           disabled={isDeleting}
@@ -119,6 +139,12 @@ export default function TicketCategories() {
               )}
             </tbody>
           </table>
+           <ConfirmModal
+                          isOpen={isModalOpen}
+                          onClose={closeModal}
+                          onConfirm={confiramDelete}
+                          message="Are you sure you want to delete this Ticket Categories?"
+                        />
         </div>
       </div>
     </div>
