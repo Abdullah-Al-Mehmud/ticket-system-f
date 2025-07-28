@@ -33,6 +33,9 @@ const EventDetailsAdmin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  const [showConfirmInput, setShowConfirmInput] = useState(false);
+  const [confirmationText, setConfirmationText] = useState("");
+
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
   const [eventStatus, setEventStatus] = useState("");
@@ -121,6 +124,13 @@ const EventDetailsAdmin = () => {
     refetch();
   };
 
+  const handleConfirmClick = () => {
+    if (confirmationText.toLowerCase() === "confirm") {
+      handleDeleteEvent();
+    } else {
+      toast.error("You must type 'confirm' to delete.");
+    }
+  };
   const handleDeleteEvent = async () => {
     try {
       await deleteEvent(event?.id).unwrap();
@@ -135,7 +145,7 @@ const EventDetailsAdmin = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
+      {/* <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
@@ -157,7 +167,7 @@ const EventDetailsAdmin = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Overview */}
@@ -205,28 +215,55 @@ const EventDetailsAdmin = () => {
 
         {/* Tab Navigation */}
         <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-gray-200">
-            <nav className="flex space-x-8 px-6 -mb-px">
-              {[
-                { id: "overview", name: "Overview", icon: Eye },
-                { id: "tickets", name: "Tickets", icon: Tag },
-                { id: "settings", name: "Settings", icon: Settings },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center py-4 px-1 border-b-2 font-medium text-sm ${
-                    activeTab === tab.id
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
-                >
-                  <tab.icon className="w-4 h-4 mr-2" />
-                  {tab.name}
-                </button>
-              ))}
-            </nav>
+          <div className="bg-white shadow-sm border-b">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+                {/* Navigation Tabs - Left Side */}
+                <nav className="flex space-x-8 -mb-px">
+                  {[
+                    { id: "overview", name: "Overview", icon: Eye },
+                    { id: "tickets", name: "Tickets", icon: Tag },
+                    { id: "settings", name: "Settings", icon: Settings },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
+                        activeTab === tab.id
+                          ? "border-blue-500 text-blue-600"
+                          : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
+                    >
+                      <tab.icon className="w-4 h-4 mr-2" />
+                      {tab.name}
+                    </button>
+                  ))}
+                </nav>
+
+                {/* Title + Status - Right Side */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-right">
+                  <h1 className="text-base font-semibold text-gray-900">
+                    {event.title}
+                  </h1>
+                  <div className="flex items-center space-x-2 mt-1 sm:mt-0">
+                    <span
+                      className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full ${
+                        event.status === "Live"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {event.status}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      ID: #{event.id}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div className="p-6">
             {/* Overview Tab */}
             {activeTab === "overview" && (
@@ -520,12 +557,45 @@ const EventDetailsAdmin = () => {
                     <p className="text-red-700 text-sm mb-4">
                       Once deleted, this cannot be undone.
                     </p>
-                    <button
-                      onClick={handleDeleteEvent}
-                      className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                    >
-                      Delete Event Permanently
-                    </button>
+                    <div className="space-y-3">
+                      {!showConfirmInput ? (
+                        <button
+                          onClick={() => setShowConfirmInput(true)}
+                          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                        >
+                          Delete Event Permanently
+                        </button>
+                      ) : (
+                        <div className="space-y-2">
+                          <input
+                            type="text"
+                            placeholder="Type 'confirm' to delete"
+                            value={confirmationText}
+                            onChange={(e) =>
+                              setConfirmationText(e.target.value)
+                            }
+                            className="border px-3 py-2 rounded-md w-full"
+                          />
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={handleConfirmClick}
+                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+                            >
+                              Confirm Delete
+                            </button>
+                            <button
+                              onClick={() => {
+                                setShowConfirmInput(false);
+                                setConfirmationText("");
+                              }}
+                              className="bg-gray-300 text-black px-4 py-2 rounded-md hover:bg-gray-400"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
