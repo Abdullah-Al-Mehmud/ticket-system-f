@@ -68,7 +68,7 @@ export default function UserProfilePage() {
             </button> */}
             <Link
               to={`/admin/edit/${id}`}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
+              className="w-full flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition-colors duration-300 ease-in-out">
               <Settings className="w-4 h-4" />
               Edit Profile
             </Link>

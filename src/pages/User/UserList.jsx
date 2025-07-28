@@ -45,6 +45,8 @@ const UserList = () => {
   // filter users based on search term and role
 
   const handleDelete = async (userId) => {
+    const confirmed = window.confirm("Are you sure you want to delete this user?");
+    if(!confirmed) return;
     console.log("Deleting user:", userId);
 
     try {

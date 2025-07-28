@@ -100,6 +100,7 @@ function App() {
         {/* User Layout */}
         <Route element={<PrivateRoute allowRole="user" />}>
           <Route path="/user" element={<Layout />}>
+            <Route index element={<UserDashboard />} />
             <Route path="dashboard" element={<UserDashboard />} />
             <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
           </Route>

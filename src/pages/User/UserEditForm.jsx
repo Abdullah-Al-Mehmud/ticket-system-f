@@ -7,6 +7,7 @@ import {
   useGetUserByIdQuery,
 } from "../../redux/features/user/userApiSlice";
 import { useParams, useNavigate } from "react-router-dom";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
 export default function UserEditForm() {
   const { id } = useParams();
@@ -96,7 +97,7 @@ export default function UserEditForm() {
     }
   };
 
-  if (isFetching) return <p className="text-center mt-10">Loading...</p>;
+  if (isFetching) return <p className="text-center mt-10"><PageLoading/></p>;
 
   return (
     <div className="max-w-2xl mx-auto py-8 px-6 mt-8 bg-white shadow-md border rounded-lg">
@@ -159,8 +160,8 @@ export default function UserEditForm() {
       <button
         onClick={handleSave}
         disabled={isLoading}
-        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-800 text-white rounded-xl text-base font-medium disabled:opacity-50 transition-all duration-300 ease-in-out group shadow-md hover:shadow-lg">
-        {isLoading ? "Saving..." : "Save"}
+        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-800 text-white rounded text-base font-medium disabled:opacity-50 transition-all duration-300 ease-in-out group shadow-md hover:shadow-lg">
+        {isLoading ? <PageLoading /> : "Update"}
         <ArrowRight
           size={16}
           className="transition-transform duration-300 group-hover:translate-x-1"

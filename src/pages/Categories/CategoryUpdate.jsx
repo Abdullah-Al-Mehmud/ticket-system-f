@@ -94,7 +94,7 @@ const CategoryUpdate = () => {
             <button
               type="submit"
               disabled={updating}
-              className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-800 disabled:opacity-50"
             >
               {updating ? "Updating..." : "Update Category"}
             </button>
