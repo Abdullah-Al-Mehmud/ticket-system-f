@@ -17,6 +17,7 @@ import {
   Pencil,
   User,
 } from "lucide-react";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
 const ViewCategoryDetails = () => {
   const { id } = useParams();
@@ -45,7 +46,7 @@ const ViewCategoryDetails = () => {
   };
 
   if (isLoading)
-    return <p className="text-center text-gray-500 mt-10">Loading...</p>;
+    return <p className="text-center text-gray-500 mt-10"><PageLoading/></p>;
 
   if (error || !category)
     return (

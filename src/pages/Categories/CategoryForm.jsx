@@ -69,7 +69,7 @@ const CategoryForm = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-transform duration-150 ${
+            className={`w-full py-3 px-6 rounded font-medium text-white transition-transform duration-150 ${
               isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-amber-600 hover:bg-amber-700"
             }`}
           >
