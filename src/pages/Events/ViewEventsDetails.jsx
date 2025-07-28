@@ -173,7 +173,7 @@ const EventDetailsAdmin = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {/* ... same stats cards as before */}
           <div className="bg-white rounded-lg shadow p-6 flex items-center">
-            <Users className="h-8 w-8 text-blue-600" />
+            <Users className="h-8 w-8 text-amber-600" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">Total Tickets</p>
               <p className="text-2xl font-semibold text-gray-900">
@@ -252,9 +252,7 @@ const EventDetailsAdmin = () => {
                       }`}>
                       {event.status}
                     </span>
-                    <span className="text-xs text-gray-500">
-                      ID: #{event.id}
-                    </span>
+                  
                   </div>
                 </div>
               </div>
