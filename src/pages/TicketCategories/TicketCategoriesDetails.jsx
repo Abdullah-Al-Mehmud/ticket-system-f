@@ -11,7 +11,7 @@ import {
   Download,
   Share2,
 } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetTicketCategoryByIdQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 
 function TicketCategoriesDetails() {
@@ -74,7 +74,10 @@ function TicketCategoriesDetails() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
                 <ArrowLeft className="w-5 h-5 text-gray-600" />
               </button>
               <div>
@@ -289,7 +292,13 @@ function TicketCategoriesDetails() {
 
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {event.title}
+                  <Link
+                    to={`/admin/events-details/${event.id}`}
+                    className="hover:underline flex items-center gap-1 underline"
+                  >
+                    {event.title}
+                    <Eye className="w-4 h-4 text-gray-500" />
+                  </Link>
                 </h3>
 
                 <div className="space-y-4">
