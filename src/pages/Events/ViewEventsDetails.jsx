@@ -146,30 +146,7 @@ const EventDetailsAdmin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      {/* <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {event.title}
-              </h1>
-              <div className="flex items-center space-x-4 mt-1">
-                <span
-                  className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                    event.status === "Live"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {event.status}
-                </span>
-                <span className="text-sm text-gray-500">ID: #{event.id}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
+    
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Overview */}

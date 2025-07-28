@@ -15,6 +15,8 @@ import {
 } from "../../redux/features/event/EventApiSlice";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
+
 
 const AllEventslist = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,11 +25,32 @@ const AllEventslist = () => {
   const [sortBy, setSortBy] = useState("event_name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedStatus, setSelectedStatus] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
 
   const { data, isLoading, isError, refetch } = useGetEventsQuery();
   const events = data?.data || [];
 
+
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventMutation();
+
+  
+  const handleDeleteClick = (userId) => {
+    setUserToDelete(userId);
+    setIsModalOpen(true);
+  };
+
+  const confiramDelete = async () => {
+    if (!userToDelete) return;
+    await handleDelete(userToDelete);
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
 
   const handleDelete = async (eventId) => {
     // const confirmDelete = window.confirm('Are you sure you want to delete this event?');
@@ -297,7 +320,7 @@ const AllEventslist = () => {
                             <Edit size={16} />
                           </Link>
                           <button
-                            onClick={() => handleDelete(event.id)}
+                            onClick={() => handleDeleteClick(event.id)}
                             className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
                             title="Delete"
                             disabled={isDeleting}>
@@ -312,6 +335,12 @@ const AllEventslist = () => {
             </div>
           </div>
         )}
+         <ConfirmModal
+                        isOpen={isModalOpen}
+                        onClose={closeModal}
+                        onConfirm={confiramDelete}
+                        message="Are you sure you want to delete this Event?"
+                      />
       </div>
     </div>
   );

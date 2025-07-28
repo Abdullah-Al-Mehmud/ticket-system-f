@@ -278,7 +278,7 @@ const CategoriesList = () => {
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 onConfirm={confiramDelete}
-                message="Are you sure you want to delete this user?"
+                message="Are you sure you want to delete this Categories?"
               />
 
               {filteredCategories.length === 0 && (
