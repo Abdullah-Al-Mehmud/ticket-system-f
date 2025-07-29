@@ -205,6 +205,7 @@ const EventDetailsAdmin = () => {
       toast.success("Organizer assigned successfully.");
       setShowModal(false);
       setSelectedUsers([]);
+      refetch();
     } catch (err) {
       console.error("Assignment failed:", err);
       alert("Something went wrong!");
@@ -496,6 +497,49 @@ const EventDetailsAdmin = () => {
                       </div>
                     )}
                   </div>
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      Organizers
+                    </h3>
+
+                    {event.organizers.length > 0 ? (
+                      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <table className="min-w-full divide-y divide-gray-200">
+                          <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                            <tr>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                                Name
+                              </th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                                Email
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {event.organizers.map((org, index) => (
+                              <tr
+                                key={org.id}
+                                className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 transition-all duration-300"
+                                style={{ animationDelay: `${index * 100}ms` }}
+                              >
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                  {org.name}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-700">
+                                  {org.email}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500 mt-2">
+                        No organizers assigned to this event.
+                      </p>
+                    )}
+                  </div>
+
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-4">
                       Metadata
