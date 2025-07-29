@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Mail, Phone, Calendar, MapPin, Edit } from "lucide-react";
+import { Mail, Phone, Calendar, MapPin, Edit } from "lucide-react";
 import UserModelTicketForm from "./UserModelTicketForm";
 
 const UserDashboard = () => {
