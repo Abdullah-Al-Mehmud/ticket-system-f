@@ -15,6 +15,8 @@ import {
 } from "../../redux/features/event/EventApiSlice";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
+import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
 
 const AllEventslist = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,11 +25,30 @@ const AllEventslist = () => {
   const [sortBy, setSortBy] = useState("event_name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const { data, isLoading, isError, refetch } = useGetEventsQuery();
   const events = data?.data || [];
 
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventMutation();
+
+  const handleDeleteClick = (userId) => {
+    setUserToDelete(userId);
+    setIsModalOpen(true);
+  };
+
+  const confiramDelete = async () => {
+    if (!userToDelete) return;
+    await handleDelete(userToDelete);
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
 
   const handleDelete = async (eventId) => {
     // const confirmDelete = window.confirm('Are you sure you want to delete this event?');
@@ -69,10 +90,10 @@ const AllEventslist = () => {
 
   const getStatusBadge = (status) => {
     const statusStyles = {
-      active: "bg-green-100 text-green-800 border-green-200",
-      pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      completed: "bg-blue-100 text-blue-800 border-blue-200",
-      cancelled: "bg-red-100 text-red-800 border-red-200",
+      Live: "bg-green-100 text-green-800 border-green-200",
+      Upcoming: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      Done: "bg-blue-100 text-blue-800 border-blue-200",
+      Cancelled: "bg-red-100 text-red-800 border-red-200",
     };
     return (
       <span
@@ -103,10 +124,13 @@ const AllEventslist = () => {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(dateString).toLocaleString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true, // for AM/PM format; use false for 24-hour format
     });
   };
 
@@ -199,19 +223,19 @@ const AllEventslist = () => {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
                 <Download size={16} /> Export
               </button>
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                 <MoreVertical size={16} />
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
 
         {/* Table or Loading State */}
-        { isError ? (
+        {isError ? (
           <div className="bg-white rounded-lg shadow-sm border p-6 text-center text-red-500">
             Failed to load events. Please try again later.
           </div>
@@ -228,83 +252,108 @@ const AllEventslist = () => {
                       Event Name
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Organizer
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Category
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Organizer
+                      Location
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Status
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Date & Time
+                      Start Date
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Location
+                      End Date
                     </th>
+
                     <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {filteredEvents.map((event) => (
-                    <tr key={event.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        #{event.id}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-900 font-medium">
-                        {event.title}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {getCategoryBadge(event.category.name)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {getStatusBadge(event.organizer.name)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {getStatusBadge(event.status)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        <div>{formatDate(event.start_date)}</div>
-                        <div className="text-xs text-gray-400">
-                          {event.end_date}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {event.location}
-                      </td>
+                  {isLoading ? (
+                    <TableRowSkeleton count={4} />
+                  ) : (
+                    <>
+                      {" "}
+                      {filteredEvents.map((event) => (
+                        <tr key={event.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                            <Link
+                              className="hover:underline"
+                              to={`/admin/events-details/${event.id}`}>
+                              #{event.id}
+                            </Link>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                            <Link
+                              className="hover:underline"
+                              to={`/admin/events-details/${event.id}`}>
+                              {event.title}
+                            </Link>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {event.organizer.name}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {event.category.name}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {event.location}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            {getStatusBadge(event.status)}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            <div>{formatDate(event.start_date)}</div>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500">
+                            <div>{formatDate(event.end_date)}</div>
+                          </td>
 
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          <Link
-                            to={`/admin/events-details/${event.id}`}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                            title="View">
-                            <Eye size={16} />
-                          </Link>
-                          <Link
-                            to={`/admin/event-edit/${event.id}`}
-                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                            title="Edit">
-                            <Edit size={16} />
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(event.id)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
-                            title="Delete"
-                            disabled={isDeleting}>
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                          <td className="px-6 py-4 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <Link
+                                to={`/admin/events-details/${event.id}`}
+                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                                title="View">
+                                <Eye size={16} />
+                              </Link>
+                              <Link
+                                to={`/admin/event-edit/${event.id}`}
+                                className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                                title="Edit">
+                                <Edit size={16} />
+                              </Link>
+                              <button
+                                onClick={() => handleDeleteClick(event.id)}
+                                className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                                title="Delete"
+                                disabled={isDeleting}>
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         )}
+        <ConfirmModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={confiramDelete}
+          message="Are you sure you want to delete this Event?"
+        />
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
+
 import {
   useDeleteEventMutation,
   useGetEventByIdQuery,
@@ -22,6 +23,7 @@ import PageLoading from "../../components/LoderComponent/PageLoading";
 import toast from "react-hot-toast";
 import { useDeleteTicketCategoryMutation } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 import TicketCategoryModal from "./TicketCategoryModal";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
 
 const EventDetailsAdmin = () => {
   const { id } = useParams();
@@ -37,6 +39,9 @@ const EventDetailsAdmin = () => {
 
   const [showConfirmInput, setShowConfirmInput] = useState(false);
   const [confirmationText, setConfirmationText] = useState("");
+
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
@@ -114,6 +119,23 @@ const EventDetailsAdmin = () => {
     refetch();
   };
 
+  const handleDeleteClick = (userId) => {
+    setUserToDelete(userId);
+    setIsModalOpenDelete(true);
+  };
+
+  const confiramDelete = async () => {
+    if (!userToDelete) return;
+    await handleDeleteCategory(userToDelete);
+    setIsModalOpenDelete(false);
+    setUserToDelete(null);
+  };
+
+  const closeModal = () => {
+    setIsModalOpenDelete(false);
+    setUserToDelete(null);
+  };
+
   const handleDeleteCategory = async (id) => {
     await deleteTicketCategory(id);
     toast.success("Ticket category deleted");
@@ -146,37 +168,12 @@ const EventDetailsAdmin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      {/* <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {event.title}
-              </h1>
-              <div className="flex items-center space-x-4 mt-1">
-                <span
-                  className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                    event.status === "Live"
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {event.status}
-                </span>
-                <span className="text-sm text-gray-500">ID: #{event.id}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {/* ... same stats cards as before */}
           <div className="bg-white rounded-lg shadow p-6 flex items-center">
-            <Users className="h-8 w-8 text-blue-600" />
+            <Users className="h-8 w-8 text-amber-600" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">Total Tickets</p>
               <p className="text-2xl font-semibold text-gray-900">
@@ -234,8 +231,7 @@ const EventDetailsAdmin = () => {
                         activeTab === tab.id
                           ? "border-blue-500 text-blue-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                      }`}
-                    >
+                      }`}>
                       <tab.icon className="w-4 h-4 mr-2" />
                       {tab.name}
                     </button>
@@ -253,13 +249,10 @@ const EventDetailsAdmin = () => {
                         event.status === "Live"
                           ? "bg-green-100 text-green-800"
                           : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
+                      }`}>
                       {event.status}
                     </span>
-                    <span className="text-xs text-gray-500">
-                      ID: #{event.id}
-                    </span>
+                  
                   </div>
                 </div>
               </div>
@@ -325,8 +318,7 @@ const EventDetailsAdmin = () => {
                             event.category.status === "active"
                               ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
+                          }`}>
                           {event.category.name}
                         </span>
                       </div>
@@ -345,8 +337,7 @@ const EventDetailsAdmin = () => {
                         onClick={() =>
                           setShowFullDescription(!showFullDescription)
                         }
-                        className="text-amber-600 hover:underline text-sm mt-1"
-                      >
+                        className="text-amber-600 hover:underline text-sm mt-1">
                         {showFullDescription ? "See less" : "See more"}
                       </button>
                     )}
@@ -407,8 +398,7 @@ const EventDetailsAdmin = () => {
                   </h3>
                   <button
                     onClick={openCreateModal}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                     Add New Ticket Type
                   </button>
                 </div>
@@ -419,116 +409,139 @@ const EventDetailsAdmin = () => {
                   onClose={handleModalClose}
                   initialData={selectedCategory}
                 />
-                <div className="space-y-4">
-                  {event.ticket_categories.map((t) => {
-                    const percent = (t.sold_quantity / t.total_quantity) * 100;
-                    return (
-                      <div key={t.id} className="bg-gray-50 rounded-lg p-6">
-                        <div className="flex justify-between items-center mb-2">
-                          <div>
-                            <Link
-                              to={`/admin/ticket-categories/${t.id}`}
-                              className="flex items-center gap-1 underline text-lg font-medium text-gray-900"
-                            >
-                              {t.name}
-                              <Eye className="w-4 h-4 text-gray-500" />
-                            </Link>
-                            <p className="text-xs text-gray-500 mt-1">
-                              ID: {t.id}
-                            </p>
-                          </div>
 
-                          <span className="text-2xl font-bold text-green-600">
-                            ${t.price}
-                          </span>
-                        </div>
+                <div className="bg-white rounded-lg shadow">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Ticket Category
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Price
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Sold / Total
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Progress
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Revenue
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Sales Period
+                          </th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {event.ticket_categories.map((t) => {
+                          const percent =
+                            (t.sold_quantity / t.total_quantity) * 100;
+                          const available = t.total_quantity - t.sold_quantity;
+                          const revenue = (
+                            t.sold_quantity * parseFloat(t.price)
+                          ).toFixed(2);
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Total Quantity
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {t.total_quantity}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Sold
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {t.sold_quantity}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Available
-                            </p>
-                            <p className="text-lg font-semibold">
-                              {t.total_quantity - t.sold_quantity}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-gray-500 uppercase">
-                              Revenue
-                            </p>
-                            <p className="text-lg font-semibold text-green-600">
-                              $
-                              {(t.sold_quantity * parseFloat(t.price)).toFixed(
-                                2
-                              )}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <div className="flex justify-between text-sm text-gray-600 mb-1">
-                            <span>Sales Progress</span>
-                            <span>{percent.toFixed(1)}%</span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full"
-                              style={{ width: `${percent}%` }}
-                            ></div>
-                          </div>
-                        </div>
+                          return (
+                            <tr key={t.id} className="hover:bg-gray-50">
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div>
+                                  <div className="flex items-center">
+                                    <a
+                                      href={`/admin/ticket-categories/${t.id}`}
+                                      className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900">
+                                      {t.name}
+                                      <Eye className="w-4 h-4 text-amber-600" />
+                                    </a>
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    ID: {t.id}
+                                  </div>
+                                </div>
+                              </td>
 
-                        <div className="mt-4 flex justify-between items-center text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-md px-4 py-2">
-                          <span className="flex items-center space-x-2">
-                            <Calendar className="w-5 h-5 text-blue-500" />
-                            <span>
-                              <strong>Sales:</strong>{" "}
-                              <time dateTime={t.sales_start}>
-                                {formatDate(t.sales_start)}
-                              </time>{" "}
-                              –{" "}
-                              <time dateTime={t.sales_end}>
-                                {formatDate(t.sales_end)}
-                              </time>
-                            </span>
-                          </span>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className="text-lg font-semibold text-amber-600">
+                                  ${t.price}
+                                </span>
+                              </td>
 
-                          <div className="space-x-3">
-                            <button
-                              className="flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-200"
-                              onClick={() => openEditModal(t)}
-                            >
-                              <Edit className="w-4 h-4 mr-1" />
-                              Edit
-                            </button>
-                            <button
-                              className="flex items-center text-red-600 hover:text-red-800 transition-colors duration-200"
-                              onClick={() => handleDeleteCategory(t.id)}
-                            >
-                              <Trash2 className="w-4 h-4 mr-1" />
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm text-gray-900">
+                                  <span className="font-medium">
+                                    {t.sold_quantity}
+                                  </span>{" "}
+                                  / {t.total_quantity}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {available} available
+                                </div>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center">
+                                  <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                    <div
+                                      className="bg-amber-600 h-2 rounded-full"
+                                      style={{ width: `${percent}%` }}></div>
+                                  </div>
+                                  <span className="text-sm text-gray-600">
+                                    {percent.toFixed(1)}%
+                                  </span>
+                                </div>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span className="text-sm font-semibold text-amber-600">
+                                  ${revenue}
+                                </span>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center text-xs text-gray-500">
+                                  <Calendar className="w-4 h-4 mr-1" />
+                                  <div>
+                                    <div>{formatDate(t.sales_start)}</div>
+                                    <div>to {formatDate(t.sales_end)}</div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div className="flex justify-end space-x-2">
+                                  <button
+                                    onClick={() => openEditModal(t)}
+                                    className="text-amber-600 hover:text-amber-800 p-1"
+                                    title="Edit">
+                                    <Edit className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteClick(t.id)}
+                                    className="text-red-600 hover:text-red-800 p-1"
+                                    title="Delete">
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
+
+                <ConfirmModal
+                  isOpen={isModalOpenDelete}
+                  onClose={closeModal}
+                  onConfirm={confiramDelete}
+                  message="Are you sure you want to delete this Ticket Categories ?"
+                />
               </div>
             )}
 
@@ -551,8 +564,7 @@ const EventDetailsAdmin = () => {
                     <select
                       value={eventStatus}
                       onChange={(e) => setEventStatus(e.target.value)}
-                      className="block w-48 px-3 py-2 border rounded-md"
-                    >
+                      className="block w-48 px-3 py-2 border rounded-md">
                       <option value="Upcoming">Upcoming</option>
                       <option value="Live">Live</option>
                       <option value="Done">Done</option>
@@ -560,8 +572,7 @@ const EventDetailsAdmin = () => {
                     </select>
                     <button
                       onClick={handleStatusUpdate}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                    >
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                       Update Status
                     </button>
                   </div>
@@ -581,8 +592,7 @@ const EventDetailsAdmin = () => {
                       {!showConfirmInput ? (
                         <button
                           onClick={() => setShowConfirmInput(true)}
-                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors"
-                        >
+                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors">
                           Delete Event Permanently
                         </button>
                       ) : (
@@ -606,8 +616,7 @@ const EventDetailsAdmin = () => {
                           <div className="flex gap-3">
                             <button
                               onClick={handleConfirmClick}
-                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-                            >
+                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors">
                               Confirm Delete
                             </button>
                             <button
@@ -615,8 +624,7 @@ const EventDetailsAdmin = () => {
                                 setShowConfirmInput(false);
                                 setConfirmationText("");
                               }}
-                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
-                            >
+                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
                               Cancel
                             </button>
                           </div>

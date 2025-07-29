@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetTicketCategoryByIdQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
 function TicketCategoriesDetails() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function TicketCategoriesDetails() {
     isError,
   } = useGetTicketCategoryByIdQuery(id);
 
-  if (isLoading) return <div className="p-6">Loading...</div>;
+  if (isLoading) return <div className="p-6"><PageLoading/></div>;
   if (isError || !response?.data)
     return <div className="p-6">Failed to load data.</div>;
 
@@ -112,7 +113,7 @@ function TicketCategoriesDetails() {
                   <h2 className="text-2xl font-bold text-gray-900">
                     {category.name}
                   </h2>
-                  <div className="text-3xl font-bold text-indigo-600">
+                  <div className="text-3xl font-bold text-amber-600">
                     {formatCurrency(category.price)}
                   </div>
                 </div>
