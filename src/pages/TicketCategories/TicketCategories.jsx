@@ -53,9 +53,9 @@ export default function TicketCategories() {
     });
   };
 
-  if (isLoading) {
-    return <PageLoading /> ;
-  }
+  // if (isLoading) {
+  //   return <PageLoading />;
+  // }
 
   if (isError) {
     return (
@@ -107,80 +107,88 @@ export default function TicketCategories() {
                 </th>
               </tr>
             </thead>
-           <tbody className="divide-y divide-gray-200">
-  {isLoading ? (
-    <TableRowSkeleton count={4} />
-  ) : fetchData?.data?.length > 0 ? (
-    fetchData.data.map((event) => (
-      <tr key={event?.id} className="hover:bg-gray-50 transition-colors">
-        <td className="px-6 py-4 text-sm text-gray-800 font-medium">
-          <Link
-            className="hover:underline"
-            to={`/admin/ticket-categories/${event.id}`}>
-            #{event?.id}
-          </Link>
-        </td>
-        <td className="px-6 py-4 text-sm text-gray-800">
-          <Link
-            className="hover:underline"
-            to={`/admin/ticket-categories/${event.id}`}>
-            {event?.name}
-          </Link>
-        </td>
-        <td className="px-6 py-4 text-sm text-gray-800">
-          {event?.event?.title}
-        </td>
-        <td className="px-6 py-4 text-sm text-gray-800">
-          ${event?.price}
-        </td>
-        <td className="px-6 py-4 text-sm text-gray-600">
-          {formatDateOnly(event?.sales_start)}
-        </td>
-        <td className="px-6 py-4 text-sm text-gray-600">
-          {formatDateOnly(event?.sales_end)}
-        </td>
-        <td className="px-6 py-4 text-sm text-gray-600">
-          {event?.total_quantity}
-        </td>
-        <td className="px-6 py-4 text-sm text-gray-600">
-          {event?.sold_quantity}
-        </td>
-        <td className="px-6 py-4">
-          <div className="flex gap-2">
-            <Link
-              to={`/admin/ticket-categories/${event.id}`}
-              className="p-2 text-blue-600 hover:bg-blue-100 rounded-md"
-              title="View">
-              <Eye size={16} />
-            </Link>
-            <Link
-              to={`/admin/ticket-categories/${event.id}/edit`}
-              className="p-2 text-green-600 hover:bg-green-100 rounded-md"
-              title="Edit">
-              <Edit size={16} />
-            </Link>
-            <button
-              onClick={() => handleDeleteClick(event.id)}
-              className="p-2 text-red-600 hover:bg-red-100 rounded-md"
-              title="Delete"
-              disabled={isDeleting}>
-              <Trash2 size={16} />
-            </button>
-          </div>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="9" className="text-center py-6 text-sm text-gray-500">
-        No ticket categories found.
-      </td>
-    </tr>
-  )}
-</tbody>
-
-
-
+            <tbody className="divide-y divide-gray-200">
+              {isLoading ? (
+                <TableRowSkeleton count={4} />
+              ) : fetchData?.data?.length > 0 ? (
+                fetchData.data.map((event) => (
+                  <tr
+                    key={event?.id}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm text-gray-800 font-medium">
+                      <Link
+                        className="hover:underline"
+                        to={`/admin/ticket-categories/${event.id}`}
+                      >
+                        #{event?.id}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      <Link
+                        className="hover:underline"
+                        to={`/admin/ticket-categories/${event.id}`}
+                      >
+                        {event?.name}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      {event?.event?.title}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800">
+                      ${event?.price}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {formatDateOnly(event?.sales_start)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {formatDateOnly(event?.sales_end)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.total_quantity}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {event?.sold_quantity}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <Link
+                          to={`/admin/ticket-categories/${event.id}`}
+                          className="p-2 text-blue-600 hover:bg-blue-100 rounded-md"
+                          title="View"
+                        >
+                          <Eye size={16} />
+                        </Link>
+                        <Link
+                          to={`/admin/ticket-categories/${event.id}/edit`}
+                          className="p-2 text-green-600 hover:bg-green-100 rounded-md"
+                          title="Edit"
+                        >
+                          <Edit size={16} />
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteClick(event.id)}
+                          className="p-2 text-red-600 hover:bg-red-100 rounded-md"
+                          title="Delete"
+                          disabled={isDeleting}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="9"
+                    className="text-center py-6 text-sm text-gray-500"
+                  >
+                    No ticket categories found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
           </table>
           <ConfirmModal
             isOpen={isModalOpen}
