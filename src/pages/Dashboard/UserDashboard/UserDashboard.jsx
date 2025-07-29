@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Mail, Phone, Calendar, MapPin, Edit } from "lucide-react";
 import UserModelTicketForm from "./UserModelTicketForm";
-import EditUserModal from './EditUserModal';
+import EditUserModal from "./EditUserModal";
+import UserOrganizedEventForm from "./UserOrganizedEventForm";
 
 const UserDashboard = () => {
   const user = localStorage.getItem("data")
@@ -13,7 +14,7 @@ const UserDashboard = () => {
     setIsModalOpen(true);
   };
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Dashboard Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* User Profile Section */}
@@ -110,6 +111,9 @@ const UserDashboard = () => {
         </div>
         {/* Ticket Card Modal show */}
         <UserModelTicketForm />
+
+        {/* Organized Event Card Modal show */}
+        <UserOrganizedEventForm />
 
         {/* Edit User Modal */}
         <EditUserModal
