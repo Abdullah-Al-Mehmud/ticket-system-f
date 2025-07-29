@@ -11,13 +11,13 @@ const UserDashboard = () => {
       {/* Dashboard Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* User Profile Section */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+        <div className="bg-amber rounded-lg shadow-sm overflow-hidden mb-6">
           <div className="bg-gradient-to-r from-amber-400 to-amber-600 h-24"></div>
           <div className="px-6 pb-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center -mt-12 relative">
               {/* Profile Image */}
               <div className="relative mb-4 sm:mb-0 sm:mr-6">
-                <div className="w-24 h-24 rounded-full bg-white p-1 shadow-lg">
+                <div className="w-24 h-24 rounded-full bg-amber p-1 shadow-lg">
                   {user.image ? (
                     <img
                       src={user.image}
@@ -33,7 +33,7 @@ const UserDashboard = () => {
                   )}
                 </div>
 
-                <button className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-white rounded-full p-1.5 shadow-lg transition-colors">
+                <button className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-amber rounded-full p-1.5 shadow-lg transition-colors">
                   <Edit className="w-3 h-3" />
                 </button>
               </div>
@@ -96,7 +96,7 @@ const UserDashboard = () => {
             </div>
           </div>
         </div>
-
+        {/* Ticket Card Modal show */}
         <UserModelTicketForm />
       </div>
     </div>
