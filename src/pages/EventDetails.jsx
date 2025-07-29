@@ -179,7 +179,7 @@ const EventDetailsPage = () => {
                     <h3 className="font-semibold text-gray-800">
                       Organized by
                     </h3>
-                    <p className="text-gray-600">{eventData.organizer.name}</p>
+                    <p className="text-gray-600">{eventData.creator.name}</p>
                   </div>
                 </div>
               </div>
