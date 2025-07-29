@@ -17,6 +17,7 @@ import {
   Pencil,
   User,
 } from "lucide-react";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
 const ViewCategoryDetails = () => {
   const { id } = useParams();
@@ -45,7 +46,7 @@ const ViewCategoryDetails = () => {
   };
 
   if (isLoading)
-    return <p className="text-center text-gray-500 mt-10">Loading...</p>;
+    return <p className="text-center text-gray-500 mt-10"><PageLoading/></p>;
 
   if (error || !category)
     return (
@@ -79,7 +80,7 @@ const ViewCategoryDetails = () => {
               {category.status}
             </Badge>
 
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               onClick={handleEdit}
@@ -87,8 +88,8 @@ const ViewCategoryDetails = () => {
               className="text-blue-600 hover:bg-blue-100"
             >
               <Pencil size={18} />
-            </Button>
-
+            </Button> */}
+{/* 
             <Button
               variant="ghost"
               size="icon"
@@ -97,7 +98,7 @@ const ViewCategoryDetails = () => {
               className="text-red-600 hover:bg-red-100"
             >
               <Trash2 size={18} />
-            </Button>
+            </Button> */}
           </div>
         </div>
 

@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { useParams } from "react-router-dom";
-import { useGetTicketByIdQuery } from "../../../redux/features/tickets/ticketsApiSlice";
 import {
   Calendar,
   MapPin,
@@ -10,14 +8,31 @@ import {
   CheckCircle,
   XCircle,
   Timer,
-  TimerOff
+  TimerOff,
+  Scissors
 } from "lucide-react";
 
 export default function UserViewTicket() {
-  const { id } = useParams();
-  const [isHovered, setIsHovered] = useState(false);
+  // Mock data for demonstration
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
-  const { data, isLoading, isError } = useGetTicketByIdQuery(id);
+  // Sample ticket data
+  const ticket = {
+    ticket_category: {
+      event: {
+        title: "Summer Music Festival 2025",
+        location: "Central Park, New York",
+        start_date: "2025-08-15T18:00:00Z",
+        end_date: "2025-08-15T23:00:00Z",
+        category_id: "MUS001"
+      },
+      price: 85.00
+    },
+    quantity: 2,
+    status: "Confirmed",
+    ticket_number: "TKT-2025-001234"
+  };
 
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
@@ -31,102 +46,210 @@ export default function UserViewTicket() {
     });
   };
 
-  const ticket = data?.data;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+  };
+
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
 
   if (isLoading) {
     return (
-    <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="w-16 h-16 rounded-full border-4 border-t-4 border-gray-200 border-t-blue-600 animate-spin"></div>
-        <p className="text-blue-600 text-lg font-medium animate-pulse">Loading, please wait...</p>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 shadow-lg">
+          <div className="flex flex-col items-center space-y-4">
+            <Loader2 className="w-8 h-8 text-amber-600 animate-spin" />
+            <p className="text-gray-600 font-medium">Loading your ticket...</p>
+          </div>
+        </div>
       </div>
-    </div>
     );
   }
 
   if (isError || !ticket) {
     return (
-      <div className="p-6 text-center text-red-600 font-bold">
-        Ticket not found or failed to load.
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 shadow-lg text-center">
+          <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">Ticket Not Found</h3>
+          <p className="text-gray-600">We couldn't find the ticket you're looking for.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 p-6 flex items-center justify-center">
-      <div 
-        className={`w-full max-w-xl bg-white rounded-3xl shadow-xl p-8 transition-transform duration-300 ${
-          isHovered ? "scale-105 shadow-2xl" : ""
-        }`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <h2 className="text-2xl font-bold text-purple-700 mb-4">🎫 Ticket Information</h2>
+    <div className="min-h-screen bg-gray-100 p-4 flex items-center justify-center">
+      <div className="max-w-4xl w-full">
+        {/* Ticket Container */}
+        <div className="bg-white border border-amber-600 rounded-lg overflow-hidden" style={{ fontFamily: 'monospace' }}>
+          
+          {/* Main Ticket Body */}
+          <div className="flex">
+            {/* Left Section - Main Ticket */}
+            <div className="flex-1 p-8 relative">
+              {/* Ticket Header */}
+              <div className="border-b-2 border-dashed border-gray-300 pb-6 mb-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                      {ticket.ticket_category.event.title}
+                    </h1>
+                    <div className="flex items-center text-gray-600 mb-2">
+                      <MapPin className="w-4 h-4 mr-2" />
+                      <span className="text-sm">{ticket.ticket_category.event.location}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="bg-amber-600 text-white px-3 py-1 rounded text-xs font-bold mb-2">
+                      {ticket.status.toUpperCase()}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      #{ticket.ticket_number}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Ticket className="text-gray-600" />
-            <span className="text-gray-800 font-medium">Title:</span>
-            <span>{ticket.event.title}</span>
+              {/* Event Details Grid */}
+              <div className="grid grid-cols-2 gap-6 mb-6">
+                <div>
+                  <div className="mb-4">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Date</label>
+                    <div className="text-lg font-mono text-gray-900">
+                      {formatDate(ticket.ticket_category.event.start_date)}
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Start Time</label>
+                    <div className="text-lg font-mono text-gray-900">
+                      {formatTime(ticket.ticket_category.event.start_date)}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">End Time</label>
+                    <div className="text-lg font-mono text-gray-900">
+                      {formatTime(ticket.ticket_category.event.end_date)}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="mb-4">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Category</label>
+                    <div className="text-lg font-mono text-gray-900">
+                      {ticket.ticket_category.event.category_id}
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Quantity</label>
+                    <div className="text-lg font-mono text-gray-900">
+                      {ticket.quantity} TICKET{ticket.quantity > 1 ? 'S' : ''}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Price Each</label>
+                    <div className="text-lg font-mono text-gray-900">
+                      ${ticket.ticket_category.price.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Total */}
+              <div className="border-t-2 border-dashed border-gray-300 pt-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Total Amount</span>
+                  <span className="text-3xl font-bold text-amber-600">
+                    ${(ticket.ticket_category.price * ticket.quantity).toFixed(2)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Perforated edge */}
+              <div className="absolute right-0 top-0 bottom-0 w-6 flex flex-col justify-center items-center">
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full mb-2"></div>
+                <div className="w-4 h-4 bg-gray-100 rounded-full"></div>
+              </div>
+            </div>
+
+            {/* Right Section - Stub */}
+            <div className="w-48 bg-gray-50 p-6 border-l-2 border-dashed border-gray-300 relative">
+              <div className="transform rotate-90 origin-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32">
+                <div className="text-center">
+                  <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                    Admit One
+                  </div>
+                  <div className="text-sm font-bold text-amber-600 mb-2">
+                    #{ticket.ticket_number}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    {formatDate(ticket.ticket_category.event.start_date)}
+                  </div>
+                </div>
+              </div>
+
+              {/* QR Code */}
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="w-24 h-24 bg-white border-2 border-gray-300 rounded flex items-center justify-center mx-auto">
+                  <div className="text-gray-400">
+                    <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm6 0h2v2h-2V5zm4 0h8v8h-8V3zm2 2v4h4V5h-4zm-8 8H3v8h8v-8zm-2 2v4H5v-4h4zm2-2h2v2h-2v-2zm2 0h2v2h-2v-2zm2 0h2v2h-2v-2zm0 4h2v2h-2v-2zm-4 0h2v2h-2v-2zm4-2v2h2v-2h-2zm0-2h2v2h-2v-2z"/>
+                    </svg>
+                  </div>
+                </div>
+                <div className="text-center mt-2">
+                  <div className="text-xs text-gray-500">SCAN AT VENUE</div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <MapPin className="text-gray-600" />
-            <span className="text-gray-800 font-medium">Location:</span>
-            <span>{ticket.event.location}</span>
+          {/* Bottom Tear-off Section */}
+          <div className="border-t-2 border-dashed border-gray-300 bg-gray-50 px-8 py-4">
+            <div className="flex items-center justify-between text-xs text-gray-600">
+              <div className="flex items-center">
+                <Scissors className="w-3 h-3 mr-2" />
+                <span>DETACH AT VENUE</span>
+              </div>
+              <div>
+                Valid for: {ticket.quantity} person{ticket.quantity > 1 ? 's' : ''}
+              </div>
+              <div>
+                Keep this portion
+              </div>
+            </div>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2">
-            <Timer className="text-gray-600" />
-            <span className="text-gray-800 font-medium">Start Data:</span>
-            <span>{formatDateTime(ticket.event.start_date)}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <TimerOff className="text-gray-600" />
-            <span className="text-gray-800 font-medium">End Data:</span>
-            <span>{formatDateTime(ticket.event.end_date)}</span>
-          </div>
-
-
-          <div className="flex items-center gap-2">
-            <Calendar className="text-gray-600" />
-            <span className="text-gray-800 font-medium">Category:</span>
-            <span>{ticket.event.category.name}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <BadgeDollarSign className="text-gray-600" />
-            <span className="text-gray-800 font-medium">Price per ticket:</span>
-            <span>${ticket.price_per_ticket}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Ticket className="text-gray-600" />
-            <span className="text-gray-800 font-medium">Quantity:</span>
-            <span>{ticket.ticket_quantity}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {ticket.status === "confirmed" ? (
-              <CheckCircle className="text-green-500" />
-            ) : (
-              <XCircle className="text-red-500" />
-            )}
-            <span className="text-gray-800 font-medium">Status:</span>
-            <span className={`font-semibold ${ticket.status === "confirmed" ? "text-green-600" : "text-red-600"}`}>
-              {ticket.status}
-            </span>
-          </div>
+        {/* Fine Print */}
+        <div className="mt-4 text-center text-xs text-gray-500">
+          <p>This ticket is non-refundable and non-transferable. Please arrive 30 minutes before event start time.</p>
+          <p className="mt-1">For support, contact us at support@eventtickets.com</p>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-

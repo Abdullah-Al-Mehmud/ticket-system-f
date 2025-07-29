@@ -64,7 +64,6 @@ const Login = () => {
   // Demo credentials
   const demoCredentials = {
     admin: { email: "admin@gmail.com", password: "password" },
-    organizer: { email: "organizer@gmail.com", password: "password" },
     user: { email: "user@gmail.com", password: "password" },
   };
 
@@ -174,25 +173,18 @@ const Login = () => {
                 Quick Demo Access
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="flex justify-between gap-10">
               <button
                 type="button"
                 onClick={() => setFormData(demoCredentials.admin)}
-                className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
+                className="text-xs w-full bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
               >
                 Demo Admin
               </button>
               <button
                 type="button"
-                onClick={() => setFormData(demoCredentials.organizer)}
-                className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
-              >
-                Demo Organizer
-              </button>
-              <button
-                type="button"
                 onClick={() => setFormData(demoCredentials.user)}
-                className="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
+                className="text-xs w-full bg-gray-50 hover:bg-gray-100  text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
               >
                 Demo User
               </button>

@@ -88,7 +88,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white rounded-lg shadow-md border border-gray-200">
+          {/* <div className="bg-white rounded-lg shadow-md border border-gray-200">
             <div className="p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-800">
                 Recent Activity
@@ -157,7 +157,7 @@ const AdminDashboard = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
         </main>
       </div>
     </div>

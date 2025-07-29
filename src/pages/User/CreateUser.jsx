@@ -179,12 +179,14 @@ const CreateUser = () => {
       {/* Submit Button */}
       <div className="mt-6">
         <Button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className="w-full flex items-center justify-center gap-2"
-        >
-          Create User <ArrowRight size={16} />
-        </Button>
+  onClick={handleSubmit}
+  disabled={isSubmitting}
+  className="w-full flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-800 transition-colors duration-300 ease-in-out group"
+>
+  Create User 
+  <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+</Button>
+
 
         {submitSuccess && (
           <p className="text-green-600 text-sm mt-2 text-center">User created successfully!</p>

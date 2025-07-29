@@ -5,6 +5,7 @@ import {
 } from "../../redux/features/categories/categoriesApiSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
 const CategoryUpdate = () => {
   const { id } = useParams();
@@ -56,7 +57,7 @@ const CategoryUpdate = () => {
         </h2>
 
         {fetching ? (
-          <p>Loading category...</p>
+          <p><PageLoading/></p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
@@ -94,7 +95,7 @@ const CategoryUpdate = () => {
             <button
               type="submit"
               disabled={updating}
-              className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="w-full bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-800 disabled:opacity-50"
             >
               {updating ? "Updating..." : "Update Category"}
             </button>

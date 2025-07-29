@@ -42,6 +42,13 @@ export const eventApiSlice = apiSlice.injectEndpoints({
       query: () => `/organizer-event`,
       providesTags: ["OrganizerEvent"],
     }),
+    assignOrganizer: builder.mutation({
+      query: (data) => ({
+        url: "/events/assign-organizers",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -52,4 +59,5 @@ export const {
   useUpdateEventMutation,
   useDeleteEventMutation,
   useGetOrganizerEventsQuery,
+  useAssignOrganizerMutation,
 } = eventApiSlice;

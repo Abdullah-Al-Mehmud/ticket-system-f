@@ -31,8 +31,7 @@ const Header = ({ user }) => {
   const handleProfileClick = () => {
     if (!user?.role) return;
     if (user.role === "admin") navigate("/admin/dashboard");
-    else if (user.role === "organizer") navigate("/organizer/dashboard");
-    else navigate("/user/dashboard");
+    if (user.role === "user") navigate("/user/dashboard");
   };
 
   const handleLogout = () => {
@@ -47,6 +46,45 @@ const Header = ({ user }) => {
       .join("")
       .toUpperCase()
       .substring(0, 2);
+
+  const renderUserMenuItems = () => (
+    <>
+      <DropdownMenuItem
+        onClick={handleProfileClick}
+        className="flex items-center gap-2"
+      >
+        <User className="w-4 h-4" />
+        Profile
+      </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem
+        onClick={handleLogout}
+        className="flex items-center gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+      >
+        <LogOut className="w-4 h-4" />
+        Logout
+      </DropdownMenuItem>
+    </>
+  );
+
+  const renderAdminMenuItems = () => (
+    <>
+      <DropdownMenuItem
+        onClick={handleProfileClick}
+        className="flex items-center gap-2"
+      >
+        <User className="w-4 h-4" />
+        Dashboard
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        onClick={handleLogout}
+        className="flex items-center gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
+      >
+        <LogOut className="w-4 h-4" />
+        Logout
+      </DropdownMenuItem>
+    </>
+  );
 
   return (
     <header className="bg-white/95 backdrop-blur-lg shadow-sm border-b border-amber-100 sticky top-0 z-50">
@@ -110,61 +148,13 @@ const Header = ({ user }) => {
                         <div className="font-medium text-slate-800 text-sm">
                           {user.name}
                         </div>
-                        <div className="text-xs text-slate-500">
-                          {user.email}
-                        </div>
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuItem
-                      onClick={handleProfileClick}
-                      className="flex items-center gap-2"
-                    >
-                      <User className="w-4 h-4" />
-                      Profile
-                    </DropdownMenuItem>
-
-                    <DropdownMenuItem className="flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
-                        />
-                      </svg>
-                      My Tickets
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                      </svg>
-                      Favorites
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleLogout}
-                      className="flex items-center gap-2 text-red-600 focus:text-red-600 focus:bg-red-50"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </DropdownMenuItem>
+                    {user?.role === "admin"
+                      ? renderAdminMenuItems()
+                      : renderUserMenuItems()}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -248,52 +238,53 @@ const Header = ({ user }) => {
                   </div>
 
                   <div className="space-y-1">
-                    <Button
-                      onClick={handleProfileClick}
-                      variant="ghost"
-                      className="w-full justify-start text-slate-600 hover:text-amber-600 hover:bg-amber-50"
-                    >
-                      <User className="w-4 h-4 mr-2" />
-                      Profile
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-slate-600 hover:text-amber-600 hover:bg-amber-50"
-                    >
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
-                        />
-                      </svg>
-                      My Tickets
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start text-slate-600 hover:text-amber-600 hover:bg-amber-50"
-                    >
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                        />
-                      </svg>
-                      Favorites
-                    </Button>
+                    {user.role === "admin" ? (
+                      <>
+                        <Button
+                          onClick={handleProfileClick}
+                          variant="ghost"
+                          className="w-full justify-start"
+                        >
+                          <User className="w-4 h-4 mr-2" />
+                          Admin Dashboard
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                        >
+                          🧑‍💼 Manage Users
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                        >
+                          📊 Analytics
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          onClick={handleProfileClick}
+                          variant="ghost"
+                          className="w-full justify-start"
+                        >
+                          <User className="w-4 h-4 mr-2" />
+                          Profile
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                        >
+                          🎟 My Tickets
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                        >
+                          ❤️ Favorites
+                        </Button>
+                      </>
+                    )}
                   </div>
 
                   <Button

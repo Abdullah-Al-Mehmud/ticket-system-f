@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useGetUserByIdQuery } from "../../redux/features/user/userApiSlice";
 import { Link, useParams } from "react-router-dom";
+import PageLoading from "../../components/LoderComponent/PageLoading";
 
 export default function UserProfilePage() {
  
@@ -35,7 +36,7 @@ export default function UserProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <div className="text-gray-500">Loading user profile...</div>
+        <div className="text-gray-500"><PageLoading/></div>
       </div>
     );
   }
@@ -68,7 +69,7 @@ export default function UserProfilePage() {
             </button> */}
             <Link
               to={`/admin/edit/${id}`}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
+              className="w-full flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition-colors duration-300 ease-in-out">
               <Settings className="w-4 h-4" />
               Edit Profile
             </Link>

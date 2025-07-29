@@ -22,33 +22,49 @@ import {
 } from "../../redux/features/user/userApiSlice";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
+import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
+
+// Skeleton Loader Component for Table Rows
+
 
 const UserList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState("all");
+  const [isModalOpen,setIsModalOpen] = useState(false);
+  const [userToDelete,setUserToDelete] = useState(null);
 
   const { data, error, isLoading, refetch } = useGetUserListQuery();
-  // console.log(data);
-  // console.log(data?.total_user);
   const [deleteUser] = useDeleteUserMutation();
-  // const [dashboardData] = useGetDashboardQuery();
   const {
     data: dashboardInfo,
     isLoading: isDashboardLoading,
     refetch: fetch,
   } = useGetDashboardQuery();
-  // console.log(dashboardInfo?.data.users.admins);
 
-  // const filter
+  const handleDeleteClick = (userId)=>{
+    setUserToDelete(userId);
+    setIsModalOpen(true);
+  }
 
-  // filter users based on search term and role
+  const confiramDelete = async () =>{
+       if(!userToDelete) return;
+       await handleDelete(userToDelete);
+       setIsModalOpen(false);
+       setUserToDelete(null);
+  };
+
+  const closeModal = ()=>{
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  }
+
 
   const handleDelete = async (userId) => {
-    console.log("Deleting user:", userId);
-
+   
     try {
-      const res =  await deleteUser(userId).unwrap();
+      const res = await deleteUser(userId).unwrap();
       toast.success(res.message);
       refetch(); // Refetch the user list after deletion
       fetch(); // Refetch dashboard data
@@ -117,15 +133,13 @@ const UserList = () => {
     }
   };
 
-  if (isLoading)
-    return <p className="p-8 text-center text-gray-600">Loading users...</p>;
   if (error)
     return <p className="p-8 text-center text-red-600">Error loading users.</p>;
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="  ">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
             <div>
@@ -138,7 +152,7 @@ const UserList = () => {
             </div>
             <Link
               to="/admin/create-user"
-              className="bg-blue-600 text-white px-5 py-2.5 rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2 font-medium">
+              className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
               <Plus size={16} />
               <span>Add User</span>
             </Link>
@@ -213,32 +227,40 @@ const UserList = () => {
       </div>
       {/* Filters */}
 
-      <div className="max-w-7xl   mx-auto px-8 py-6">
-        <div className="flex flex-col top-3  md:flex-row gap-5 justify-between items-center">
-          <div className="relative w-full md:w-1/2">
-            <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by name or email..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Filter className="text-gray-500" />
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-              <option value="all">All Roles</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-              <option value="organizer">Organizer</option>
-            </select>
-          </div>
-        </div>
+      <div className="max-w-7xl mx-auto px-8 mb-6">
+  <div className="bg-white rounded-lg border shadow-sm p-6">
+    <div className="flex flex-col sm:flex-row items-center gap-4">
+
+      {/* Search Input (Big) */}
+      <div className="flex-1 w-full relative">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
+
+      {/* Role Filter (Small) */}
+      <div className="w-full sm:w-48">
+        <select
+          value={filterRole}
+          onChange={(e) => setFilterRole(e.target.value)}
+          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="all">All Roles</option>
+          <option value="admin">Admin</option>
+          <option value="organizer">Organizer</option>
+          <option value="user">User</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
       {/* User Table */}
 
       <div className="max-w-7xl mx-auto px-8 pb-10">
@@ -256,7 +278,12 @@ const UserList = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {filteredUsers.length === 0 ? (
+                {isLoading ? (
+                  // Show skeleton loader while loading
+                  
+                    <TableRowSkeleton count={4} />
+                  
+                ) : filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-6 text-gray-500">
                       No users found.
@@ -265,13 +292,19 @@ const UserList = () => {
                 ) : (
                   filteredUsers.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50">
-                      <Link to={`/admin/user-profile/${user.id}`}>
+                     
                         {" "}
                         <td className="px-6 py-4">
+                         <Link className=" hover:underline" to={`/admin/user-profile/${user.id}`}>
                           #{user.id.toString().padStart(3, "0")}
-                        </td>{" "}
                       </Link>
-                      <td className="px-6 py-4">{user.name}</td>
+                        </td>{" "}
+                      
+                      <td className="px-6 py-4">
+                      <Link className=" hover:underline" to={`/admin/user-profile/${user.id}`}>
+                      {user.name}
+                      </Link>
+                      </td>
                       <td className="px-6 py-4">{user.email}</td>
                       <td className="px-6 py-4">
                         <span
@@ -287,21 +320,21 @@ const UserList = () => {
                       <td className="px-6 py-4">
                         {formatDate(user.created_at)}
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex gap-2">
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
                           <Link
                             to={`/admin/user-profile/${user.id}`}
-                            className="text-blue-600 hover:text-blue-800">
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded">
                             <Eye size={16} />
                           </Link>
                           <Link
                             to={`/admin/edit/${user.id}`}
-                            className="text-green-600 hover:text-green-800">
+                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded">
                             <Edit size={16} />
                           </Link>
                           <button
-                            onClick={() => handleDelete(user.id)}
-                            className="text-red-600 hover:text-red-800">
+                            onClick={() => handleDeleteClick(user.id)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded">
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -376,6 +409,14 @@ const UserList = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal 
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={confiramDelete}
+          message="Are you sure you want to delete this user?"
+
+      />
     </div>
   );
 };
