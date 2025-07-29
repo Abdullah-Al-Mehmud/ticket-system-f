@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Mail, Phone, Calendar, MapPin, Edit } from "lucide-react";
 import UserModelTicketForm from "./UserModelTicketForm";
+import EditUserModal from './EditUserModal';
 
 const UserDashboard = () => {
   const user = localStorage.getItem("data")
     ? JSON.parse(localStorage.getItem("data"))
     : {};
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleEditClick = () => {
+    setIsModalOpen(true);
+  };
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Dashboard Content */}
@@ -33,7 +39,10 @@ const UserDashboard = () => {
                   )}
                 </div>
 
-                <button className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-amber rounded-full p-1.5 shadow-lg transition-colors">
+                <button
+                  onClick={handleEditClick}
+                  className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-amber rounded-full p-1.5 shadow-lg transition-colors"
+                >
                   <Edit className="w-3 h-3" />
                 </button>
               </div>
@@ -49,7 +58,10 @@ const UserDashboard = () => {
                       {user.role || "Customer"}
                     </p>
                   </div>
-                  <button className="self-start sm:self-center bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                  <button
+                    onClick={handleEditClick}
+                    className="self-start sm:self-center bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  >
                     Edit Profile
                   </button>
                 </div>
@@ -98,6 +110,13 @@ const UserDashboard = () => {
         </div>
         {/* Ticket Card Modal show */}
         <UserModelTicketForm />
+
+        {/* Edit User Modal */}
+        <EditUserModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          userId={user.id}
+        />
       </div>
     </div>
   );
