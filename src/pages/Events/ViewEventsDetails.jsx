@@ -12,9 +12,11 @@ import {
   Settings,
   Edit,
   Trash2,
+  Check,
+  ChevronsUpDown,
 } from "lucide-react";
-
 import {
+  useAssignOrganizerMutation,
   useDeleteEventMutation,
   useGetEventByIdQuery,
   useUpdateEventMutation,
@@ -24,6 +26,20 @@ import toast from "react-hot-toast";
 import { useDeleteTicketCategoryMutation } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 import TicketCategoryModal from "./TicketCategoryModal";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
+import { useGetUserListQuery } from "../../redux/features/user/userApiSlice";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "../../components/ui/popover";
+import { Button } from "../../components/ui/button";
+import { cn } from "../../lib/utils";
+import {
+  Command,
+  CommandInput,
+  CommandGroup,
+  CommandItem,
+} from "../../components/ui/command";
 
 const EventDetailsAdmin = () => {
   const { id } = useParams();
@@ -32,6 +48,9 @@ const EventDetailsAdmin = () => {
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const [updateEvent] = useUpdateEventMutation();
   const [deleteEvent] = useDeleteEventMutation();
+  const { data: usersData, isLoading: isUsersLoading } = useGetUserListQuery();
+  const users = usersData?.data;
+  const [assignOrganizer] = useAssignOrganizerMutation();
 
   const [deleteTicketCategory] = useDeleteTicketCategoryMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,6 +61,10 @@ const EventDetailsAdmin = () => {
 
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  console.log(showModal);
 
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
@@ -166,10 +189,31 @@ const EventDetailsAdmin = () => {
     }
   };
 
+  const handleAssignOrganizer = async () => {
+    if (!selectedUsers.length) {
+      toast.error("Please select at least one user.");
+      return;
+    }
+
+    try {
+      await Promise.all(
+        selectedUsers.map((userId) =>
+          assignOrganizer({ event_id: event.id, user_id: userId }).unwrap()
+        )
+      );
+
+      toast.success("Organizer assigned successfully.");
+      setShowModal(false);
+      setSelectedUsers([]);
+    } catch (err) {
+      console.error("Assignment failed:", err);
+      alert("Something went wrong!");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           {/* ... same stats cards as before */}
           <div className="bg-white rounded-lg shadow p-6 flex items-center">
@@ -231,7 +275,8 @@ const EventDetailsAdmin = () => {
                         activeTab === tab.id
                           ? "border-blue-500 text-blue-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                      }`}>
+                      }`}
+                    >
                       <tab.icon className="w-4 h-4 mr-2" />
                       {tab.name}
                     </button>
@@ -249,15 +294,102 @@ const EventDetailsAdmin = () => {
                         event.status === "Live"
                           ? "bg-green-100 text-green-800"
                           : "bg-gray-100 text-gray-800"
-                      }`}>
+                      }`}
+                    >
                       {event.status}
                     </span>
-                  
                   </div>
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
+                  >
+                    Assign Organizer
+                  </button>
                 </div>
               </div>
             </div>
           </div>
+
+          {showModal && (
+            <div className="fixed inset-0  flex items-center justify-center z-50">
+              <div className="absolute top-0 bottom-0 right-0 left-0 bg-black opacity-40 -z-10"></div>
+              <div className="bg-white p-6 rounded shadow-lg w-full max-w-md relative">
+                <h2 className="text-lg font-semibold mb-4">Assign Organizer</h2>
+
+                {isUsersLoading ? (
+                  <p>Loading users...</p>
+                ) : (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between"
+                      >
+                        {selectedUsers.length > 0
+                          ? `${selectedUsers.length} user(s) selected`
+                          : "Select organizers..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput placeholder="Search users..." />
+                        <CommandGroup>
+                          {users?.map((user) => (
+                            <CommandItem
+                              key={user.id}
+                              onSelect={() => {
+                                const isSelected = selectedUsers.includes(
+                                  user.id
+                                );
+                                if (isSelected) {
+                                  setSelectedUsers(
+                                    selectedUsers.filter((id) => id !== user.id)
+                                  );
+                                } else {
+                                  setSelectedUsers([...selectedUsers, user.id]);
+                                }
+                              }}
+                            >
+                              <div
+                                className={cn(
+                                  "mr-2 h-4 w-4 border border-primary rounded-sm flex items-center justify-center",
+                                  selectedUsers.includes(user.id)
+                                    ? "bg-primary text-primary-foreground"
+                                    : "opacity-50"
+                                )}
+                              >
+                                {selectedUsers.includes(user.id) && (
+                                  <Check className="h-4 w-4" />
+                                )}
+                              </div>
+                              {user.name}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                )}
+
+                <div className="mt-4 flex justify-end space-x-2">
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="px-4 py-2 border rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAssignOrganizer}
+                    className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
+                  >
+                    Assign
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="p-6">
             {/* Overview Tab */}
@@ -318,7 +450,8 @@ const EventDetailsAdmin = () => {
                             event.category.status === "active"
                               ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"
-                          }`}>
+                          }`}
+                        >
                           {event.category.name}
                         </span>
                       </div>
@@ -337,7 +470,8 @@ const EventDetailsAdmin = () => {
                         onClick={() =>
                           setShowFullDescription(!showFullDescription)
                         }
-                        className="text-amber-600 hover:underline text-sm mt-1">
+                        className="text-amber-600 hover:underline text-sm mt-1"
+                      >
                         {showFullDescription ? "See less" : "See more"}
                       </button>
                     )}
@@ -398,7 +532,8 @@ const EventDetailsAdmin = () => {
                   </h3>
                   <button
                     onClick={openCreateModal}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    className=" hover:bg-amber-600 hover:text-white text-amber-600 border-2 border-amber-600 font-medium py-1 px-4 rounded transition duration-300 flex items-center gap-1"
+                  >
                     Add New Ticket Type
                   </button>
                 </div>
@@ -454,7 +589,8 @@ const EventDetailsAdmin = () => {
                                   <div className="flex items-center">
                                     <a
                                       href={`/admin/ticket-categories/${t.id}`}
-                                      className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900">
+                                      className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900"
+                                    >
                                       {t.name}
                                       <Eye className="w-4 h-4 text-amber-600" />
                                     </a>
@@ -488,7 +624,8 @@ const EventDetailsAdmin = () => {
                                   <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
                                     <div
                                       className="bg-amber-600 h-2 rounded-full"
-                                      style={{ width: `${percent}%` }}></div>
+                                      style={{ width: `${percent}%` }}
+                                    ></div>
                                   </div>
                                   <span className="text-sm text-gray-600">
                                     {percent.toFixed(1)}%
@@ -517,13 +654,15 @@ const EventDetailsAdmin = () => {
                                   <button
                                     onClick={() => openEditModal(t)}
                                     className="text-amber-600 hover:text-amber-800 p-1"
-                                    title="Edit">
+                                    title="Edit"
+                                  >
                                     <Edit className="w-4 h-4" />
                                   </button>
                                   <button
                                     onClick={() => handleDeleteClick(t.id)}
                                     className="text-red-600 hover:text-red-800 p-1"
-                                    title="Delete">
+                                    title="Delete"
+                                  >
                                     <Trash2 className="w-4 h-4" />
                                   </button>
                                 </div>
@@ -564,7 +703,8 @@ const EventDetailsAdmin = () => {
                     <select
                       value={eventStatus}
                       onChange={(e) => setEventStatus(e.target.value)}
-                      className="block w-48 px-3 py-2 border rounded-md">
+                      className="block w-48 px-3 py-2 border rounded-md"
+                    >
                       <option value="Upcoming">Upcoming</option>
                       <option value="Live">Live</option>
                       <option value="Done">Done</option>
@@ -572,7 +712,8 @@ const EventDetailsAdmin = () => {
                     </select>
                     <button
                       onClick={handleStatusUpdate}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
                       Update Status
                     </button>
                   </div>
@@ -592,7 +733,8 @@ const EventDetailsAdmin = () => {
                       {!showConfirmInput ? (
                         <button
                           onClick={() => setShowConfirmInput(true)}
-                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors">
+                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors"
+                        >
                           Delete Event Permanently
                         </button>
                       ) : (
@@ -616,7 +758,8 @@ const EventDetailsAdmin = () => {
                           <div className="flex gap-3">
                             <button
                               onClick={handleConfirmClick}
-                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors">
+                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
+                            >
                               Confirm Delete
                             </button>
                             <button
@@ -624,7 +767,8 @@ const EventDetailsAdmin = () => {
                                 setShowConfirmInput(false);
                                 setConfirmationText("");
                               }}
-                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
+                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
+                            >
                               Cancel
                             </button>
                           </div>
