@@ -252,7 +252,7 @@ const AllEventslist = () => {
                       Event Name
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Organizer
+                      Creator
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Category
@@ -298,7 +298,7 @@ const AllEventslist = () => {
                             </Link>
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-500">
-                            {event.organizer.name}
+                            {event.creator.name}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-500">
                             {event.category.name}
