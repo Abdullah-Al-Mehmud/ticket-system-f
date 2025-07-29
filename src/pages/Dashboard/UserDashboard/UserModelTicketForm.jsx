@@ -1,7 +1,14 @@
 import React from "react";
 import { useGetUserTicketsQuery } from "../../../redux/features/tickets/ticketsApiSlice";
-import { Bell, ChartBarStacked, Download, Eye, MapPinCheck, Table } from "lucide-react";
-import { Link } from 'react-router-dom';
+import {
+  Bell,
+  ChartBarStacked,
+  Download,
+  Eye,
+  MapPinCheck,
+  Table,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import TableRowSkeleton from "../../../components/LoderComponent/TableRowSkeleton";
 
 function UserModelTicketForm() {
@@ -10,13 +17,13 @@ function UserModelTicketForm() {
     <>
       {/* Profile Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-amber rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center">
             <div className="p-2 bg-amber-100 rounded-lg">
               <ChartBarStacked className="w-6 h-6 text-amber-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-amber-600">
+              <p className="text-sm font-medium text-gray-800">
                 Total Bookings
               </p>
               <p className="text-2xl font-bold text-amber-900">
@@ -25,13 +32,13 @@ function UserModelTicketForm() {
             </div>
           </div>
         </div>
-        <div className="bg-amber rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center">
             <div className="p-2 bg-amber-100 rounded-lg">
               <MapPinCheck className="w-6 h-6 text-amber-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-amber-600">
+              <p className="text-sm font-medium text-gray-800">
                 Active Tickets
               </p>
               <p className="text-2xl font-bold text-amber-900">
@@ -41,13 +48,13 @@ function UserModelTicketForm() {
             </div>
           </div>
         </div>
-        <div className="bg-amber rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex items-center">
             <div className="p-2 bg-amber-100 rounded-lg">
               <Bell className="w-6 h-6 text-amber-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-amber-600">Total Spent</p>
+              <p className="text-sm font-medium text-gray-800">Total Spent</p>
               <p className="text-2xl font-bold text-amber-900">
                 {data?.data
                   ?.reduce(
@@ -57,117 +64,158 @@ function UserModelTicketForm() {
                         0),
                     0
                   )
-                  .toFixed(2)}{" "}
-                ৳
+                  .toFixed(0)}{" "}
+                 <span className="font-mono mr-1">৳</span>
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* {UserModelForm} */}
-      <div className="bg-amber rounded-lg shadow-sm overflow-hidden">
+      {/* MY BOOKINGS */}
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-amber-200">
           <h2 className="text-lg font-medium text-amber-900">My Bookings</h2>
         </div>
-        <div className="overflow-x-auto">
-          <div className="max-h-[500px] overflow-y-auto">
-            <table className="w-full min-w-[1000px] divide-y divide-amber-200">
-              <thead className="bg-amber border-b border-amber">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black-200 uppercase tracking-wider">
-                    Title
-                  </th>
-                  <th className="px-6 py-3">Ticket Per Price</th>
-                  <th className="px-6 py-3">Ticket Quantity</th>
-                  <th className="px-6 py-3">Total Cost</th>
-                  <th className="px-6 py-3">Status</th>
-                  <th className="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
 
-              <tbody className="bg-amber divide-y divide-amber-200">
-                {/* Loading */}
-                {isLoading && (
-                  <tr>
-                    <td colSpan="9" className="text-center py-6 text-amber-500">
-                      <TableRowSkeleton count={2} />
-                    </td>
-                  </tr>
-                )}
+        <div className="p-6">
+          {/* Loading */}
+          {isLoading && (
+            <div className="text-center py-6 text-amber-500">
+              <TableRowSkeleton count={2} />
+            </div>
+          )}
 
-                {/* Error */}
-                {isError && (
-                  <tr>
-                    <td colSpan="9" className="text-center py-6 text-red-500">
-                      Failed to load data.
-                    </td>
-                  </tr>
-                )}
+          {/* Error */}
+          {isError && (
+            <div className="text-center py-6 text-red-500">
+              Failed to load data.
+            </div>
+          )}
 
-                {/* Empty */}
-                {!isLoading && !isError && data?.data?.length === 0 && (
-                  <tr>
-                    <td colSpan="9" className="text-center py-6 text-amber-500">
-                      No bookings found.
-                    </td>
-                  </tr>
-                )}
+          {/* Empty */}
+          {!isLoading && !isError && data?.data?.length === 0 && (
+            <div className="text-center py-6 text-amber-500">
+              No bookings found.
+            </div>
+          )}
 
-                {/* Data Rows */}
-                {!isLoading &&
-                  !isError &&
-                  data?.data?.map((booking) => (
-                    <tr key={booking.id} className="hover:bg-amber">
-                      <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-amber-900">
-                          {booking?.ticket_category?.event?.title ||
-                            "Untitled Event"}
+          {/* Mini Real Tickets */}
+          {!isLoading && !isError && data?.data?.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 ">
+              {data.data.map((booking) => (
+                <Link
+                  key={booking.id}
+                  to={`/user/user-view-ticket/${booking.id}`}
+                >
+                  <div
+                    className="relative bg-gradient-to-r from-amber-50 to-amber-100 rounded-lg border-2 border-dashed border-amber-400 cursor-pointer "
+                    style={{
+                      width: "350px",
+                      height: "220px",
+                      backgroundImage: `repeating-linear-gradient(
+                      90deg,
+                      transparent,
+                      transparent 10px,
+                      rgba(245, 158, 11, 0.1) 10px,
+                      rgba(245, 158, 11, 0.1) 11px
+                    )`,
+                    }}
+                  >
+                    {/* Ticket Stub - Left Side */}
+                    <div className="flex h-full">
+                      <div className="w-4 bg-amber-200 rounded-l-lg flex flex-col justify-center items-center py-4">
+                        <div className="text-xs font-bold text-amber-800 transform -rotate-90 whitespace-nowrap">
+                          TICKET
+                        </div>
+                      </div>
+
+                      {/* Main Ticket Content */}
+                      <div className="flex-1 p-4 flex flex-col justify-between">
+                        {/* Header */}
+                        <div className="border-b border-amber-300 border-dashed pb-3 mb-3">
+                          <h3 className="text-sm font-bold text-amber-900 mb-2 line-clamp-3 leading-tight">
+                            {booking?.ticket_category?.event?.title ||
+                              "Untitled Event"}
+                          </h3>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-amber-700 font-mono">
+                              #{booking.id}
+                            </span>
+                            <span
+                              className={`text-xs px-2 py-1 rounded-full font-bold ${
+                                booking.status === "Confirmed"
+                                  ? "bg-green-200 text-green-800"
+                                  : "bg-gray-200 text-gray-800"
+                              }`}
+                            >
+                              {booking.status.toUpperCase()}
+                            </span>
+                          </div>
                         </div>
 
-                        <div className="text-sm text-amber-600 font-medium">
-                          Booking ID: {booking.id}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-900">
-                        {booking?.ticket_category?.price}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-900">
-                        x {booking.quantity}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-900">
-                        {(
-                          booking?.quantity * booking?.ticket_category?.price
-                        ).toFixed(2)}
-                        taka
-                      </td>
+                        {/* Middle Content */}
+                        <div className="flex-1 flex flex-col justify-center">
+                          {/* Ticket Details Grid */}
+                          <div className="grid grid-cols-2 gap-3 mb-3">
+                            <div className="text-center">
+                              <div className="text-xs text-amber-600 font-semibold uppercase tracking-wide">
+                                Price
+                              </div>
+                              <div className="text-base font-bold text-amber-900">
+                               {Number(booking?.ticket_category?.price).toFixed(0)} <span className="font-mono mr-1">৳</span>
+                              </div>
+                            </div>
 
-                      <td className="px-6 py-4 text-sm text-amber-900">
-                        {booking.status}
-                      </td>
+                            <div className="text-center">
+                              <div className="text-xs text-amber-600 font-semibold uppercase tracking-wide">
+                                Qty
+                              </div>
+                              <div className="text-base font-bold text-amber-900">
+                                {booking.quantity}
+                              </div>
+                            </div>
+                          </div>
 
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <Link
-                            to={`/user/user-view-ticket/${booking.id}`}
-                            className="text-amber-600 hover:text-amber-800 p-1"
-                            title="View Details"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Link>
-                          <button
-                            className="text-amber-600 hover:text-amber-800 p-1"
-                            title="Download"
-                          >
-                            <Download className="w-4 h-4" />
-                          </button>
+                          {/* Total Amount - Prominent */}
+                          <div className="bg-amber-200 rounded-md p-2 mb-3 text-center border border-amber-300">
+                            <div className="text-xs text-amber-700 font-semibold uppercase">
+                              Total Amount
+                            </div>
+                            <div className="text-lg font-bold text-amber-900">
+                              {(
+                                booking?.quantity *
+                                booking?.ticket_category?.price
+                              ).toFixed(0)} <span className="font-mono mr-[2px]">৳</span>
+                              
+                            </div>
+                          </div>
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+                      </div>
+                    </div>
+
+                    {/* Perforated Edge Effect */}
+                    <div className="absolute left-4 top-0 bottom-0 w-px">
+                      <div
+                        className="h-full w-full bg-amber-300 opacity-50"
+                        style={{
+                          backgroundImage: `repeating-linear-gradient(
+                             0deg,
+                             transparent,
+                             transparent 4px,
+                             rgba(245, 158, 11, 0.8) 4px,
+                             rgba(245, 158, 11, 0.8) 6px
+                           )`,
+                        }}
+                      ></div>
+                    </div>
+
+                    
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

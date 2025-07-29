@@ -1,149 +1,162 @@
-import React from "react";
-import { CalendarDays, MapPinCheck, Users } from "lucide-react";
+import React, { useState } from "react";
+import { CalendarDays, MapPin, Users, Clock } from "lucide-react";
 import TableRowSkeleton from "../../../components/LoderComponent/TableRowSkeleton";
 import { Link } from "react-router-dom";
 import { useGetOrganizerEventsQuery } from "../../../redux/features/event/EventApiSlice";
 
 function UserOrganizedEventForm() {
   const { data, isLoading, isError } = useGetOrganizerEventsQuery();
+  const [activeTab, setActiveTab] = useState("All");
+
+  const statusTabs = ["All", "Upcoming", "Live", "Done", "Cancelled"];
+
+  const filteredEvents = data?.data?.filter(event => {
+    if (activeTab === "All") return true;
+    return event.status === activeTab;
+  }) || [];
 
   return (
     <>
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 pt-5 gap-6 mb-6">
-        <div className="bg-amber rounded-lg shadow-sm p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <CalendarDays className="w-6 h-6 text-amber-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-amber-600">Total Events</p>
-              <p className="text-2xl font-bold text-amber-900">
-                {data?.data?.length || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-amber rounded-lg shadow-sm p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <MapPinCheck className="w-6 h-6 text-amber-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-amber-600">Live Events</p>
-              <p className="text-2xl font-bold text-amber-900">
-                {data?.data?.filter((event) => event.status === "Live")
-                  ?.length || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-amber rounded-lg shadow-sm p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <Users className="w-6 h-6 text-amber-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-amber-600">Organizers</p>
-              <p className="text-2xl font-bold text-amber-900">
-                {new Set(
-                  data?.data?.flatMap((event) =>
-                    event.organizers?.map((org) => org.email)
-                  )
-                ).size || 0}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="bg-amber rounded-lg shadow-sm overflow-hidden">
+      {/* Header */}
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-amber-200">
-          <h2 className="text-lg font-medium text-amber-900">
-            My Organized Events
+          <h2 className="text-xl font-semibold text-amber-900">
+            My Events
           </h2>
         </div>
-        <div className="overflow-x-auto">
-          <div className="max-h-[500px] overflow-y-auto">
-            <table className="w-full min-w-[1000px] divide-y divide-amber-200">
-              <thead className="bg-amber border-b border-amber">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black-200 uppercase">
-                    Title
-                  </th>
-                  <th className="px-6 py-3">Category</th>
-                  <th className="px-6 py-3">Location</th>
-                  <th className="px-6 py-3">Start Date</th>
-                  <th className="px-6 py-3">End Date</th>
-                  <th className="px-6 py-3">Status</th>
-                  <th className="px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-amber divide-y divide-amber-200">
-                {isLoading && (
-                  <tr>
-                    <td colSpan="7" className="text-center py-6 text-amber-500">
-                      <TableRowSkeleton count={2} />
-                    </td>
-                  </tr>
-                )}
 
-                {isError && (
-                  <tr>
-                    <td colSpan="7" className="text-center py-6 text-red-500">
-                      Failed to load events.
-                    </td>
-                  </tr>
-                )}
-
-                {!isLoading && !isError && data?.data?.length === 0 && (
-                  <tr>
-                    <td colSpan="7" className="text-center py-6 text-amber-500">
-                      No events found.
-                    </td>
-                  </tr>
-                )}
-
-                {!isLoading &&
-                  !isError &&
-                  data?.data?.map((event) => (
-                    <tr key={event.id} className="hover:bg-amber-100">
-                      <td className="px-6 py-4 text-sm font-semibold text-amber-900">
-                        {event.title}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-800">
-                        {event.category?.name || "N/A"}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-800">
-                        {event.location}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-800">
-                        {new Date(event.start_date).toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-800">
-                        {new Date(event.end_date).toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-amber-800">
-                        {event.status}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <Link
-                            to={`/event-details/${event.id}`}
-                            className="text-amber-600 hover:text-amber-800 p-1"
-                            title="View Event"
-                          >
-                            <span className="underline">View</span>
-                          </Link>
-                          {/* Add edit/delete if needed */}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+        {/* Status Tabs */}
+        <div className="px-6 py-4 border-b border-amber-200 bg-amber-50">
+          <div className="flex flex-wrap gap-2">
+            {statusTabs.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  activeTab === tab
+                    ? "bg-amber-600 text-white shadow-sm"
+                    : "text-amber-700 hover:bg-amber-100 bg-white border border-amber-200"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
           </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {isLoading && (
+            <div className="text-center py-8 text-amber-600">
+              <TableRowSkeleton count={2} />
+            </div>
+          )}
+
+          {isError && (
+            <div className="text-center py-8">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
+                Failed to load events. Please try again.
+              </div>
+            </div>
+          )}
+
+          {!isLoading && !isError && filteredEvents.length === 0 && (
+            <div className="text-center py-12">
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-amber-700">
+                <Users className="w-12 h-12 mx-auto mb-4 text-amber-400" />
+                <p className="text-lg font-medium mb-2">No Events Found</p>
+                <p className="text-sm">
+                  {activeTab === "All" 
+                    ? "You haven't created any events yet." 
+                    : `No ${activeTab.toLowerCase()} events found.`}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Event Grid */}
+          {!isLoading && !isError && filteredEvents.length > 0 && (
+            <div className="max-h-[600px] overflow-y-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className="bg-white border border-amber-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden group"
+                  >
+                    {/* Event Image */}
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={event.image || "/api/placeholder/400/200"}
+                        alt={event.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.target.src = "/api/placeholder/400/200";
+                        }}
+                      />
+                      {/* Status Badge */}
+                      <div className="absolute top-3 right-3">
+                        <span
+                          className={`px-3 py-1 text-xs font-semibold rounded-full backdrop-blur-sm ${
+                            event.status === "Live"
+                              ? "bg-green-500/90 text-white"
+                              : event.status === "Upcoming"
+                              ? "bg-blue-500/90 text-white"
+                              : event.status === "Done"
+                              ? "bg-gray-500/90 text-white"
+                              : "bg-red-500/90 text-white"
+                          }`}
+                        >
+                          {event.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Event Details */}
+                    <div className="p-5">
+                      <h3 className="text-lg font-semibold text-amber-900 mb-3 line-clamp-2 leading-tight">
+                        {event.title}
+                      </h3>
+
+                      <div className="space-y-2 mb-4">
+                        <div className="flex items-center text-sm text-amber-700">
+                          <Users className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
+                          <span className="font-medium">{event.category?.name || "N/A"}</span>
+                        </div>
+
+                        <div className="flex items-center text-sm text-amber-700">
+                          <MapPin className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
+                          <span className="line-clamp-1">{event.location}</span>
+                        </div>
+
+                        <div className="flex items-center text-sm text-amber-700">
+                          <CalendarDays className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
+                          <span className="line-clamp-1">
+                            {new Date(event.start_date).toLocaleDateString()} - {new Date(event.end_date).toLocaleDateString()}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center text-sm text-amber-700">
+                          <Clock className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
+                          <span>
+                            {new Date(event.start_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      <Link
+                        to={`/event-details/${event.id}`}
+                        className="block w-full bg-amber-600 text-white text-center px-4 py-3 rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors duration-200 shadow-sm hover:shadow-md"
+                        title="View Event"
+                      >
+                        View Event Details
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
