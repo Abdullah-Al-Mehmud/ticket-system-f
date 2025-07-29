@@ -18,24 +18,24 @@ function UserOrganizedEventForm() {
   return (
     <>
       {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-8">
         <div className="px-6 py-4 border-b border-amber-200">
-          <h2 className="text-xl font-semibold text-amber-900">
+          <h2 className="text-lg font-medium text-amber-900">
             My Events
           </h2>
         </div>
 
         {/* Status Tabs */}
-        <div className="px-6 py-4 border-b border-amber-200 bg-amber-50">
-          <div className="flex flex-wrap gap-2">
+        <div className="px-6 py-3 bg-amber-100 border-b border-amber-200">
+          <div className="flex space-x-1 ">
             {statusTabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                   activeTab === tab
-                    ? "bg-amber-600 text-white shadow-sm"
-                    : "text-amber-700 hover:bg-amber-100 bg-white border border-amber-200"
+                    ? "bg-amber-600 text-white"
+                    : "text-amber-600 hover:bg-amber-50"
                 }`}
               >
                 {tab}
@@ -47,114 +47,77 @@ function UserOrganizedEventForm() {
         {/* Content */}
         <div className="p-6">
           {isLoading && (
-            <div className="text-center py-8 text-amber-600">
+            <div className="text-center py-6 text-amber-600">
               <TableRowSkeleton count={2} />
             </div>
           )}
 
           {isError && (
-            <div className="text-center py-8">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
-                Failed to load events. Please try again.
-              </div>
+            <div className="text-center py-6 text-red-500">
+              Failed to load events.
             </div>
           )}
 
           {!isLoading && !isError && filteredEvents.length === 0 && (
-            <div className="text-center py-12">
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-amber-700">
-                <Users className="w-12 h-12 mx-auto mb-4 text-amber-400" />
-                <p className="text-lg font-medium mb-2">No Events Found</p>
-                <p className="text-sm">
-                  {activeTab === "All" 
-                    ? "You haven't created any events yet." 
-                    : `No ${activeTab.toLowerCase()} events found.`}
-                </p>
-              </div>
+            <div className="text-center py-6 text-amber-600">
+              {activeTab === "All" ? "No events found." : `No ${activeTab.toLowerCase()} events found.`}
             </div>
           )}
 
-          {/* Event Grid */}
+          {/* Event Cards */}
           {!isLoading && !isError && filteredEvents.length > 0 && (
-            <div className="max-h-[600px] overflow-y-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="bg-white border border-amber-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden group"
-                  >
+            <div className="max-h-[500px] overflow-y-auto space-y-4">
+              {filteredEvents.map((event) => (
+                <div
+                  key={event.id}
+                  className="bg-white border border-amber-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex">
                     {/* Event Image */}
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="w-48 h-full">
                       <img
-                        src={event.image || "/api/placeholder/400/200"}
+                        src={event.image_url }
                         alt={event.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.target.src = "/api/placeholder/400/200";
-                        }}
+                        className="w-full h-full object-cover rounded-l-lg"
                       />
-                      {/* Status Badge */}
-                      <div className="absolute top-3 right-3">
+                    </div>
+
+                    {/* Event Details */}
+                    <div className="flex-1 p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-lg font-semibold text-amber-900 line-clamp-1">
+                          {event.title}
+                        </h3>
                         <span
-                          className={`px-3 py-1 text-xs font-semibold rounded-full backdrop-blur-sm ${
+                          className={`px-3 py-1 text-xs font-medium rounded-full ${
                             event.status === "Live"
-                              ? "bg-green-500/90 text-white"
+                              ? "bg-green-100 text-green-800"
                               : event.status === "Upcoming"
-                              ? "bg-blue-500/90 text-white"
+                              ? "bg-blue-100 text-blue-800"
                               : event.status === "Done"
-                              ? "bg-gray-500/90 text-white"
-                              : "bg-red-500/90 text-white"
+                              ? "bg-gray-100 text-gray-800"
+                              : "bg-red-100 text-red-800"
                           }`}
                         >
                           {event.status}
                         </span>
                       </div>
-                    </div>
 
-                    {/* Event Details */}
-                    <div className="p-5">
-                      <h3 className="text-lg font-semibold text-amber-900 mb-3 line-clamp-2 leading-tight">
-                        {event.title}
-                      </h3>
+                      
 
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-sm text-amber-700">
-                          <Users className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
-                          <span className="font-medium">{event.category?.name || "N/A"}</span>
-                        </div>
-
-                        <div className="flex items-center text-sm text-amber-700">
-                          <MapPin className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
-                          <span className="line-clamp-1">{event.location}</span>
-                        </div>
-
-                        <div className="flex items-center text-sm text-amber-700">
-                          <CalendarDays className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
-                          <span className="line-clamp-1">
-                            {new Date(event.start_date).toLocaleDateString()} - {new Date(event.end_date).toLocaleDateString()}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center text-sm text-amber-700">
-                          <Clock className="w-4 h-4 mr-3 text-amber-500 flex-shrink-0" />
-                          <span>
-                            {new Date(event.start_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                          </span>
-                        </div>
+                      <div className="flex justify-end ">
+                        <Link
+                          to={`/event-details/${event.id}`}
+                          className="bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-700 transition-colors"
+                          title="View Event"
+                        >
+                          View Event
+                        </Link>
                       </div>
-
-                      {/* Action Button */}
-                      <Link
-                        to={`/event-details/${event.id}`}
-                        className="block w-full bg-amber-600 text-white text-center px-4 py-3 rounded-lg text-sm font-semibold hover:bg-amber-700 transition-colors duration-200 shadow-sm hover:shadow-md"
-                        title="View Event"
-                      >
-                        View Event Details
-                      </Link>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
