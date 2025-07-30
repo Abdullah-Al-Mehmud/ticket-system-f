@@ -12,7 +12,7 @@ const EditUserModal = ({ isOpen, onClose, userId }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    image_url: null,
+    // image_url: null,
   });
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const EditUserModal = ({ isOpen, onClose, userId }) => {
       setFormData({
         name: userData.data?.name || "",
         email: userData.data?.email || "",
-        image_url: null, // Clear previous image
+        image_url: userData.data?.image_url || "",
       });
     }
   }, [userData]);
@@ -39,25 +39,16 @@ const EditUserModal = ({ isOpen, onClose, userId }) => {
     const form = new FormData();
     form.append("name", formData.name);
     form.append("email", formData.email);
-    if (formData.image_url) {
+
+    if (formData.image_url && typeof formData.image_url !== "string") {
       form.append("image_url", formData.image_url);
     }
-    form.append("_method", "PATCH"); // Laravel support
+
+    form.append("_method", "PATCH");
 
     try {
       await updateUser({ id: userId, data: form }).unwrap();
-      const updatedFields = {
-        name: form.get("name"),
-        email: form.get("email"),
-        image_url: form.get("image_url"),
-      };
 
-      const updatedUser = {
-        ...userData?.data,
-        ...updatedFields,
-      };
-
-      localStorage.setItem("data", JSON.stringify(updatedUser));
       toast.success("User updated successfully!");
       onClose();
     } catch (err) {
@@ -104,14 +95,24 @@ const EditUserModal = ({ isOpen, onClose, userId }) => {
                 onChange={handleFileChange}
                 className="w-full px-3 py-2 border rounded"
               />
-              {formData.image_url && typeof formData.image_url === "object" && (
+              {formData.image_url && typeof formData.image_url === "object" ? (
                 <img
                   src={URL.createObjectURL(formData.image_url)}
                   alt="Preview"
                   className="w-20 h-20 rounded mt-2 object-cover"
                 />
+              ) : (
+                formData.image_url &&
+                typeof formData.image_url === "string" && (
+                  <img
+                    src={`${import.meta.env.VITE_IMG_URL}/${formData.image_url}`}
+                    alt="Existing Profile"
+                    className="w-20 h-20 rounded mt-2 object-cover"
+                  />
+                )
               )}
             </div>
+
             <div className="flex justify-end space-x-2">
               <button
                 type="button"
