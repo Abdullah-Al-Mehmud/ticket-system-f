@@ -1,80 +1,68 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
-import {
-  useGetEventsQuery,
-  useDeleteEventMutation,
-} from "../../redux/features/event/EventApiSlice";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
 import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
+import {
+  useGetEventsQuery,
+  useDeleteEventMutation,
+} from "../../redux/features/event/EventApiSlice";
 
-const AllEventslist = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("event_name");
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
-
-  const { data, isLoading, isError, refetch } = useGetEventsQuery({
-    all: true,
+const AllEventsList = () => {
+  const [configPage, setConfigPage] = useState({
+    page: 1,
+    count: 10,
+    search: "",
+    status: "",
+    category: "",
   });
-  const events = data?.data || [];
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
+
+  const { data, isLoading, isError, refetch } = useGetEventsQuery(configPage);
 
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventMutation();
 
-  const handleDeleteClick = (userId) => {
-    setUserToDelete(userId);
+  const events = data?.data || [];
+  const lastPage = data?.last_page || 1;
+  const currentPage = data?.current_page || 1;
+
+  const uniqueStatuses = [...new Set(events.map((e) => e.status))];
+  const uniqueCategories = [...new Set(events.map((e) => e.category?.name))];
+
+  const handleDeleteClick = (id) => {
+    setEventToDelete(id);
     setIsModalOpen(true);
   };
 
-  const confiramDelete = async () => {
-    if (!userToDelete) return;
-    await handleDelete(userToDelete);
-    setIsModalOpen(false);
-    setUserToDelete(null);
+  const confirmDelete = async () => {
+    if (!eventToDelete) return;
+    try {
+      const res = await deleteEvent(eventToDelete).unwrap();
+      toast.success(res.message || "Event deleted successfully!");
+      refetch();
+    } catch {
+      toast.error("Failed to delete event.");
+    } finally {
+      setIsModalOpen(false);
+      setEventToDelete(null);
+    }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setUserToDelete(null);
+    setEventToDelete(null);
   };
 
-  const handleDelete = async (eventId) => {
-    try {
-      const res = await deleteEvent(eventId).unwrap();
-      if (res.status === true) {
-        toast.success(res.message);
-      } else {
-        toast.error(res.message);
-      }
-
-      refetch();
-    } catch (error) {
-      console.error("Delete failed:", error);
-      alert("Failed to delete event. Please try again.");
-    }
-  };
-
-  const filteredEvents = events
-    .filter((event) => {
-      const titleMatch = event.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const categoryMatch =
-        categoryFilter === "all" || event.category.name === categoryFilter;
-      const statusMatch =
-        statusFilter === "all" || event.status === statusFilter;
-      return titleMatch && categoryMatch && statusMatch;
-    })
-    .sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
-      if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
-      return 0;
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
     });
 
   const getStatusBadge = (status) => {
@@ -90,168 +78,159 @@ const AllEventslist = () => {
           statusStyles[status] || "bg-gray-100 text-gray-800 border-gray-200"
         }`}
       >
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+        {status}
       </span>
     );
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true, // for AM/PM format; use false for 24-hour format
-    });
-  };
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  const statusOptions = [];
-  events.forEach((event) => {
-    if (!statusOptions.includes(event.status)) {
-      statusOptions.push(event.status);
-    }
-  });
-
-  const categoryOptions = [];
-  events.forEach((event) => {
-    if (!categoryOptions.includes(event.category)) {
-      categoryOptions.push(event.category.name);
-    }
-  });
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">All Events</h1>
-            <p className="mt-2 text-gray-600">
-              Manage and track all your events in one place
-            </p>
+            <p className="mt-2 text-gray-600">Manage all your events</p>
           </div>
           <Link
             to="/admin/create-event"
-            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
             <Plus size={20} /> Create Event
           </Link>
         </div>
 
-        {/* Controls */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-md">
+        {/* Filters */}
+        <div className="bg-white rounded-lg border p-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex-1 flex gap-2 w-full flex-wrap">
+              <div className="relative flex-1 min-w-[180px]">
                 <Search
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                   size={20}
                 />
                 <input
                   type="text"
                   placeholder="Search events..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={configPage.search}
+                  onChange={(e) =>
+                    setConfigPage((prev) => ({
+                      ...prev,
+                      search: e.target.value,
+                      page: 1,
+                    }))
+                  }
+                  className="w-full pl-10 pr-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
 
-              <div className="flex gap-2">
-                <select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="all">All Status</option>
-                  {statusOptions.map((status) => (
-                    <option key={status} value={status}>
-                      {status.charAt(0).toUpperCase() + status.slice(1)}
-                    </option>
-                  ))}
-                </select>
+              <button
+                onClick={() => setConfigPage((prev) => ({ ...prev, page: 1 }))}
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1"
+              >
+                Search
+              </button>
 
-                <select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="all">All Categories</option>
-                  {categoryOptions.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <button
+                onClick={() =>
+                  setConfigPage({
+                    page: 1,
+                    count: configPage.count,
+                    search: "",
+                    status: "",
+                    category: "",
+                  })
+                }
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Clear
+              </button>
+            </div>
+
+            <div className="flex gap-2 flex-wrap">
+              <select
+                value={configPage.status}
+                onChange={(e) =>
+                  setConfigPage((prev) => ({
+                    ...prev,
+                    status: e.target.value,
+                    page: 1,
+                  }))
+                }
+                className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              >
+                <option value="">All Status</option>
+                {uniqueStatuses.map((status, idx) => (
+                  <option key={idx} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={configPage.category}
+                onChange={(e) =>
+                  setConfigPage((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                    page: 1,
+                  }))
+                }
+                className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              >
+                <option value="">All Categories</option>
+                {uniqueCategories.map((cat, idx) => (
+                  <option key={idx} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
 
-        {/* Table or Loading State */}
-        {isError ? (
-          <div className="bg-white rounded-lg shadow-sm border p-6 text-center text-red-500">
-            Failed to load events. Please try again later.
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+        {/* Table */}
+        <div className="bg-white rounded-lg border overflow-hidden">
+          {isError ? (
+            <div className="p-6 text-center text-red-500">
+              Failed to load events.
+            </div>
+          ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      ID
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Event Image
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Event Name
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Creator
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Category
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Location
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      Start Date
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
-                      End Date
-                    </th>
-
-                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
-                      Actions
-                    </th>
+                    {[
+                      "ID",
+                      "Event_Image",
+                      "Event",
+                      "Creator",
+                      "Category",
+                      "Location",
+                      "Status",
+                      "Start",
+                      "End",
+                      "Actions",
+                    ].map((heading, i) => (
+                      <th
+                        key={i}
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase"
+                      >
+                        {heading}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {isLoading ? (
                     <TableRowSkeleton count={4} />
-                  ) : (
-                    filteredEvents.map((event) => (
+                  ) : events.length > 0 ? (
+                    events.map((event) => (
                       <tr key={event.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                          <Link
-                            className="hover:underline"
-                            to={`/admin/events-details/${event.id}`}
-                          >
-                            #{event.id}
-                          </Link>
+                          #{event.id}
                         </td>
-
-                        {/* Image + Title in one cell */}
-                        <td className="px-6 py-4 text-sm text-gray-900 font-medium flex items-center gap-3">
+                        <td className="px-6 py-4 text-sm">
                           {event.image_url ? (
                             <img
                               src={`${import.meta.env.VITE_IMG_URL}/${
@@ -259,10 +238,6 @@ const AllEventslist = () => {
                               }`}
                               alt={event.title}
                               className="w-8 h-8 rounded-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.onerror = null;
-                                e.currentTarget.src = "/default-image.png";
-                              }}
                             />
                           ) : (
                             <div className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold uppercase">
@@ -270,54 +245,47 @@ const AllEventslist = () => {
                             </div>
                           )}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                        <td className="px-6 py-4 text-sm">
                           <Link
-                            className="hover:underline"
                             to={`/admin/events-details/${event.id}`}
+                            className="hover:underline"
                           >
                             {event.title}
                           </Link>
                         </td>
-
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {event.creator.name}
+                        <td className="px-6 py-4 text-sm">
+                          {event.creator?.name}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {event.category.name}
+                        <td className="px-6 py-4 text-sm">
+                          {event.category?.name}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {event.location}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 text-sm">{event.location}</td>
+                        <td className="px-6 py-4 text-sm">
                           {getStatusBadge(event.status)}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 text-sm">
                           {formatDate(event.start_date)}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
+                        <td className="px-6 py-4 text-sm">
                           {formatDate(event.end_date)}
                         </td>
-
                         <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
+                          <div className="flex gap-2 justify-center">
                             <Link
                               to={`/admin/events-details/${event.id}`}
                               className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                              title="View"
                             >
                               <Eye size={16} />
                             </Link>
                             <Link
                               to={`/admin/event-edit/${event.id}`}
                               className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                              title="Edit"
                             >
                               <Edit size={16} />
                             </Link>
                             <button
                               onClick={() => handleDeleteClick(event.id)}
                               className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
-                              title="Delete"
                               disabled={isDeleting}
                             >
                               <Trash2 size={16} />
@@ -326,21 +294,91 @@ const AllEventslist = () => {
                         </td>
                       </tr>
                     ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="9"
+                        className="text-center py-12 text-gray-500"
+                      >
+                        No events found.
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
             </div>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {lastPage > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
+            {/* Previous Button */}
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.max(1, currentPage - 1),
+                }))
+              }
+              disabled={currentPage === 1}
+              className={`px-4 py-2 text-sm rounded-md border transition ${
+                currentPage === 1
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                  : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+              }`}
+            >
+              Previous
+            </button>
+
+            {/* Page Numbers */}
+            {[...Array(lastPage)].map((_, idx) => {
+              const pageNum = idx + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() =>
+                    setConfigPage((prev) => ({ ...prev, page: pageNum }))
+                  }
+                  className={`px-4 py-2 text-sm rounded-md border transition ${
+                    pageNum === currentPage
+                      ? "bg-amber-600 text-white border-amber-600"
+                      : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {/* Next Button */}
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.min(lastPage, currentPage + 1),
+                }))
+              }
+              disabled={currentPage === lastPage}
+              className={`px-4 py-2 text-sm rounded-md border transition ${
+                currentPage === lastPage
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                  : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+              }`}
+            >
+              Next
+            </button>
           </div>
         )}
         <ConfirmModal
           isOpen={isModalOpen}
           onClose={closeModal}
-          onConfirm={confiramDelete}
-          message="Are you sure you want to delete this Event?"
+          onConfirm={confirmDelete}
+          message="Are you sure you want to delete this event?"
         />
       </div>
     </div>
   );
 };
 
-export default AllEventslist;
+export default AllEventsList;
