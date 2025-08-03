@@ -20,7 +20,7 @@ const Event = () => {
   const { data, isFetching, isLoading, isError } =
     useGetEventsQuery(pageConfig);
   const { data: categoryData, isLoading: isLoadingCategory } =
-    useGetCategoriesQuery();
+    useGetCategoriesQuery({ all: true });
   const events = data?.data ?? [];
   const categories = categoryData?.data ?? [];
 
