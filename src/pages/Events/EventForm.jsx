@@ -20,7 +20,7 @@ const EventForm = () => {
 
   const [errors, setErrors] = useState({});
   const [createEvent, { isLoading }] = useCreateEventMutation();
-  const { data: categories } = useGetCategoriesQuery();
+  const { data: categories } = useGetCategoriesQuery({all: true});
   const CategoriesList = categories?.data || [];
 
   const handleChange = (e) => {

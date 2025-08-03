@@ -89,9 +89,7 @@ const UserList = () => {
   };
 
   if (isError)
-    return (
-      <p className="p-8 text-center text-red-600">Error loading users.</p>
-    );
+    return <p className="p-8 text-center text-red-600">Error loading users.</p>;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -102,7 +100,9 @@ const UserList = () => {
             <h1 className="text-3xl font-semibold text-gray-900">
               User Management
             </h1>
-            <p className="mt-2 text-gray-600">Manage and monitor user accounts</p>
+            <p className="mt-2 text-gray-600">
+              Manage and monitor user accounts
+            </p>
           </div>
           <Link
             to="/admin/create-user"
@@ -182,6 +182,9 @@ const UserList = () => {
                     ID
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Image
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                     Name
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
@@ -213,6 +216,34 @@ const UserList = () => {
                         </Link>
                       </td>
                       <td className="px-6 py-4 text-sm">
+                        <Link to={`/admin/user-profile/${user?.id}`}>
+                          {user?.image_url ? (
+                            <img
+                              src={`${import.meta.env.VITE_IMG_URL}/${
+                                user.image_url
+                              }`}
+                              alt={user?.name || "User Avatar"}
+                              className="w-8 h-8 rounded-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = "/default-image.png";
+                              }}
+                            />
+                          ) : (
+                            <div
+                              className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold uppercase"
+                              title={user?.name || "Unknown User"}
+                              aria-label={`User avatar placeholder for ${
+                                user?.name || "Unknown"
+                              }`}
+                            >
+                              {user?.name?.charAt(0) || "?"}
+                            </div>
+                          )}
+                        </Link>
+                      </td>
+
+                      <td className="px-6 py-4 text-sm">
                         <Link
                           to={`/admin/user-profile/${user.id}`}
                           className="hover:underline"
@@ -228,7 +259,9 @@ const UserList = () => {
                           )}`}
                         >
                           {getRoleIcon(user?.role?.name)}
-                          <span className="ml-1 capitalize">{user?.role?.name}</span>
+                          <span className="ml-1 capitalize">
+                            {user?.role?.name}
+                          </span>
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
