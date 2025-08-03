@@ -23,10 +23,10 @@ export const eventApiSlice = apiSlice.injectEndpoints({
     }),
 
     updateEvent: builder.mutation({
-      query: ({ id, ...updatedData }) => ({
+      query: ({ id, formData }) => ({
         url: `/event/${id}`,
-        method: "PATCH",
-        body: updatedData,
+        method: "POST", 
+        body: formData,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "Event", id }],
     }),

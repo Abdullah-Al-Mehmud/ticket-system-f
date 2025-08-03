@@ -42,7 +42,6 @@ const EventForm = () => {
     if (!formData.end_date) newErrors.end_date = "End date is required";
     if (!formData.privacy_policy)
       newErrors.privacy_policy = "Accept the privacy policy";
-    if (!formData.image_url) newErrors.image_url = "image_url is required";
 
     if (
       formData.start_date &&
@@ -70,6 +69,7 @@ const EventForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     const formattedStart = formatForMySQL(formData.start_date);
@@ -83,7 +83,11 @@ const EventForm = () => {
     submissionData.append("start_date", formattedStart);
     submissionData.append("end_date", formattedEnd);
     submissionData.append("privacy_policy", formData.privacy_policy);
-    submissionData.append("image_url", formData.image_url); // file object
+
+    // ✅ Only append image if a file is selected
+    if (formData.image_url) {
+      submissionData.append("image_url", formData.image_url);
+    }
 
     try {
       await createEvent(submissionData).unwrap();
@@ -229,7 +233,7 @@ const EventForm = () => {
             <input
               type="file"
               name="image_url"
-              accept="image/*" 
+              accept="image/*"
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-4 py-2"
             />
