@@ -49,6 +49,16 @@ const EditUserModal = ({ isOpen, onClose, userId }) => {
     try {
       await updateUser({ id: userId, data: form }).unwrap();
 
+      const existingUser = JSON.parse(localStorage.getItem("data"));
+
+      const updatedLocalUser = {
+        ...existingUser,
+        name: formData.name,
+        email: formData.email,
+      };
+
+      localStorage.setItem("data", JSON.stringify(updatedLocalUser));
+
       toast.success("User updated successfully!");
       onClose();
     } catch (err) {
@@ -105,7 +115,9 @@ const EditUserModal = ({ isOpen, onClose, userId }) => {
                 formData.image_url &&
                 typeof formData.image_url === "string" && (
                   <img
-                    src={`${import.meta.env.VITE_IMG_URL}/${formData.image_url}`}
+                    src={`${import.meta.env.VITE_IMG_URL}/${
+                      formData.image_url
+                    }`}
                     alt="Existing Profile"
                     className="w-20 h-20 rounded mt-2 object-cover"
                   />
