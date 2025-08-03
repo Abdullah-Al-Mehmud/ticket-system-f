@@ -12,7 +12,7 @@ const EventCard = ({ event }) => {
           {event.image_url ? (
             <>
               <img
-                src={event.image_url}
+                src={`${import.meta.env.VITE_IMG_URL}/${event.image_url}`}
                 alt={event.title}
                 className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500"
                 onError={(e) => {
