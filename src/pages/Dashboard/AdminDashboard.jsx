@@ -21,10 +21,10 @@ const AdminDashboard = () => {
   const stats = data?.data?.users || {};
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex bg-gray-100">
       <div className="flex-1 flex flex-col overflow-hidden">
         <main className="flex-1 overflow-y-auto p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard title="Total Users" value={stats.total} icon={Users} />
             <StatCard title="Total Admin" value={stats.admins} icon={Crown} />
             <StatCard title="Users" value={stats.users} icon={UserCheck} />
