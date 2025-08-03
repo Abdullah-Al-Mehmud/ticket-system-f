@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { User, Plus, Edit, Trash2, Eye, Shield, Crown } from "lucide-react";
 import {
   useDeleteUserMutation,
@@ -23,13 +23,15 @@ const UserList = () => {
     role: "",
   });
 
-  const { data, isError, isLoading } = useGetUserListQuery(configPage);
+  const { data, isError, isLoading, refetch } = useGetUserListQuery(configPage);
   const [deleteUser] = useDeleteUserMutation();
 
   const users = data?.data ?? [];
   const currentPage = data?.current_page || 1;
   const lastPage = data?.last_page || 1;
-
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
   const handleDeleteClick = (userId) => {
     setUserToDelete(userId);
     setIsModalOpen(true);
