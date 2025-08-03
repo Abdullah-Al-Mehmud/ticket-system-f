@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calendar, MapPin, DollarSign, Upload } from "lucide-react";
+import { Calendar, MapPin, Upload } from "lucide-react";
 import { useCreateEventMutation } from "../../redux/features/event/EventApiSlice";
 import { useGetCategoriesQuery } from "../../redux/features/categories/categoriesApiSlice";
 import { toast } from "react-hot-toast";
@@ -8,15 +8,14 @@ import { useNavigate } from "react-router-dom";
 const EventForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    category_id: null,
-    title: null,
-    event_description: null,
-    location: null,
-    start_date: null,
-    end_date: null,
-    ticket_price: null,
-    privacy_policy: null,
-    image_url: null,
+    category_id: "",
+    title: "",
+    event_description: "",
+    location: "",
+    start_date: "",
+    end_date: "",
+    privacy_policy: "",
+    image_url: null, // will hold file
   });
 
   const [errors, setErrors] = useState({});
@@ -25,13 +24,10 @@ const EventForm = () => {
   const CategoriesList = categories?.data || [];
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        name === "ticket_price" || name === "category_id"
-          ? Number(value)
-          : value,
+      [name]: name === "image_url" ? files[0] : value,
     }));
   };
 
@@ -44,10 +40,9 @@ const EventForm = () => {
     if (!formData.location.trim()) newErrors.location = "Location is required";
     if (!formData.start_date) newErrors.start_date = "Start date is required";
     if (!formData.end_date) newErrors.end_date = "End date is required";
-    if (formData.ticket_price === "" || formData.ticket_price < 0)
-      newErrors.ticket_price = "Ticket price is required";
     if (!formData.privacy_policy)
       newErrors.privacy_policy = "Accept the privacy policy";
+    if (!formData.image_url) newErrors.image_url = "image_url is required";
 
     if (
       formData.start_date &&
@@ -61,13 +56,8 @@ const EventForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const formatDateTime = (date) => {
-    const d = new Date(date);
-    return d.toISOString().slice(0, 19).replace("T", " ");
-  };
   const formatForMySQL = (dateStr) => {
     const d = new Date(dateStr);
-    // Format to "YYYY-MM-DD HH:mm:ss"
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
@@ -82,20 +72,26 @@ const EventForm = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    const payload = {
-      ...formData,
-      start_date: formatForMySQL(formData.start_date),
-      end_date: formatForMySQL(formData.end_date),
-    };
+    const formattedStart = formatForMySQL(formData.start_date);
+    const formattedEnd = formatForMySQL(formData.end_date);
+
+    const submissionData = new FormData();
+    submissionData.append("category_id", formData.category_id);
+    submissionData.append("title", formData.title);
+    submissionData.append("event_description", formData.event_description);
+    submissionData.append("location", formData.location);
+    submissionData.append("start_date", formattedStart);
+    submissionData.append("end_date", formattedEnd);
+    submissionData.append("privacy_policy", formData.privacy_policy);
+    submissionData.append("image_url", formData.image_url); // file object
 
     try {
-      await createEvent(payload).unwrap();
+      await createEvent(submissionData).unwrap();
       toast.success("Event created successfully!");
       navigate("/admin/events");
     } catch (err) {
       console.error("Error creating event:", err);
-      toast.error(err?.data?.message);
-      toast.error(err?.data?.errors);
+      toast.error(err?.data?.message || "Something went wrong!");
     }
   };
 
@@ -109,7 +105,11 @@ const EventForm = () => {
           Fill out the details for your upcoming event
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6"
+          encType="multipart/form-data"
+        >
           {/* Category */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -119,7 +119,8 @@ const EventForm = () => {
               name="category_id"
               value={formData.category_id}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2">
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            >
               <option value="">Select Category</option>
               {CategoriesList.map((category) => (
                 <option key={category.id} value={category.id}>
@@ -220,36 +221,28 @@ const EventForm = () => {
             </div>
           </div>
 
-          {/* Ticket Price */}
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-              <DollarSign size={16} /> Ticket Price (BDT)
-            </label>
-            <input
-              type="number"
-              name="ticket_price"
-              step="0.01"
-              value={formData.ticket_price}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2"
-            />
-            {errors.ticket_price && (
-              <p className="text-red-500 text-sm mt-1">{errors.ticket_price}</p>
-            )}
-          </div> */}
-
-          {/* Image URL */}
+          {/* Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-              <Upload size={16} /> Image URL
+              <Upload size={16} /> Upload Event Image
             </label>
             <input
-              type="text"
+              type="file"
               name="image_url"
-              value={formData.image_url}
+              accept="image/*" 
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-4 py-2"
             />
+            {errors.image_url && (
+              <p className="text-red-500 text-sm mt-1">{errors.image_url}</p>
+            )}
+            {formData.image_url && typeof formData.image_url === "object" ? (
+              <img
+                src={URL.createObjectURL(formData.image_url)}
+                alt="Preview"
+                className="w-20 h-20 rounded mt-2 object-cover"
+              />
+            ) : null}
           </div>
 
           {/* Privacy Policy */}
@@ -271,7 +264,7 @@ const EventForm = () => {
             )}
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             disabled={isLoading}
@@ -279,7 +272,8 @@ const EventForm = () => {
               isLoading
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-amber-600 hover:bg-amber-700"
-            }`}>
+            }`}
+          >
             {isLoading ? "Creating..." : "Create Event"}
           </button>
         </form>
