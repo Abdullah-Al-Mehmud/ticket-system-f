@@ -10,8 +10,8 @@ import {
   Plus,
   Minus,
 } from "lucide-react";
-import { useGetEventByIdQuery } from "../redux/features/event/EventApiSlice";
-import { useCreateTicketMutation } from "../redux/features/tickets/ticketsApiSlice";
+import { useGetEventByIdQuery } from "../../../redux/features/event/EventApiSlice";
+import { useCreateTicketMutation } from "../../../redux/features/tickets/ticketsApiSlice";
 import toast from "react-hot-toast";
 
 const EventDetailsPage = () => {
@@ -199,10 +199,7 @@ const EventDetailsPage = () => {
                   const available =
                     ticket.total_quantity - ticket.sold_quantity;
                   return (
-                    <div
-                      key={ticket.id}
-                      className="border rounded-xl p-4"
-                    >
+                    <div key={ticket.id} className="border rounded-xl p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="font-semibold text-gray-800">

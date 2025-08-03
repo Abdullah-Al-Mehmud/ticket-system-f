@@ -16,8 +16,8 @@ const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Contact = lazy(() => import("./pages/Contact"));
-const Event = lazy(() => import("./pages/Event"));
-const EventDetails = lazy(() => import("./pages/EventDetails"));
+const Event = lazy(() => import("./pages/Public/Event/Event"));
+const EventDetails = lazy(() => import("./pages/Public/Event/EventDetails"));
 
 const NotFound = lazy(() => import("./pages/Notfound"));
 

@@ -1,10 +1,11 @@
 // src/redux/features/event/eventApiSlice.js
+import queryGenerator from "../../../../utils/queryGenerator";
 import { apiSlice } from "../../app/api/apiSlice";
 
 export const eventApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getEvents: builder.query({
-      query: () => "/event",
+      query: (pageConfig) => `/event?${queryGenerator(pageConfig)}`,
       providesTags: ["Event"],
     }),
 
