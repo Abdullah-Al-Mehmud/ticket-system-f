@@ -102,7 +102,7 @@ const CategoriesList = () => {
         </div>
 
         {/* Search & Filter */}
-        <div className="bg-white rounded-lg border shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-lg border p-6 mb-6">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="flex-1 flex gap-2 w-full">
               <input
@@ -110,7 +110,7 @@ const CategoriesList = () => {
                 placeholder="Search categories..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
               <button
                 onClick={() =>
@@ -163,7 +163,7 @@ const CategoriesList = () => {
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+        <div className="bg-white rounded-lg border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 border-b">

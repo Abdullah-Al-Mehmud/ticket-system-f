@@ -3,7 +3,7 @@ import { Users, UserCheck, Crown } from "lucide-react";
 import { useGetDashboardQuery } from "../../redux/features/user/userApiSlice";
 
 const StatCard = ({ title, value, icon: Icon }) => (
-  <div className="bg-white rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow">
+  <div className="bg-white rounded-lg p-6 border border-gray-200">
     <div className="flex items-center justify-between">
       <div>
         <p className="text-sm font-medium text-amber-600">{title}</p>
