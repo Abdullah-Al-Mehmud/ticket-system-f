@@ -178,161 +178,173 @@ const UserList = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 pb-10">
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-100 text-gray-700 text-xs uppercase tracking-wide">
+      <div className="bg-white rounded-lg border overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-100 text-gray-700 text-xs uppercase tracking-wide">
+              <tr>
+                <th className="px-6 py-3 text-left">ID</th>
+                <th className="px-6 py-3 text-left">User</th>
+                <th className="px-6 py-3 text-left">Email</th>
+                <th className="px-6 py-3 text-left">Role</th>
+                <th className="px-6 py-3 text-left">Created</th>
+                <th className="px-6 py-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {isLoading ? (
+                <TableRowSkeleton count={5} />
+              ) : users.length === 0 ? (
                 <tr>
-                  <th className="px-6 py-3 text-left">ID</th>
-                  <th className="px-6 py-3 text-left">User</th>
-                  <th className="px-6 py-3 text-left">Email</th>
-                  <th className="px-6 py-3 text-left">Role</th>
-                  <th className="px-6 py-3 text-left">Created</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
+                  <td colSpan="6" className="text-center py-6 text-gray-500">
+                    <div>No users found.</div>
+                    <button
+                      onClick={() => {
+                        setSearchTerm("");
+                        setFilterRole("");
+                        setConfigPage({
+                          page: 1,
+                          count: 10,
+                          search: "",
+                          role: "",
+                        });
+                      }}
+                      className="mt-3 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+                    >
+                      Clear Filters
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {isLoading ? (
-                  <TableRowSkeleton count={5} />
-                ) : users.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="text-center py-6 text-gray-500">
-                      <div>No users found.</div>
-                      <button
-                        onClick={() => {
-                          setSearchTerm("");
-                          setFilterRole("");
-                          setConfigPage({
-                            page: 1,
-                            count: 10,
-                            search: "",
-                            role: "",
-                          });
-                        }}
-                        className="mt-3 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              ) : (
+                users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <Link
+                        className="hover:underline"
+                        to={`/admin/user-profile/${user.id}`}
                       >
-                        Clear Filters
-                      </button>
+                        #{user.id.toString().padStart(3, "0")}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Link
+                        className="hover:underline"
+                        to={`/admin/user-profile/${user.id}`}
+                      >
+                        {user.name}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4">{user.email}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
+                          user?.role?.name
+                        )}`}
+                      >
+                        {getRoleIcon(user?.role?.name)}
+                        <span className="ml-1 capitalize">
+                          {user?.role?.name}
+                        </span>
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">{formatDate(user.created_at)}</td>
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <Link
+                          to={`/admin/user-profile/${user.id}`}
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                        >
+                          <Eye size={16} />
+                        </Link>
+                        <Link
+                          to={`/admin/edit/${user.id}`}
+                          className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                        >
+                          <Edit size={16} />
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteClick(user.id)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
-                ) : (
-                  users.map((user) => (
-                    <tr key={user.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <Link
-                          className="hover:underline"
-                          to={`/admin/user-profile/${user.id}`}
-                        >
-                          #{user.id.toString().padStart(3, "0")}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Link
-                          className="hover:underline"
-                          to={`/admin/user-profile/${user.id}`}
-                        >
-                          {user.name}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4">{user.email}</td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
-                            user?.role?.name
-                          )}`}
-                        >
-                          {getRoleIcon(user?.role?.name)}
-                          <span className="ml-1 capitalize">
-                            {user?.role?.name}
-                          </span>
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        {formatDate(user.created_at)}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          <Link
-                            to={`/admin/user-profile/${user.id}`}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                          >
-                            <Eye size={16} />
-                          </Link>
-                          <Link
-                            to={`/admin/edit/${user.id}`}
-                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                          >
-                            <Edit size={16} />
-                          </Link>
-                          <button
-                            onClick={() => handleDeleteClick(user.id)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-
-        {lastPage > 1 && (
-          <div className="flex justify-center items-center gap-2 py-6">
-            <button
-              onClick={() =>
-                setConfigPage((prev) => ({
-                  ...prev,
-                  page: Math.max(1, currentPage - 1),
-                }))
-              }
-              disabled={currentPage === 1}
-              className="px-3 py-1 rounded border text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
-            >
-              Prev
-            </button>
-
-            {[...Array(lastPage)].map((_, index) => {
-              const pageNum = index + 1;
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() =>
-                    setConfigPage((prev) => ({
-                      ...prev,
-                      page: pageNum,
-                    }))
-                  }
-                  className={`px-3 py-1 rounded border text-sm ${
-                    currentPage === pageNum
-                      ? "bg-amber-500 text-white"
-                      : "bg-gray-100 hover:bg-gray-200"
-                  }`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() =>
-                setConfigPage((prev) => ({
-                  ...prev,
-                  page: Math.min(lastPage, currentPage + 1),
-                }))
-              }
-              disabled={currentPage === lastPage}
-              className="px-3 py-1 rounded border text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-        )}
       </div>
+
+      {lastPage > 1 && (
+        <div className="flex justify-center items-center mt-8 space-x-2">
+          {/* Previous Button */}
+          <button
+            onClick={() =>
+              setConfigPage((prev) => ({
+                ...prev,
+                page: Math.max(1, currentPage - 1),
+              }))
+            }
+            disabled={currentPage === 1}
+            className={`px-3 py-2 rounded-md border text-sm font-medium transition 
+        ${
+          currentPage === 1
+            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+            : "bg-white hover:bg-gray-100 text-gray-700"
+        }`}
+          >
+            Prev
+          </button>
+
+          {/* Page Buttons */}
+          {Array.from({ length: lastPage }, (_, index) => {
+            const pageNum = index + 1;
+            const isActive = pageNum === currentPage;
+
+            return (
+              <button
+                key={pageNum}
+                onClick={() =>
+                  setConfigPage((prev) => ({
+                    ...prev,
+                    page: pageNum,
+                  }))
+                }
+                className={`px-3 py-2 rounded-md border text-sm font-medium transition
+            ${
+              isActive
+                ? "bg-amber-600 text-white border-amber-600"
+                : "bg-white hover:bg-gray-100 text-gray-700"
+            }`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+
+          {/* Next Button */}
+          <button
+            onClick={() =>
+              setConfigPage((prev) => ({
+                ...prev,
+                page: Math.min(lastPage, currentPage + 1),
+              }))
+            }
+            disabled={currentPage === lastPage}
+            className={`px-3 py-2 rounded-md border text-sm font-medium transition 
+        ${
+          currentPage === lastPage
+            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+            : "bg-white hover:bg-gray-100 text-gray-700"
+        }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       <ConfirmModal
         isOpen={isModalOpen}
