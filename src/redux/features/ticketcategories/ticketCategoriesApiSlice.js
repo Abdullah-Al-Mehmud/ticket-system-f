@@ -31,7 +31,6 @@ export const ticketCategoriesApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["TicketCategory"],
     }),
 
-
     updateTicketCategory: builder.mutation({
       query: ({ id, ...updatedData }) => ({
         url: `/ticket-category/${id}`,

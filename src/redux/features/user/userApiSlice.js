@@ -9,7 +9,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
 
     getUserList: builder.query({
-      query: (pageConfig) => `/user??${queryGenerator(pageConfig)}`,
+      query: (pageConfig) => `/user?${queryGenerator(pageConfig)}`,
       providesTags: ["User"],
     }),
 
