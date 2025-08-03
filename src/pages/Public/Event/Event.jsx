@@ -5,6 +5,8 @@ import { Calendar, Search } from "lucide-react";
 import { useGetEventsQuery } from "../../../redux/features/event/EventApiSlice";
 import { useGetCategoriesQuery } from "../../../redux/features/categories/categoriesApiSlice";
 import EventCard from "./EventCard";
+import EventCardLoadingSkeleton from "../../../components/LoderComponent/EventCardLoadingSkeleton";
+import CategoryLoadingSkeleton from "../../../components/LoderComponent/CategoryLoadingSkeleton";
 
 const Event = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +17,8 @@ const Event = () => {
     search: "",
     category: "",
   });
-  const { data, isLoading, isError } = useGetEventsQuery(pageConfig);
+  const { data, isFetching, isLoading, isError } =
+    useGetEventsQuery(pageConfig);
   const { data: categoryData, isLoading: isLoadingCategory } =
     useGetCategoriesQuery();
   const events = data?.data ?? [];
@@ -65,14 +68,7 @@ const Event = () => {
           {/* Category Filters */}
           <div className="flex flex-wrap justify-center gap-3">
             {isLoadingCategory ? (
-              <>
-                {[...Array(5)].map((_, index) => (
-                  <div
-                    key={index}
-                    className="h-8 w-24 animate-pulse rounded-full bg-gray-200"
-                  ></div>
-                ))}
-              </>
+              <CategoryLoadingSkeleton count={5} />
             ) : (
               categories.map((category) => (
                 <Button
@@ -121,24 +117,7 @@ const Event = () => {
           </div>
         )}
 
-        {isLoading && (
-          // 🔄 Loader shown while loading
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-pulse">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div
-                key={index}
-                className="bg-white p-4 rounded-md shadow-sm h-72 flex flex-col justify-between"
-              >
-                <div className="bg-gray-200 h-40 w-full rounded-md" />
-                <div className="mt-4 space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-3/4" />
-                  <div className="h-4 bg-gray-200 rounded w-1/2" />
-                </div>
-                <div className="h-4 bg-gray-200 rounded w-1/3 mt-4" />
-              </div>
-            ))}
-          </div>
-        )}
+        {isFetching && <EventCardLoadingSkeleton count={6} />}
 
         {!isLoading && !isError && (
           <>
