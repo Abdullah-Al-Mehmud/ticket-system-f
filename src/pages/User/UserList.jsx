@@ -181,7 +181,7 @@ const UserList = () => {
                 ) : users.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-6 text-gray-500">
-                      No users found.
+                      <div>No users found.</div>
                       <button
                         onClick={() => {
                           setSearchTerm("");
@@ -194,7 +194,7 @@ const UserList = () => {
                             all: true,
                           });
                         }}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+                        className="mt-3 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
                       >
                         Clear Filters
                       </button>
