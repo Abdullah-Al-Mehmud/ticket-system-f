@@ -17,7 +17,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 const TicketCategoriesUpdate = () => {
   const { id } = useParams();

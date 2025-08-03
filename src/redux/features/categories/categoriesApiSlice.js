@@ -1,12 +1,10 @@
+import queryGenerator from "../../../../utils/queryGenerator";
 import { apiSlice } from "../../app/api/apiSlice";
 
 export const categoriesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query({
-      query: () => ({
-        url: "/categories",
-        params: { all: true }, // Send query string ?all=true
-      }),
+      query: (pageConfig) => `/categories?${queryGenerator(pageConfig)}`,
       providesTags: ["Category"],
     }),
     getCategoryById: builder.query({

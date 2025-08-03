@@ -6,7 +6,7 @@ import {
   useGetUserByIdQuery,
 } from "../../redux/features/user/userApiSlice";
 import { useParams, useNavigate } from "react-router-dom";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 export default function UserEditForm() {
   const { id } = useParams();

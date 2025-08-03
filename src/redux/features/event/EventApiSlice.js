@@ -1,10 +1,11 @@
 // src/redux/features/event/eventApiSlice.js
+import queryGenerator from "../../../../utils/queryGenerator";
 import { apiSlice } from "../../app/api/apiSlice";
 
 export const eventApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getEvents: builder.query({
-      query: () => "/event",
+      query: (pageConfig) => `/event?${queryGenerator(pageConfig)}`,
       providesTags: ["Event"],
     }),
 
@@ -23,10 +24,19 @@ export const eventApiSlice = apiSlice.injectEndpoints({
     }),
 
     updateEvent: builder.mutation({
-      query: ({ id, ...updatedData }) => ({
+      query: ({ id, formData }) => ({
+        url: `/event/${id}`,
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Event", id }],
+    }),
+
+    updateEventStatus: builder.mutation({
+      query: ({ id, data }) => ({
         url: `/event/${id}`,
         method: "PATCH",
-        body: updatedData,
+        body: data,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "Event", id }],
     }),
@@ -60,4 +70,5 @@ export const {
   useDeleteEventMutation,
   useGetOrganizerEventsQuery,
   useAssignOrganizerMutation,
+  useUpdateEventStatusMutation,
 } = eventApiSlice;

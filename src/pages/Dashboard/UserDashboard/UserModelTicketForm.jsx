@@ -9,7 +9,7 @@ import {
   Table,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import TableRowSkeleton from "../../../components/LoderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../../components/LoaderComponent/TableRowSkeleton";
 
 function UserModelTicketForm() {
   const { data, isLoading, isError } = useGetUserTicketsQuery();

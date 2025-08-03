@@ -6,10 +6,10 @@ import {
 } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-import DataLoadingLoader from "../../components/LoderComponent/PageLoading";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import DataLoadingLoader from "../../components/LoaderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
 
 export default function TicketCategories() {
   const { data: fetchData, isLoading, isError } = useGetTicketCategoriesQuery();

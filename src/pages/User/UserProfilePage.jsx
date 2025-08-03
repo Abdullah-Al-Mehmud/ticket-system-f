@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useGetUserByIdQuery } from "../../redux/features/user/userApiSlice";
 import { Link, useParams } from "react-router-dom";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 export default function UserProfilePage() {
  

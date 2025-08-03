@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetTicketCategoryByIdQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 function TicketCategoriesDetails() {
   const navigate = useNavigate();

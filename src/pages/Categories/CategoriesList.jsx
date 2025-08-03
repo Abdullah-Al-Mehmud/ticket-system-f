@@ -1,14 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {
-  Eye,
-  Edit,
-  Trash2,
-  Plus,
-  Search,
-  Filter,
-  Download,
-  MoreVertical,
-} from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Eye, Edit, Trash2, Plus } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
   useGetCategoriesQuery,
@@ -16,71 +7,57 @@ import {
 } from "../../redux/features/categories/categoriesApiSlice";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
 
 const CategoriesList = () => {
   const location = useLocation();
-  const [categories, setCategories] = useState([]);
   const [deleteCategory] = useDeleteCategoryMutation();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("id");
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [statusFilter, setStatusFilter] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
 
-  // useEffect to call RTK API
-  const { data, isLoading, isError, refetch } = useGetCategoriesQuery(
-    undefined,
-    {
-      skip: false,
-    }
-  );
+  const [pageConfig, setPageConfig] = useState({
+    page: 1,
+    count: 10,
+    search: "",
+    status: "",
+  });
 
-  useEffect(() => {
-    if (data?.data) setCategories(data.data);
-  }, [data]);
+  const { data, isLoading, refetch } = useGetCategoriesQuery(pageConfig);
+
+  const categories = data?.data || [];
 
   useEffect(() => {
     if (location.state?.refresh) {
       refetch();
     }
-  }, [location.state]);
+  }, [location.state, refetch]);
 
-  const handleDeleteClick = (userId) => {
-    setUserToDelete(userId);
+  const handleDeleteClick = (id) => {
+    setCategoryToDelete(id);
     setIsModalOpen(true);
   };
 
-  const confiramDelete = async () => {
-    if (!userToDelete) return;
-    await handleDelete(userToDelete);
-    setIsModalOpen(false);
-    setUserToDelete(null);
+  const confirmDelete = async () => {
+    if (!categoryToDelete) return;
+    try {
+      const res = await deleteCategory(categoryToDelete).unwrap();
+      toast.success(res.message || "Category deleted successfully!");
+      refetch();
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete category");
+    } finally {
+      setIsModalOpen(false);
+      setCategoryToDelete(null);
+    }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setUserToDelete(null);
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      let res = await deleteCategory(id).unwrap();
-      toast.success(res.message || "Category deleted successfully!!");
-      refetch();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete category");
-    }
-  };
-
-  const handleSort = (column) => {
-    setSortBy(column);
-    setSortOrder((prev) =>
-      sortBy === column && prev === "asc" ? "desc" : "asc"
-    );
+    setCategoryToDelete(null);
   };
 
   const getStatusBadge = (status) => {
@@ -93,7 +70,8 @@ const CategoriesList = () => {
       <span
         className={`px-2 py-1 text-xs font-medium rounded-full border ${
           badgeMap[status] || ""
-        }`}>
+        }`}
+      >
         {status.charAt(0).toUpperCase() + status.slice(1)}
       </span>
     );
@@ -106,28 +84,6 @@ const CategoriesList = () => {
       day: "numeric",
     });
 
-  const filteredCategories = useMemo(() => {
-    return categories
-      .filter(
-        (cat) =>
-          cat.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          (statusFilter === "all" || cat.status === statusFilter)
-      )
-      .sort((a, b) => {
-        const aVal =
-          typeof a[sortBy] === "string" ? a[sortBy].toLowerCase() : a[sortBy];
-        const bVal =
-          typeof b[sortBy] === "string" ? b[sortBy].toLowerCase() : b[sortBy];
-        return sortOrder === "asc"
-          ? aVal > bVal
-            ? 1
-            : -1
-          : aVal < bVal
-          ? 1
-          : -1;
-      });
-  }, [categories, searchTerm, statusFilter, sortBy, sortOrder]);
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -139,155 +95,225 @@ const CategoriesList = () => {
           </div>
           <Link
             to="/admin/create-category"
-            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
+          >
             <Plus size={20} /> Add Category
           </Link>
         </div>
 
-        {/* Filter Section */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-md">
-                <Search
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-                <input
-                  type="text"
-                  placeholder="Search categories..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-
-              {/* <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                <Filter size={16} /> Filter
-              </button> */}
+        {/* Search & Filter */}
+        <div className="bg-white rounded-lg border p-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex-1 flex gap-2 w-full">
+              <input
+                type="text"
+                placeholder="Search categories..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <button
+                onClick={() =>
+                  setPageConfig((prev) => ({
+                    ...prev,
+                    search: searchTerm,
+                    status: statusFilter === "all" ? "" : statusFilter,
+                    page: 1,
+                  }))
+                }
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Search
+              </button>
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setStatusFilter("all");
+                  setPageConfig({
+                    page: 1,
+                    count: 10,
+                    search: "",
+                    status: "",
+                  });
+                }}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Clear
+              </button>
             </div>
 
-            {/* <div className="flex gap-2">
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                <Download size={16} /> Export
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                <MoreVertical size={16} />
-              </button>
-            </div> */}
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                const status = e.target.value;
+                setStatusFilter(status);
+                setPageConfig((prev) => ({
+                  ...prev,
+                  status: status === "all" ? "" : status,
+                  page: 1,
+                }));
+              }}
+              className="w-full sm:w-48 px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
           </div>
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+        <div className="bg-white rounded-lg border overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  {["id", "name", "status", "created_at", "updated_at"].map(
-                    (col) => (
-                      <th
-                        key={col}
-                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                        onClick={() => handleSort(col)}>
-                        {col.replace("_", " ").toUpperCase()}
-                        {sortBy === col && (
-                          <span className="ml-1">
-                            {sortOrder === "asc" ? "↑" : "↓"}
-                          </span>
-                        )}
-                      </th>
-                    )
-                  )}
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    ID
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Created At
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Updated At
+                  </th>
                   <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {isLoading ? <TableRowSkeleton count={4} /> : <>
-                
-                     {filteredCategories.map((category) => (
-                      <tr key={category.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                {isLoading ? (
+                  <TableRowSkeleton count={4} />
+                ) : categories.length > 0 ? (
+                  categories.map((category) => (
+                    <tr key={category.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                        <Link
+                          to={`/admin/categories/${category.id}`}
+                          className="hover:underline"
+                        >
+                          #{category.id}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 text-sm">{category.name}</td>
+                      <td className="px-6 py-4 text-sm">
+                        {getStatusBadge(category.status)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {formatDate(category.created_at)}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {formatDate(category.updated_at)}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
                           <Link
                             to={`/admin/categories/${category.id}`}
-                            className="hover:underline text-black-600"
-                            title="View Category">
-                            #{category.id}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                          >
+                            <Eye size={16} />
                           </Link>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
                           <Link
-                            to={`/admin/categories/${category.id}`}
-                            className="hover:underline text-black-600"
-                            title="View Category">
-                            {category.name}
+                            to={`/admin/categories/edit/${category.id}`}
+                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                          >
+                            <Edit size={16} />
                           </Link>
-                        </td>
-
-                        <td className="px-6 py-4 text-sm">
-                          {getStatusBadge(category.status)}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {formatDate(category.created_at)}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {formatDate(category.updated_at)}
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <Link
-                              to={`/admin/categories/${category.id}`}
-                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                              title="View">
-                              <Eye size={16} />
-                            </Link>
-                            <Link
-                              to={`/admin/categories/edit/${category.id}`}
-                              className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                              title="Edit">
-                              <Edit size={16} />
-                            </Link>
-                            <button
-                              onClick={() => handleDeleteClick(category.id)}
-                              className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
-                              title="Delete">
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                     ))
-                    }
-                 </>}
+                          <button
+                            onClick={() => handleDeleteClick(category.id)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center py-12 text-gray-500">
+                      No categories found.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
-          <ConfirmModal
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onConfirm={confiramDelete}
-            message="Are you sure you want to delete this Categories?"
-          />
-
-          {filteredCategories.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">
-                No categories found matching your criteria.
-              </p>
-            </div>
-          )}
         </div>
+        {/* Pagination */}
+        {data?.last_page > 1 && (
+          <div className="flex justify-center items-center mt-6 space-x-2">
+            <button
+              onClick={() =>
+                setPageConfig((prev) => ({
+                  ...prev,
+                  page: Math.max(1, prev.page - 1),
+                }))
+              }
+              disabled={pageConfig.page === 1}
+              className={`px-3 py-2 border rounded-md text-sm ${
+                pageConfig.page === 1
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+            >
+              Previous
+            </button>
+
+            {[...Array(data.last_page)].map((_, idx) => {
+              const pageNum = idx + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() =>
+                    setPageConfig((prev) => ({
+                      ...prev,
+                      page: pageNum,
+                    }))
+                  }
+                  className={`px-3 py-2 border rounded-md text-sm ${
+                    pageNum === pageConfig.page
+                      ? "bg-amber-600 text-white"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() =>
+                setPageConfig((prev) => ({
+                  ...prev,
+                  page: Math.min(data.last_page, prev.page + 1),
+                }))
+              }
+              disabled={pageConfig.page === data.last_page}
+              className={`px-3 py-2 border rounded-md text-sm ${
+                pageConfig.page === data.last_page
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
+
+        <ConfirmModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={confirmDelete}
+          message="Are you sure you want to delete this category?"
+        />
       </div>
     </div>
   );

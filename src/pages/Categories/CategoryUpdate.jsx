@@ -5,7 +5,7 @@ import {
 } from "../../redux/features/categories/categoriesApiSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 const CategoryUpdate = () => {
   const { id } = useParams();

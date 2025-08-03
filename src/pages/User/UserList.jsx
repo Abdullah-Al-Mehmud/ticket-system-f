@@ -1,111 +1,66 @@
-import React, { use, useState, useEffect } from "react";
-import {
-  User,
-  Mail,
-  Calendar,
-  Search,
-  Filter,
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  Users,
-  Shield,
-  Crown,
-  X,
-  ChevronRight,
-} from "lucide-react";
-import { useGetUserListQuery } from "../../redux/features/user/userApiSlice";
+import React, { useState } from "react";
+import { User, Plus, Edit, Trash2, Eye, Shield, Crown } from "lucide-react";
 import {
   useDeleteUserMutation,
-  useGetDashboardQuery,
+  useGetUserListQuery,
 } from "../../redux/features/user/userApiSlice";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
-
-// Skeleton Loader Component for Table Rows
-
+import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
+import AdminDashboard from "../../pages/Dashboard/AdminDashboard";
 
 const UserList = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState("all");
-  const [isModalOpen,setIsModalOpen] = useState(false);
-  const [userToDelete,setUserToDelete] = useState(null);
+  const [filterRole, setFilterRole] = useState("");
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, error, isLoading, refetch } = useGetUserListQuery();
+  const [configPage, setConfigPage] = useState({
+    page: 1,
+    count: 10,
+    search: "",
+    role: "",
+  });
+
+  const { data, isError, isLoading } = useGetUserListQuery(configPage);
   const [deleteUser] = useDeleteUserMutation();
-  const {
-    data: dashboardInfo,
-    isLoading: isDashboardLoading,
-    refetch: fetch,
-  } = useGetDashboardQuery();
 
-  const handleDeleteClick = (userId)=>{
+  const users = data?.data ?? [];
+  const currentPage = data?.current_page || 1;
+  const lastPage = data?.last_page || 1;
+
+  const handleDeleteClick = (userId) => {
     setUserToDelete(userId);
     setIsModalOpen(true);
-  }
-
-  const confiramDelete = async () =>{
-       if(!userToDelete) return;
-       await handleDelete(userToDelete);
-       setIsModalOpen(false);
-       setUserToDelete(null);
   };
 
-  const closeModal = ()=>{
+  const confirmDelete = async () => {
+    if (!userToDelete) return;
+    try {
+      const res = await deleteUser(userToDelete).unwrap();
+      toast.success(res.message);
+    } catch (err) {
+      toast.error("Failed to delete user.");
+      console.error(err);
+    }
     setIsModalOpen(false);
     setUserToDelete(null);
-  }
-
-
-  const handleDelete = async (userId) => {
-   
-    try {
-      const res = await deleteUser(userId).unwrap();
-      toast.success(res.message);
-      refetch(); // Refetch the user list after deletion
-      fetch(); // Refetch dashboard data
-      setSelectedUser(null); // Deselect user after deletion
-    } catch (err) {
-      console.error("Failed to delete user:", err);
-      alert("Failed to delete user. Please try again.");
-    }
   };
 
-  const usersData = data?.data ?? [];
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setUserToDelete(null);
+  };
 
-  // ✅ Fixed filter logic
-  const filteredUsers = usersData
-    .filter((user) => {
-      const nameMatch = user.name
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const emailMatch = user.email
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      return nameMatch || emailMatch;
-    })
-    .filter((user) =>
-      filterRole === "all" ? true : user.role.name === filterRole
-    );
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
-
-  useEffect(() => {
-    refetch();
-    fetch();
-  }, [refetch, fetch]);
 
   const getRoleColor = (role) => {
     switch (role) {
@@ -133,290 +88,256 @@ const UserList = () => {
     }
   };
 
-  if (error)
-    return <p className="p-8 text-center text-red-600">Error loading users.</p>;
+  if (isError)
+    return (
+      <p className="p-8 text-center text-red-600">Error loading users.</p>
+    );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="  ">
-        <div className="max-w-7xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900">
-                User Management
-              </h1>
-              <p className="mt-1 text-sm text-gray-600">
-                Manage and monitor user accounts
-              </p>
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-semibold text-gray-900">
+              User Management
+            </h1>
+            <p className="mt-2 text-gray-600">Manage and monitor user accounts</p>
+          </div>
+          <Link
+            to="/admin/create-user"
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
+          >
+            <Plus size={20} /> Add User
+          </Link>
+        </div>
+
+        <div className="mb-6 px-6">
+          <AdminDashboard />
+        </div>
+
+        {/* Search & Filter */}
+        <div className="bg-white rounded-lg border p-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex-1 flex gap-2 w-full">
+              <input
+                type="text"
+                placeholder="Search users..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <button
+                onClick={() =>
+                  setConfigPage((prev) => ({
+                    ...prev,
+                    search: searchTerm,
+                    role: filterRole,
+                    page: 1,
+                  }))
+                }
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Search
+              </button>
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilterRole("");
+                  setConfigPage({ page: 1, count: 10, search: "", role: "" });
+                }}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Clear
+              </button>
             </div>
-            <Link
-              to="/admin/create-user"
-              className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
-              <Plus size={16} />
-              <span>Add User</span>
-            </Link>
+
+            <select
+              value={filterRole}
+              onChange={(e) => {
+                const role = e.target.value;
+                setFilterRole(role);
+                setConfigPage((prev) => ({
+                  ...prev,
+                  role,
+                  page: 1,
+                }));
+              }}
+              className="w-full sm:w-48 px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
+              <option value="">All Roles</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                <Users size={20} className="text-gray-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
-                  Total Users
-                </p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {dashboardInfo?.data.users.total}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
-                <Crown size={20} className="text-red-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
-                  Admins
-                </p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {dashboardInfo?.data.users.admins}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                <Shield size={20} className="text-blue-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
-                  Organizer
-                </p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {dashboardInfo?.data.users.organizers}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
-            <div className="flex items-center">
-              <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
-                <User size={20} className="text-green-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">
-                  Users
-                </p>
-                <p className="text-2xl font-semibold text-gray-900 mt-1">
-                  {dashboardInfo?.data.users.users}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Filters */}
-
-      <div className="max-w-7xl mx-auto px-8 mb-6">
-  <div className="bg-white rounded-lg border shadow-sm p-6">
-    <div className="flex flex-col sm:flex-row items-center gap-4">
-
-      {/* Search Input (Big) */}
-      <div className="flex-1 w-full relative">
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
-
-      {/* Role Filter (Small) */}
-      <div className="w-full sm:w-48">
-        <select
-          value={filterRole}
-          onChange={(e) => setFilterRole(e.target.value)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="all">All Roles</option>
-          <option value="admin">Admin</option>
-          <option value="organizer">Organizer</option>
-          <option value="user">User</option>
-        </select>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-
-      {/* User Table */}
-
-      <div className="max-w-7xl mx-auto px-8 pb-10">
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        {/* Table */}
+        <div className="bg-white rounded-lg border overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-100 text-gray-700 text-xs uppercase tracking-wide">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="px-6 py-3 text-left">ID</th>
-                  <th className="px-6 py-3 text-left">User</th>
-                  <th className="px-6 py-3 text-left">Email</th>
-                  <th className="px-6 py-3 text-left">Role</th>
-                  <th className="px-6 py-3 text-left">Created</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    ID
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Email
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Role
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Created At
+                  </th>
+                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-gray-200">
                 {isLoading ? (
-                  // Show skeleton loader while loading
-                  
-                    <TableRowSkeleton count={4} />
-                  
-                ) : filteredUsers.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" className="text-center py-6 text-gray-500">
-                      No users found.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredUsers.map((user) => (
+                  <TableRowSkeleton count={5} />
+                ) : users.length > 0 ? (
+                  users.map((user) => (
                     <tr key={user.id} className="hover:bg-gray-50">
-                     
-                        {" "}
-                        <td className="px-6 py-4">
-                         <Link className=" hover:underline" to={`/admin/user-profile/${user.id}`}>
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                        <Link
+                          to={`/admin/user-profile/${user.id}`}
+                          className="hover:underline"
+                        >
                           #{user.id.toString().padStart(3, "0")}
-                      </Link>
-                        </td>{" "}
-                      
-                      <td className="px-6 py-4">
-                      <Link className=" hover:underline" to={`/admin/user-profile/${user.id}`}>
-                      {user.name}
-                      </Link>
+                        </Link>
                       </td>
-                      <td className="px-6 py-4">{user.email}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-sm">
+                        <Link
+                          to={`/admin/user-profile/${user.id}`}
+                          className="hover:underline"
+                        >
+                          {user.name}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 text-sm">{user.email}</td>
+                      <td className="px-6 py-4 text-sm">
                         <span
                           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
-                            user.role.name
-                          )}`}>
-                          {getRoleIcon(user.role.name)}
-                          <span className="ml-1 capitalize">
-                            {user.role.name}
-                          </span>
+                            user?.role?.name
+                          )}`}
+                        >
+                          {getRoleIcon(user?.role?.name)}
+                          <span className="ml-1 capitalize">{user?.role?.name}</span>
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 text-sm text-gray-500">
                         {formatDate(user.created_at)}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <Link
                             to={`/admin/user-profile/${user.id}`}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded">
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                          >
                             <Eye size={16} />
                           </Link>
                           <Link
                             to={`/admin/edit/${user.id}`}
-                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded">
+                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                          >
                             <Edit size={16} />
                           </Link>
                           <button
                             onClick={() => handleDeleteClick(user.id)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded">
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                          >
                             <Trash2 size={16} />
                           </button>
                         </div>
                       </td>
                     </tr>
                   ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center py-12 text-gray-500">
+                      No users found.
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>
           </div>
         </div>
-      </div>
 
-      {/* Selected User Details */}
-      {selectedUser && (
-        <div className="mt-8 bg-white rounded-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">
-              User Details
-            </h2>
+        {/* Pagination */}
+        {lastPage > 1 && (
+          <div className="flex justify-center items-center mt-6 space-x-2">
             <button
-              onClick={() => setSelectedUser(null)}
-              className="text-gray-400 hover:text-gray-600 transition-colors p-1">
-              <X size={20} />
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.max(1, currentPage - 1),
+                }))
+              }
+              disabled={currentPage === 1}
+              className={`px-3 py-2 border rounded-md text-sm ${
+                currentPage === 1
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+            >
+              Previous
+            </button>
+
+            {[...Array(lastPage)].map((_, idx) => {
+              const pageNum = idx + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() =>
+                    setConfigPage((prev) => ({
+                      ...prev,
+                      page: pageNum,
+                    }))
+                  }
+                  className={`px-3 py-2 border rounded-md text-sm ${
+                    pageNum === currentPage
+                      ? "bg-amber-600 text-white"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.min(lastPage, currentPage + 1),
+                }))
+              }
+              disabled={currentPage === lastPage}
+              className={`px-3 py-2 border rounded-md text-sm ${
+                currentPage === lastPage
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+            >
+              Next
             </button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                ID
-              </label>
-              <p className="text-lg font-semibold text-gray-900">
-                #{selectedUser.id.toString().padStart(3, "0")}
-              </p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                Name
-              </label>
-              <p className="text-lg font-semibold text-gray-900">
-                {selectedUser.name}
-              </p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                Email
-              </label>
-              <p className="text-lg font-semibold text-gray-900">
-                {selectedUser.email}
-              </p>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                Role
-              </label>
-              <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
-                  selectedUser.role
-                )}`}>
-                <span className="mr-1.5">{getRoleIcon(selectedUser.role)}</span>
-                {/* {selectedUser.role.charAt(0).toUpperCase() + selectedUser.role.slice(1)} */}
-              </span>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
-                Created
-              </label>
-              <p className="text-lg font-semibold text-gray-900">
-                {formatDate(selectedUser.created_at)}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
 
-      <ConfirmModal 
+        <ConfirmModal
           isOpen={isModalOpen}
           onClose={closeModal}
-          onConfirm={confiramDelete}
+          onConfirm={confirmDelete}
           message="Are you sure you want to delete this user?"
-
-      />
+        />
+      </div>
     </div>
   );
 };

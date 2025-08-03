@@ -4,7 +4,7 @@ import UserModelTicketForm from "./UserModelTicketForm";
 import EditUserModal from "./EditUserModal";
 import UserOrganizedEventForm from "./UserOrganizedEventForm";
 import { useGetUserByIdQuery } from "../../../redux/features/user/userApiSlice";
-import PageLoading from "../../../components/LoderComponent/PageLoading";
+import PageLoading from "../../../components/LoaderComponent/PageLoading";
 
 const UserDashboard = () => {
   const users = localStorage.getItem("data")

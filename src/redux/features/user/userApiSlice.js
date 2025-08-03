@@ -1,3 +1,4 @@
+import queryGenerator from "../../../../utils/queryGenerator";
 import { apiSlice } from "../../app/api/apiSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
@@ -8,7 +9,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
 
     getUserList: builder.query({
-      query: () => "/user",
+      query: (pageConfig) => `/user?${queryGenerator(pageConfig)}`,
       providesTags: ["User"],
     }),
 
