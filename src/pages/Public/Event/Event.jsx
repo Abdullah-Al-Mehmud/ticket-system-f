@@ -5,8 +5,8 @@ import { Calendar, Search } from "lucide-react";
 import { useGetEventsQuery } from "../../../redux/features/event/EventApiSlice";
 import { useGetCategoriesQuery } from "../../../redux/features/categories/categoriesApiSlice";
 import EventCard from "./EventCard";
-import EventCardLoadingSkeleton from "../../../components/LoderComponent/EventCardLoadingSkeleton";
-import CategoryLoadingSkeleton from "../../../components/LoderComponent/CategoryLoadingSkeleton";
+import EventCardLoadingSkeleton from "../../../components/LoaderComponent/EventCardLoadingSkeleton";
+import CategoryLoadingSkeleton from "../../../components/LoaderComponent/CategoryLoadingSkeleton";
 
 const Event = () => {
   const [searchTerm, setSearchTerm] = useState("");

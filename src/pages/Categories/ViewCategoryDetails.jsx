@@ -17,7 +17,7 @@ import {
   Pencil,
   User,
 } from "lucide-react";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 const ViewCategoryDetails = () => {
   const { id } = useParams();

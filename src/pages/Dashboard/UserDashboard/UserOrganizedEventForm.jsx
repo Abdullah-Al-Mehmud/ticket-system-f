@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CalendarDays, MapPin, Users, Clock } from "lucide-react";
-import TableRowSkeleton from "../../../components/LoderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../../components/LoaderComponent/TableRowSkeleton";
 import { Link } from "react-router-dom";
 import { useGetOrganizerEventsQuery } from "../../../redux/features/event/EventApiSlice";
 

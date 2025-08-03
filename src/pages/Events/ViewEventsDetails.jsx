@@ -21,7 +21,7 @@ import {
   useGetEventByIdQuery,
   useUpdateEventStatusMutation,
 } from "../../redux/features/event/EventApiSlice";
-import PageLoading from "../../components/LoderComponent/PageLoading";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 import toast from "react-hot-toast";
 import { useDeleteTicketCategoryMutation } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 import TicketCategoryModal from "./TicketCategoryModal";

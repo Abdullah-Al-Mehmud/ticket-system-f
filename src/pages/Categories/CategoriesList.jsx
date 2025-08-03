@@ -16,7 +16,7 @@ import {
 } from "../../redux/features/categories/categoriesApiSlice";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
 
 const CategoriesList = () => {
   const location = useLocation();

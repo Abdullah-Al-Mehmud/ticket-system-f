@@ -8,7 +8,7 @@ import AdminLayout from "./Layout/AdminLayout";
 // Auth wrappers
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
-import PageLoading from "./components/LoderComponent/PageLoading";
+import PageLoading from "./components/LoaderComponent/PageLoading";
 
 
 // Lazy-loaded pages

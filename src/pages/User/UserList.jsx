@@ -23,7 +23,7 @@ import {
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
 
 // Skeleton Loader Component for Table Rows
 
