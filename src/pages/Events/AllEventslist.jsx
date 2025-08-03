@@ -18,7 +18,9 @@ const AllEventslist = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
-  const { data, isLoading, isError, refetch } = useGetEventsQuery();
+  const { data, isLoading, isError, refetch } = useGetEventsQuery({
+    all: true,
+  });
   const events = data?.data || [];
 
   const [deleteEvent, { isLoading: isDeleting }] = useDeleteEventMutation();
