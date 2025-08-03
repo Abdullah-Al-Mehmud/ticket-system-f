@@ -18,15 +18,17 @@ const UserList = () => {
 
   const [configPage, setConfigPage] = useState({
     page: 1,
-    count: 3,
+    count: 10,
     search: "",
     role: "",
-    all: true,
   });
+
   const { data, isError, isLoading } = useGetUserListQuery(configPage);
   const [deleteUser] = useDeleteUserMutation();
 
   const users = data?.data ?? [];
+  const currentPage = data?.current_page || 1;
+  const lastPage = data?.last_page || 1;
 
   const handleDeleteClick = (userId) => {
     setUserToDelete(userId);
@@ -51,15 +53,14 @@ const UserList = () => {
     setUserToDelete(null);
   };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
 
   const getRoleColor = (role) => {
     switch (role) {
@@ -130,6 +131,7 @@ const UserList = () => {
                   setConfigPage((prev) => ({
                     ...prev,
                     search: searchTerm,
+                    page: 1,
                   }))
                 }
                 className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium"
@@ -142,10 +144,9 @@ const UserList = () => {
                   setFilterRole("");
                   setConfigPage({
                     page: 1,
-                    count: 3,
+                    count: 10,
                     search: "",
                     role: "",
-                    all: true,
                   });
                 }}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
@@ -170,6 +171,7 @@ const UserList = () => {
               >
                 <option value="">All Roles</option>
                 <option value="admin">Admin</option>
+                <option value="organizer">Organizer</option>
                 <option value="user">User</option>
               </select>
             </div>
@@ -193,7 +195,7 @@ const UserList = () => {
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {isLoading ? (
-                  <TableRowSkeleton count={4} />
+                  <TableRowSkeleton count={5} />
                 ) : users.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="text-center py-6 text-gray-500">
@@ -204,10 +206,9 @@ const UserList = () => {
                           setFilterRole("");
                           setConfigPage({
                             page: 1,
-                            count: 3,
+                            count: 10,
                             search: "",
                             role: "",
-                            all: true,
                           });
                         }}
                         className="mt-3 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
@@ -239,12 +240,12 @@ const UserList = () => {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
-                            user.role.name
+                            user?.role?.name
                           )}`}
                         >
-                          {getRoleIcon(user.role.name)}
+                          {getRoleIcon(user?.role?.name)}
                           <span className="ml-1 capitalize">
-                            {user.role.name}
+                            {user?.role?.name}
                           </span>
                         </span>
                       </td>
@@ -280,6 +281,58 @@ const UserList = () => {
             </table>
           </div>
         </div>
+
+        {lastPage > 1 && (
+          <div className="flex justify-center items-center gap-2 py-6">
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.max(1, currentPage - 1),
+                }))
+              }
+              disabled={currentPage === 1}
+              className="px-3 py-1 rounded border text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+            >
+              Prev
+            </button>
+
+            {[...Array(lastPage)].map((_, index) => {
+              const pageNum = index + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() =>
+                    setConfigPage((prev) => ({
+                      ...prev,
+                      page: pageNum,
+                    }))
+                  }
+                  className={`px-3 py-1 rounded border text-sm ${
+                    currentPage === pageNum
+                      ? "bg-amber-500 text-white"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.min(lastPage, currentPage + 1),
+                }))
+              }
+              disabled={currentPage === lastPage}
+              className="px-3 py-1 rounded border text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
 
       <ConfirmModal
