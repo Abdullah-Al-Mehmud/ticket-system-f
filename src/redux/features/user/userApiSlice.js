@@ -1,43 +1,45 @@
-import { apiSlice } from '../../app/api/apiSlice';
+import { apiSlice } from "../../app/api/apiSlice";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboard: builder.query({
-      query: () => 'admin/dashboard',
-      providesTags: ['User'],
+      query: () => "admin/dashboard",
+      providesTags: ["User"],
     }),
 
     getUserList: builder.query({
-      query: () => '/user', 
-      providesTags: ['User'],
+      query: () => "/user",
+      providesTags: ["User"],
     }),
 
     getUserById: builder.query({
       query: (id) => `/user/${id}`,
-      providesTags: (result, error, id) => [{ type: 'User', id }],
+      providesTags: (result, error, id) => [{ type: "User", id }],
     }),
+
     updateUser: builder.mutation({
-      query: ({ id, ...data }) => ({
+      query: ({ id, data }) => ({
         url: `/users/${id}`,
-        method: 'PATCH',
-        body: data,
+        method: "POST", // Laravel will detect _method = PATCH
+        body: data, // FormData
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
+      invalidatesTags: (result, error, { id }) => [{ type: "User", id }],
     }),
+
     deleteUser: builder.mutation({
       query: (id) => ({
         url: `/users/${id}`,
-        method: 'DELETE',
+        method: "DELETE",
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ["User"],
     }),
     createUser: builder.mutation({
       query: (data) => ({
-        url: '/users',
-        method: 'POST',
+        url: "/users",
+        method: "POST",
         body: data,
       }),
-      invalidatesTags: ['User'],
+      invalidatesTags: ["User"],
     }),
   }),
 });

@@ -3,12 +3,26 @@ import { Mail, Phone, Calendar, MapPin, Edit } from "lucide-react";
 import UserModelTicketForm from "./UserModelTicketForm";
 import EditUserModal from "./EditUserModal";
 import UserOrganizedEventForm from "./UserOrganizedEventForm";
+import { useGetUserByIdQuery } from "../../../redux/features/user/userApiSlice";
+import PageLoading from "../../../components/LoderComponent/PageLoading";
 
 const UserDashboard = () => {
-  const user = localStorage.getItem("data")
+  const users = localStorage.getItem("data")
     ? JSON.parse(localStorage.getItem("data"))
     : {};
+
+  const userId = users?.id;
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data: userData, isLoading } = useGetUserByIdQuery(userId);
+  const user = userData?.data;
+
+  if (isLoading)
+    return (
+      <p>
+        <PageLoading />
+      </p>
+    );
 
   const handleEditClick = () => {
     setIsModalOpen(true);
@@ -25,9 +39,9 @@ const UserDashboard = () => {
               {/* Profile Image */}
               <div className="relative mb-6 sm:mb-0 sm:mr-8">
                 <div className="w-28 h-28 rounded-full shadow overflow-hidden">
-                  {user.image ? (
+                  {user.image_url ? (
                     <img
-                      src={user.image}
+                      src={`${import.meta.env.VITE_IMG_URL}/${user.image_url}`}
                       alt={user.name || "User"}
                       className="w-full h-full object-cover"
                     />
