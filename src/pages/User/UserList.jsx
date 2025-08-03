@@ -89,48 +89,50 @@ const UserList = () => {
   };
 
   if (isError)
-    return <p className="p-8 text-center text-red-600">Error loading users.</p>;
+    return (
+      <p className="p-8 text-center text-red-600">Error loading users.</p>
+    );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-8 py-6">
-        <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">
+            <h1 className="text-3xl font-semibold text-gray-900">
               User Management
             </h1>
-            <p className="mt-1 text-sm text-gray-600">
-              Manage and monitor user accounts
-            </p>
+            <p className="mt-2 text-gray-600">Manage and monitor user accounts</p>
           </div>
           <Link
             to="/admin/create-user"
-            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
-            <Plus size={16} />
-            <span>Add User</span>
+            <Plus size={20} /> Add User
           </Link>
         </div>
-      </div>
 
-      <AdminDashboard />
+        <div className="mb-6 px-6">
+          <AdminDashboard />
+        </div>
 
-      <div className="max-w-7xl mx-auto px-8 mb-6">
-        <div className="bg-white rounded-lg border shadow-sm p-6">
+        {/* Search & Filter */}
+        <div className="bg-white rounded-lg border p-6 mb-6">
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex-1 w-full relative flex gap-2">
+            <div className="flex-1 flex gap-2 w-full">
               <input
                 type="text"
                 placeholder="Search users..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
               <button
                 onClick={() =>
                   setConfigPage((prev) => ({
                     ...prev,
                     search: searchTerm,
+                    role: filterRole,
                     page: 1,
                   }))
                 }
@@ -142,12 +144,7 @@ const UserList = () => {
                 onClick={() => {
                   setSearchTerm("");
                   setFilterRole("");
-                  setConfigPage({
-                    page: 1,
-                    count: 10,
-                    search: "",
-                    role: "",
-                  });
+                  setConfigPage({ page: 1, count: 10, search: "", role: "" });
                 }}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
               >
@@ -155,203 +152,192 @@ const UserList = () => {
               </button>
             </div>
 
-            <div className="w-full sm:w-48">
-              <select
-                value={filterRole}
-                onChange={(e) => {
-                  const selectedRole = e.target.value;
-                  setFilterRole(selectedRole);
-                  setConfigPage((prev) => ({
-                    ...prev,
-                    role: selectedRole,
-                    page: 1,
-                  }));
-                }}
-                className="w-full px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="">All Roles</option>
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
-              </select>
-            </div>
+            <select
+              value={filterRole}
+              onChange={(e) => {
+                const role = e.target.value;
+                setFilterRole(role);
+                setConfigPage((prev) => ({
+                  ...prev,
+                  role,
+                  page: 1,
+                }));
+              }}
+              className="w-full sm:w-48 px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
+              <option value="">All Roles</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
           </div>
         </div>
-      </div>
 
-      <div className="bg-white rounded-lg border overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-100 text-gray-700 text-xs uppercase tracking-wide">
-              <tr>
-                <th className="px-6 py-3 text-left">ID</th>
-                <th className="px-6 py-3 text-left">User</th>
-                <th className="px-6 py-3 text-left">Email</th>
-                <th className="px-6 py-3 text-left">Role</th>
-                <th className="px-6 py-3 text-left">Created</th>
-                <th className="px-6 py-3 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {isLoading ? (
-                <TableRowSkeleton count={5} />
-              ) : users.length === 0 ? (
+        {/* Table */}
+        <div className="bg-white rounded-lg border overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b">
                 <tr>
-                  <td colSpan="6" className="text-center py-6 text-gray-500">
-                    <div>No users found.</div>
-                    <button
-                      onClick={() => {
-                        setSearchTerm("");
-                        setFilterRole("");
-                        setConfigPage({
-                          page: 1,
-                          count: 10,
-                          search: "",
-                          role: "",
-                        });
-                      }}
-                      className="mt-3 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
-                    >
-                      Clear Filters
-                    </button>
-                  </td>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    ID
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Name
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Email
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Role
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                    Created At
+                  </th>
+                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
                 </tr>
-              ) : (
-                users.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <Link
-                        className="hover:underline"
-                        to={`/admin/user-profile/${user.id}`}
-                      >
-                        #{user.id.toString().padStart(3, "0")}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4">
-                      <Link
-                        className="hover:underline"
-                        to={`/admin/user-profile/${user.id}`}
-                      >
-                        {user.name}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4">{user.email}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
-                          user?.role?.name
-                        )}`}
-                      >
-                        {getRoleIcon(user?.role?.name)}
-                        <span className="ml-1 capitalize">
-                          {user?.role?.name}
-                        </span>
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">{formatDate(user.created_at)}</td>
-                    <td className="px-6 py-4 text-center">
-                      <div className="flex items-center justify-center gap-2">
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {isLoading ? (
+                  <TableRowSkeleton count={5} />
+                ) : users.length > 0 ? (
+                  users.map((user) => (
+                    <tr key={user.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
                         <Link
                           to={`/admin/user-profile/${user.id}`}
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                          className="hover:underline"
                         >
-                          <Eye size={16} />
+                          #{user.id.toString().padStart(3, "0")}
                         </Link>
+                      </td>
+                      <td className="px-6 py-4 text-sm">
                         <Link
-                          to={`/admin/edit/${user.id}`}
-                          className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                          to={`/admin/user-profile/${user.id}`}
+                          className="hover:underline"
                         >
-                          <Edit size={16} />
+                          {user.name}
                         </Link>
-                        <button
-                          onClick={() => handleDeleteClick(user.id)}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                      </td>
+                      <td className="px-6 py-4 text-sm">{user.email}</td>
+                      <td className="px-6 py-4 text-sm">
+                        <span
+                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getRoleColor(
+                            user?.role?.name
+                          )}`}
                         >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
+                          {getRoleIcon(user?.role?.name)}
+                          <span className="ml-1 capitalize">{user?.role?.name}</span>
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {formatDate(user.created_at)}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <Link
+                            to={`/admin/user-profile/${user.id}`}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                          >
+                            <Eye size={16} />
+                          </Link>
+                          <Link
+                            to={`/admin/edit/${user.id}`}
+                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                          >
+                            <Edit size={16} />
+                          </Link>
+                          <button
+                            onClick={() => handleDeleteClick(user.id)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" className="text-center py-12 text-gray-500">
+                      No users found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        {/* Pagination */}
+        {lastPage > 1 && (
+          <div className="flex justify-center items-center mt-6 space-x-2">
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.max(1, currentPage - 1),
+                }))
+              }
+              disabled={currentPage === 1}
+              className={`px-3 py-2 border rounded-md text-sm ${
+                currentPage === 1
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+            >
+              Previous
+            </button>
+
+            {[...Array(lastPage)].map((_, idx) => {
+              const pageNum = idx + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() =>
+                    setConfigPage((prev) => ({
+                      ...prev,
+                      page: pageNum,
+                    }))
+                  }
+                  className={`px-3 py-2 border rounded-md text-sm ${
+                    pageNum === currentPage
+                      ? "bg-amber-600 text-white"
+                      : "bg-white hover:bg-gray-100"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.min(lastPage, currentPage + 1),
+                }))
+              }
+              disabled={currentPage === lastPage}
+              className={`px-3 py-2 border rounded-md text-sm ${
+                currentPage === lastPage
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-white hover:bg-gray-100"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
+
+        <ConfirmModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={confirmDelete}
+          message="Are you sure you want to delete this user?"
+        />
       </div>
-
-      {lastPage > 1 && (
-        <div className="flex justify-center items-center mt-8 space-x-2">
-          {/* Previous Button */}
-          <button
-            onClick={() =>
-              setConfigPage((prev) => ({
-                ...prev,
-                page: Math.max(1, currentPage - 1),
-              }))
-            }
-            disabled={currentPage === 1}
-            className={`px-3 py-2 rounded-md border text-sm font-medium transition 
-        ${
-          currentPage === 1
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 text-gray-700"
-        }`}
-          >
-            Prev
-          </button>
-
-          {/* Page Buttons */}
-          {Array.from({ length: lastPage }, (_, index) => {
-            const pageNum = index + 1;
-            const isActive = pageNum === currentPage;
-
-            return (
-              <button
-                key={pageNum}
-                onClick={() =>
-                  setConfigPage((prev) => ({
-                    ...prev,
-                    page: pageNum,
-                  }))
-                }
-                className={`px-3 py-2 rounded-md border text-sm font-medium transition
-            ${
-              isActive
-                ? "bg-amber-600 text-white border-amber-600"
-                : "bg-white hover:bg-gray-100 text-gray-700"
-            }`}
-              >
-                {pageNum}
-              </button>
-            );
-          })}
-
-          {/* Next Button */}
-          <button
-            onClick={() =>
-              setConfigPage((prev) => ({
-                ...prev,
-                page: Math.min(lastPage, currentPage + 1),
-              }))
-            }
-            disabled={currentPage === lastPage}
-            className={`px-3 py-2 rounded-md border text-sm font-medium transition 
-        ${
-          currentPage === lastPage
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-            : "bg-white hover:bg-gray-100 text-gray-700"
-        }`}
-          >
-            Next
-          </button>
-        </div>
-      )}
-
-      <ConfirmModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={confirmDelete}
-        message="Are you sure you want to delete this user?"
-      />
     </div>
   );
 };
