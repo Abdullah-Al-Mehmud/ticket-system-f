@@ -136,6 +136,22 @@ const UserList = () => {
               >
                 Search
               </button>
+              <button
+                onClick={() => {
+                  setSearchTerm("");
+                  setFilterRole("");
+                  setConfigPage({
+                    page: 1,
+                    count: 3,
+                    search: "",
+                    role: "",
+                    all: true,
+                  });
+                }}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Clear
+              </button>
             </div>
 
             <div className="w-full sm:w-48">
