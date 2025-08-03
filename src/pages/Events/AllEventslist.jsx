@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Eye,
-  Edit,
-  Trash2,
-  Plus,
-  Search,
-  Filter,
-  Download,
-  MoreVertical,
-} from "lucide-react";
+import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
 import {
   useGetEventsQuery,
   useDeleteEventMutation,
@@ -24,7 +15,6 @@ const AllEventslist = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("event_name");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedStatus, setSelectedStatus] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
@@ -51,9 +41,6 @@ const AllEventslist = () => {
   };
 
   const handleDelete = async (eventId) => {
-    // const confirmDelete = window.confirm('Are you sure you want to delete this event?');
-    // if (!confirmDelete) return;
-
     try {
       const res = await deleteEvent(eventId).unwrap();
       if (res.status === true) {
@@ -99,26 +86,9 @@ const AllEventslist = () => {
       <span
         className={`px-2 py-1 text-xs font-medium rounded-full border ${
           statusStyles[status] || "bg-gray-100 text-gray-800 border-gray-200"
-        }`}>
+        }`}
+      >
         {status.charAt(0).toUpperCase() + status.slice(1)}
-      </span>
-    );
-  };
-
-  const getCategoryBadge = (category) => {
-    const categoryColors = {
-      Technology: "bg-purple-100 text-purple-800",
-      Marketing: "bg-pink-100 text-pink-800",
-      Finance: "bg-indigo-100 text-indigo-800",
-      "Human Resources": "bg-orange-100 text-orange-800",
-      Operations: "bg-teal-100 text-teal-800",
-    };
-    return (
-      <span
-        className={`px-2 py-1 text-xs font-medium rounded ${
-          categoryColors[category] || "bg-gray-100 text-gray-800"
-        }`}>
-        {category}
       </span>
     );
   };
@@ -132,15 +102,6 @@ const AllEventslist = () => {
       minute: "2-digit",
       hour12: true, // for AM/PM format; use false for 24-hour format
     });
-  };
-
-  const handleSort = (column) => {
-    if (sortBy === column) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortBy(column);
-      setSortOrder("asc");
-    }
   };
 
   useEffect(() => {
@@ -173,7 +134,8 @@ const AllEventslist = () => {
           </div>
           <Link
             to="/admin/create-event"
-            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
+          >
             <Plus size={20} /> Create Event
           </Link>
         </div>
@@ -200,7 +162,8 @@ const AllEventslist = () => {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
                   <option value="all">All Status</option>
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>
@@ -212,7 +175,8 @@ const AllEventslist = () => {
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
                   <option value="all">All Categories</option>
                   {categoryOptions.map((category, index) => (
                     <option key={index} value={category}>
@@ -222,15 +186,6 @@ const AllEventslist = () => {
                 </select>
               </div>
             </div>
-
-            {/* <div className="flex gap-2">
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                <Download size={16} /> Export
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                <MoreVertical size={16} />
-              </button>
-            </div> */}
           </div>
         </div>
 
@@ -247,6 +202,9 @@ const AllEventslist = () => {
                   <tr>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       ID
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Event Image
                     </th>
                     <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Event Name
@@ -279,69 +237,93 @@ const AllEventslist = () => {
                   {isLoading ? (
                     <TableRowSkeleton count={4} />
                   ) : (
-                    <>
-                      {" "}
-                      {filteredEvents.map((event) => (
-                        <tr key={event.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                            <Link
-                              className="hover:underline"
-                              to={`/admin/events-details/${event.id}`}>
-                              #{event.id}
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-900 font-medium">
-                            <Link
-                              className="hover:underline"
-                              to={`/admin/events-details/${event.id}`}>
-                              {event.title}
-                            </Link>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            {event.creator.name}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            {event.category.name}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            {event.location}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            {getStatusBadge(event.status)}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            <div>{formatDate(event.start_date)}</div>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
-                            <div>{formatDate(event.end_date)}</div>
-                          </td>
+                    filteredEvents.map((event) => (
+                      <tr key={event.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          <Link
+                            className="hover:underline"
+                            to={`/admin/events-details/${event.id}`}
+                          >
+                            #{event.id}
+                          </Link>
+                        </td>
 
-                          <td className="px-6 py-4 text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <Link
-                                to={`/admin/events-details/${event.id}`}
-                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                                title="View">
-                                <Eye size={16} />
-                              </Link>
-                              <Link
-                                to={`/admin/event-edit/${event.id}`}
-                                className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
-                                title="Edit">
-                                <Edit size={16} />
-                              </Link>
-                              <button
-                                onClick={() => handleDeleteClick(event.id)}
-                                className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
-                                title="Delete"
-                                disabled={isDeleting}>
-                                <Trash2 size={16} />
-                              </button>
+                        {/* Image + Title in one cell */}
+                        <td className="px-6 py-4 text-sm text-gray-900 font-medium flex items-center gap-3">
+                          {event.image_url ? (
+                            <img
+                              src={`${import.meta.env.VITE_IMG_URL}/${
+                                event.image_url
+                              }`}
+                              alt={event.title}
+                              className="w-8 h-8 rounded-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = "/default-image.png";
+                              }}
+                            />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-semibold uppercase">
+                              {event.title.charAt(0)}
                             </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900 font-medium">
+                          <Link
+                            className="hover:underline"
+                            to={`/admin/events-details/${event.id}`}
+                          >
+                            {event.title}
+                          </Link>
+                        </td>
+
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {event.creator.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {event.category.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {event.location}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {getStatusBadge(event.status)}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {formatDate(event.start_date)}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {formatDate(event.end_date)}
+                        </td>
+
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <Link
+                              to={`/admin/events-details/${event.id}`}
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                              title="View"
+                            >
+                              <Eye size={16} />
+                            </Link>
+                            <Link
+                              to={`/admin/event-edit/${event.id}`}
+                              className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                              title="Edit"
+                            >
+                              <Edit size={16} />
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteClick(event.id)}
+                              className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                              title="Delete"
+                              disabled={isDeleting}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
                   )}
                 </tbody>
               </table>
