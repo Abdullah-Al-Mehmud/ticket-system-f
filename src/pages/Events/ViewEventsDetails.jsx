@@ -19,7 +19,7 @@ import {
   useAssignOrganizerMutation,
   useDeleteEventMutation,
   useGetEventByIdQuery,
-  useUpdateEventMutation,
+  useUpdateEventStatusMutation,
 } from "../../redux/features/event/EventApiSlice";
 import PageLoading from "../../components/LoderComponent/PageLoading";
 import toast from "react-hot-toast";
@@ -46,7 +46,7 @@ const EventDetailsAdmin = () => {
   const navigate = useNavigate();
 
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
-  const [updateEvent] = useUpdateEventMutation();
+  const [updateEventStatus] = useUpdateEventStatusMutation();
   const [deleteEvent] = useDeleteEventMutation();
   const { data: usersData, isLoading: isUsersLoading } = useGetUserListQuery();
   const users = usersData?.data;
@@ -166,7 +166,10 @@ const EventDetailsAdmin = () => {
   };
 
   const handleStatusUpdate = async () => {
-    await updateEvent({ id: event.id, status: eventStatus });
+    await updateEventStatus({
+      id: event.id,
+      data: { status: eventStatus },
+    }).unwrap();
     toast.success("Event status updated successfully!");
     refetch();
   };

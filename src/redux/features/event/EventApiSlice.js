@@ -25,8 +25,17 @@ export const eventApiSlice = apiSlice.injectEndpoints({
     updateEvent: builder.mutation({
       query: ({ id, formData }) => ({
         url: `/event/${id}`,
-        method: "POST", 
+        method: "POST",
         body: formData,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Event", id }],
+    }),
+
+    updateEventStatus: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/event/${id}`,
+        method: "PATCH",
+        body: data,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "Event", id }],
     }),
@@ -60,4 +69,5 @@ export const {
   useDeleteEventMutation,
   useGetOrganizerEventsQuery,
   useAssignOrganizerMutation,
+  useUpdateEventStatusMutation,
 } = eventApiSlice;
