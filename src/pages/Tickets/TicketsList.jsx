@@ -93,12 +93,12 @@ const AllTicketsList = () => {
               Manage all tickets with user and event info
             </p>
           </div>
-          <Link
+          {/* <Link
             to="/admin/tickets/create-ticket"
             className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
             <Plus size={20} /> Create Ticket
-          </Link>
+          </Link> */}
         </div>
 
         {/* Filters */}
@@ -247,12 +247,12 @@ const AllTicketsList = () => {
                             >
                               <Eye size={16} />
                             </Link>
-                            <Link
+                            {/* <Link
                               to={`/admin/ticket-edit/${ticket.id}`}
                               className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
                             >
                               <Edit size={16} />
-                            </Link>
+                            </Link> */}
                             <button
                               onClick={() => handleDeleteClick(ticket.id)}
                               className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"

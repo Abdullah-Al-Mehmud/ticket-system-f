@@ -20,7 +20,7 @@ const TicketsForm = () => {
   const [createTicket, { isLoading }] = useCreateTicketMutation();
 
   const { data: usersData, isLoading: usersLoading } = useGetUserQuery();
-  const { data: eventsData, isLoading: eventsLoading } = useGetEventsQuery();
+  const { data: eventsData, isLoading: eventsLoading } = useGetEventsQuery({all: true});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
