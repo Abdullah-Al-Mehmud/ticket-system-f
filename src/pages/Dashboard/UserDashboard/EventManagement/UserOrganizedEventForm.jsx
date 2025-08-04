@@ -139,13 +139,13 @@ function UserOrganizedEventForm() {
                       Sales Overview
                     </Link>
                     <Link
-                      to="#"
+                      to={`/user/ticket-list/${event.id}`}
                       className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded font-medium text-sm"
                     >
                       Ticket Details
                     </Link>
                     <Link
-                      to="#"
+                      to={`/event-details/${event.id}`}
                       className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded font-medium text-sm"
                     >
                       On Cart

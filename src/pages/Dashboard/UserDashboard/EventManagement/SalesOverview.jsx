@@ -36,7 +36,7 @@ const MetricCard = ({
   textColorClass = "text-gray-900",
 }) => (
   <div
-    className={`${colorClass} border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200`}
+    className={`${colorClass} border border-gray-200 rounded-xl p-6  hover:shadow-md transition-shadow duration-200`}
   >
     <div className="flex items-center justify-between">
       <div>
@@ -85,7 +85,7 @@ const CategoryCard = ({ category, sold, total, left, soldPercent, price }) => {
         badge: "bg-yellow-100 text-yellow-800",
       };
     return {
-      bg: "bg-red-50",
+      bg: "bg-black-50",
       border: "border-red-200",
       title: "text-red-900",
       progress: "bg-red-600",
@@ -97,7 +97,7 @@ const CategoryCard = ({ category, sold, total, left, soldPercent, price }) => {
 
   return (
     <div
-      className={`${theme.bg} ${theme.border} border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200`}
+      className={`${theme.bg} ${theme.border} border rounded-xl p-6  hover:shadow-md transition-all duration-200`}
     >
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
@@ -201,7 +201,7 @@ const SalesOverview = () => {
   return (
     <div className="space-y-8 p-6 bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+      <div className="bg-white rounded-xl p-6  border border-gray-200">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">

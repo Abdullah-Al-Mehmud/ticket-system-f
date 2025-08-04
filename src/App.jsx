@@ -54,6 +54,7 @@ const EventManagement = lazy(() => import("./pages/Dashboard/OrganizerDashboard/
 const CreateEventOrganizer = lazy(() => import("./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer"));
 const EventDetailsDetails = lazy(() => import("./pages/Dashboard/OrganizerDashboard/EventDetailsDetails"));
 const SalesOverview = lazy(() => import("./pages/Dashboard/UserDashboard/EventManagement/SalesOverview"));
+const TicketList = lazy(() => import("./pages/Dashboard/UserDashboard/EventManagement/TicketList"));
 
 function App() {
   return (
@@ -105,6 +106,7 @@ function App() {
             <Route path="dashboard" element={<UserDashboard />} />
             <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
             <Route path="sales-overview/:id" element={<SalesOverview />} />
+            <Route path="ticket-list/:id" element={<TicketList />} />
           </Route>
         </Route>
 
