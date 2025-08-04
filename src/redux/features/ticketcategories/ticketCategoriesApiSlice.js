@@ -1,14 +1,11 @@
+import queryGenerator from "../../../../utils/queryGenerator";
 import { apiSlice } from "../../app/api/apiSlice"; // adjust path
 
 export const ticketCategoriesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // GET: Fetch all ticket categories
     getTicketCategories: builder.query({
-      query: () => ({
-        url: "/ticket-category",
-        method: "GET",
-        params: { all: true },
-      }),
+      query: (pageConfig) => `/ticket-category?${queryGenerator(pageConfig)}`,
       providesTags: ["TicketCategory"],
     }),
 
