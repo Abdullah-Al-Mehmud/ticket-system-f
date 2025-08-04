@@ -48,7 +48,9 @@ const EventDetailsAdmin = () => {
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const [updateEventStatus] = useUpdateEventStatusMutation();
   const [deleteEvent] = useDeleteEventMutation();
-  const { data: usersData, isLoading: isUsersLoading } = useGetUserListQuery();
+  const { data: usersData, isLoading: isUsersLoading } = useGetUserListQuery({
+    all: true,
+  });
   const users = usersData?.data;
   const [assignOrganizer] = useAssignOrganizerMutation();
 
