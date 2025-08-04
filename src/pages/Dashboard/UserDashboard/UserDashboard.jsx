@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Mail, Phone, Calendar, MapPin, Edit } from "lucide-react";
-import UserModelTicketForm from "./UserModelTicketForm";
+import UserModelTicketForm from "./TicketManagement/UserModelTicketForm";
 import EditUserModal from "./EditUserModal";
-import UserOrganizedEventForm from "./UserOrganizedEventForm";
+import UserOrganizedEventForm from "./EventManagement/UserOrganizedEventForm";
 import { useGetUserByIdQuery } from "../../../redux/features/user/userApiSlice";
 import PageLoading from "../../../components/LoaderComponent/PageLoading";
 

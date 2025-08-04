@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetOrganizerEventsQuery } from "../../../redux/features/event/EventApiSlice";
-import TableRowSkeleton from "../../../components/LoaderComponent/TableRowSkeleton";
+import { useGetOrganizerEventsQuery } from "../../../../redux/features/event/EventApiSlice";
+import TableRowSkeleton from "../../../../components/LoaderComponent/TableRowSkeleton";
 import { Eye } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -122,15 +122,18 @@ function UserOrganizedEventForm() {
                     </div>
 
                     {/* Eye Icon */}
-                    <button className="text-gray-500 hover:text-gray-700">
+                    <Link
+                      to={`/event-details/${event.id}`}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
                       <Eye />
-                    </button>
+                    </Link>
                   </div>
 
                   {/* Action Buttons */}
                   <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-12 mt-auto pt-15">
                     <Link
-                      to="#"
+                      to={`/event-details/${event.id}`}
                       className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded font-medium text-sm"
                     >
                       Sales Overview

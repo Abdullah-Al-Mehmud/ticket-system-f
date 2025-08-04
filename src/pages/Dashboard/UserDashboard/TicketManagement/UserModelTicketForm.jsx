@@ -1,15 +1,8 @@
 import React from "react";
-import { useGetUserTicketsQuery } from "../../../redux/features/tickets/ticketsApiSlice";
-import {
-  Bell,
-  ChartBarStacked,
-  Download,
-  Eye,
-  MapPinCheck,
-  Table,
-} from "lucide-react";
+import { useGetUserTicketsQuery } from "../../../../redux/features/tickets/ticketsApiSlice";
+import { Bell, ChartBarStacked, MapPinCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import TableRowSkeleton from "../../../components/LoaderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../../../components/LoaderComponent/TableRowSkeleton";
 
 function UserModelTicketForm() {
   const { data, isLoading, isError } = useGetUserTicketsQuery();
@@ -65,7 +58,7 @@ function UserModelTicketForm() {
                     0
                   )
                   .toFixed(0)}{" "}
-                 <span className="font-mono mr-1">৳</span>
+                <span className="font-mono mr-1">৳</span>
               </p>
             </div>
           </div>
@@ -163,7 +156,10 @@ function UserModelTicketForm() {
                                 Price
                               </div>
                               <div className="text-base font-bold text-amber-900">
-                               {Number(booking?.ticket_category?.price).toFixed(0)} <span className="font-mono mr-1">৳</span>
+                                {Number(
+                                  booking?.ticket_category?.price
+                                ).toFixed(0)}{" "}
+                                <span className="font-mono mr-1">৳</span>
                               </div>
                             </div>
 
@@ -186,8 +182,8 @@ function UserModelTicketForm() {
                               {(
                                 booking?.quantity *
                                 booking?.ticket_category?.price
-                              ).toFixed(0)} <span className="font-mono mr-[2px]">৳</span>
-                              
+                              ).toFixed(0)}{" "}
+                              <span className="font-mono mr-[2px]">৳</span>
                             </div>
                           </div>
                         </div>
@@ -209,8 +205,6 @@ function UserModelTicketForm() {
                         }}
                       ></div>
                     </div>
-
-                    
                   </div>
                 </Link>
               ))}
