@@ -125,11 +125,33 @@ const EventDetailsPage = () => {
         {/* Header */}
         <div className="bg-white rounded-2xl  overflow-hidden mb-8">
           <div className="relative h-96">
-            <img
-              src={eventData.image_url}
-              alt={eventData.title}
-              className="w-full h-full object-cover"
-            />
+            {eventData.image_url ? (
+              <>
+                <img
+                  src={`${import.meta.env.VITE_IMG_URL}/${eventData.image_url}`}
+                  alt={eventData.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.parentNode.querySelector(
+                      ".fallback-img"
+                    ).style.display = "flex";
+                  }}
+                />
+                <div className="fallback-img hidden absolute inset-0 bg-gray-200 items-end justify-center pb-4 shadow-md">
+                  <span className="text-xl font-bold text-slate-900">
+                    TapKori
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <span className="text-6xl font-bold text-slate-400">
+                  TapKori
+                </span>
+              </div>
+            )}
+
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
             <div className="absolute bottom-6 left-6 text-white">
               <h1 className="text-4xl font-bold mb-2">{eventData.title}</h1>
