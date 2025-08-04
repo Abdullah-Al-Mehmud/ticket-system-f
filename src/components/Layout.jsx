@@ -6,6 +6,9 @@ import Footer from "./Footer";
 const Layout = () => {
   const [user, setUser] = useState(null);
   const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("data");

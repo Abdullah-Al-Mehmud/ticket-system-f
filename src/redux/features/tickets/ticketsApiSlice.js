@@ -1,12 +1,11 @@
+import queryGenerator from "../../../../utils/queryGenerator";
 import { apiSlice } from "../../app/api/apiSlice";
 
 export const ticketsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // GET all tickets
     getTickets: builder.query({
-      query: () => ({
-        url: "/ticket", // Consider changing to "/tickets" if the backend supports plural
-      }),
+      query: (pageConfig) => `/ticket?${queryGenerator(pageConfig)}`,
       providesTags: ["Ticket"],
     }),
 
@@ -61,5 +60,5 @@ export const {
   useCreateTicketMutation,
   useUpdateTicketMutation,
   useDeleteTicketMutation,
-  useGetUserTicketsQuery, 
+  useGetUserTicketsQuery,
 } = ticketsApiSlice;

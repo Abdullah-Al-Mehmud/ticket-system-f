@@ -20,6 +20,8 @@ const AllEventsList = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
 
   const { data, isLoading, isError, refetch } = useGetEventsQuery(configPage);
 
@@ -28,9 +30,6 @@ const AllEventsList = () => {
   const events = data?.data || [];
   const lastPage = data?.last_page || 1;
   const currentPage = data?.current_page || 1;
-
-  const uniqueStatuses = [...new Set(events.map((e) => e.status))];
-  const uniqueCategories = [...new Set(events.map((e) => e.category?.name))];
 
   const handleDeleteClick = (id) => {
     setEventToDelete(id);
@@ -112,35 +111,46 @@ const AllEventsList = () => {
                 <input
                   type="text"
                   placeholder="Search events..."
-                  value={configPage.search}
-                  onChange={(e) =>
-                    setConfigPage((prev) => ({
-                      ...prev,
-                      search: e.target.value,
-                      page: 1,
-                    }))
-                  }
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setConfigPage((prev) => ({
+                        ...prev,
+                        search: search,
+                        page: 1,
+                      }));
+                    }
+                  }}
                   className="w-full pl-10 pr-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  aria-label="Search events"
                 />
               </div>
 
               <button
-                onClick={() => setConfigPage((prev) => ({ ...prev, page: 1 }))}
+                onClick={() =>
+                  setConfigPage((prev) => ({
+                    ...prev,
+                    search: search,
+                    page: 1,
+                  }))
+                }
                 className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1"
               >
                 Search
               </button>
 
               <button
-                onClick={() =>
-                  setConfigPage({
-                    page: 1,
-                    count: configPage.count,
+                onClick={() => {
+                  setSearch("");
+                  setStatus("");
+                  setConfigPage((prev) => ({
+                    ...prev,
                     search: "",
                     status: "",
-                    category: "",
-                  })
-                }
+                    page: 1,
+                  }));
+                }}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
               >
                 Clear
@@ -149,25 +159,26 @@ const AllEventsList = () => {
 
             <div className="flex gap-2 flex-wrap">
               <select
-                value={configPage.status}
-                onChange={(e) =>
+                value={status}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setStatus(value);
                   setConfigPage((prev) => ({
                     ...prev,
-                    status: e.target.value,
+                    status: value,
                     page: 1,
-                  }))
-                }
+                  }));
+                }}
                 className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               >
                 <option value="">All Status</option>
-                {uniqueStatuses.map((status, idx) => (
-                  <option key={idx} value={status}>
-                    {status}
-                  </option>
-                ))}
+                <option value="Upcoming">Upcoming</option>
+                <option value="Live">Live</option>
+                <option value="Done">Done</option>
+                <option value="Cancelled">Cancelled</option>
               </select>
 
-              <select
+              {/* <select
                 value={configPage.category}
                 onChange={(e) =>
                   setConfigPage((prev) => ({
@@ -179,12 +190,7 @@ const AllEventsList = () => {
                 className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               >
                 <option value="">All Categories</option>
-                {uniqueCategories.map((cat, idx) => (
-                  <option key={idx} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
+              </select> */}
             </div>
           </div>
         </div>

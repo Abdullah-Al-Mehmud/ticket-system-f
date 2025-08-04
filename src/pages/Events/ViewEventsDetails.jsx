@@ -48,7 +48,9 @@ const EventDetailsAdmin = () => {
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const [updateEventStatus] = useUpdateEventStatusMutation();
   const [deleteEvent] = useDeleteEventMutation();
-  const { data: usersData, isLoading: isUsersLoading } = useGetUserListQuery();
+  const { data: usersData, isLoading: isUsersLoading } = useGetUserListQuery({
+    all: true,
+  });
   const users = usersData?.data;
   const [assignOrganizer] = useAssignOrganizerMutation();
 
@@ -489,14 +491,25 @@ const EventDetailsAdmin = () => {
                       Event Banner
                     </h3>
                     {event.image_url ? (
-                      <img
-                        src={event.image_url}
-                        alt={event.title}
-                        className="rounded-lg object-cover w-full aspect-w-16 aspect-h-9"
-                      />
+                      <>
+                        <img
+                          src={event.image_url}
+                          alt={event.title}
+                          className="rounded-lg object-cover w-full aspect-w-16 aspect-h-9"
+                          onError={(e) => {
+                            e.currentTarget.style.display = "none";
+                            e.currentTarget.parentNode.querySelector(
+                              ".fallback-banner"
+                            ).style.display = "flex";
+                          }}
+                        />
+                        <div className="fallback-banner hidden h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                          <p className="text-gray-500">TapKori</p>
+                        </div>
+                      </>
                     ) : (
                       <div className="h-48 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <p className="text-gray-500">No Banner</p>
+                        <p className="text-gray-500">TapKori</p>
                       </div>
                     )}
                   </div>
