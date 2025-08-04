@@ -114,9 +114,9 @@ const UserList = () => {
           </Link>
         </div>
 
-        <div className="mb-6 px-6">
+        {/* <div className="mb-6 px-6">
           <AdminDashboard />
-        </div>
+        </div> */}
 
         {/* Search & Filter */}
         <div className="bg-white rounded-lg border p-6 mb-6">
