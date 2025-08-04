@@ -47,7 +47,7 @@ const TicketCategoriesDetails = lazy(() => import("./pages/TicketCategories/Tick
 const TicketCategoriesUpdate = lazy(() => import("./pages/TicketCategories/TicketCategoriesUpdate"));
 
 const UserDashboard = lazy(() => import("./pages/Dashboard/UserDashboard/UserDashboard"));
-const UserViewTicket = lazy(() => import("./pages/Dashboard/UserDashboard/UserViewTicket"));
+const UserViewTicket = lazy(() => import("./pages/Dashboard/UserDashboard/TicketManagement/UserViewTicket"));
 
 const OrganizerDashboard = lazy(() => import("./pages/Dashboard/OrganizerDashboard/OrganizerDashboard"));
 const EventManagement = lazy(() => import("./pages/Dashboard/OrganizerDashboard/EventManagement"));
