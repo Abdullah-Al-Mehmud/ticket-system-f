@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -30,6 +30,10 @@ const AllEventsList = () => {
   const events = data?.data || [];
   const lastPage = data?.last_page || 1;
   const currentPage = data?.current_page || 1;
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   const handleDeleteClick = (id) => {
     setEventToDelete(id);
