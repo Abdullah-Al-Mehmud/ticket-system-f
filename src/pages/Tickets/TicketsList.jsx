@@ -1,76 +1,78 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {
-  Eye,
-  Edit,
-  Trash2,
-  Plus,
-  Search,
-  Filter,
-  Download,
-  MoreVertical,
-} from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
+import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
 import {
   useGetTicketsQuery,
   useDeleteTicketMutation,
 } from "../../redux/features/tickets/ticketsApiSlice";
-import toast from "react-hot-toast";
 
-export const TicketsList = () => {
-  const location = useLocation();
-  const [tickets, setTickets] = useState([]);
-  const [deleteTicket] = useDeleteTicketMutation();
+const AllTicketsList = () => {
+  const [configPage, setConfigPage] = useState({
+    page: 1,
+    count: 10,
+    search: "",
+    status: "",
+  });
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("id");
-  const [sortOrder, setSortOrder] = useState("desc");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ticketToDelete, setTicketToDelete] = useState(null);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
 
-  const { data, isLoading, isError, refetch } = useGetTicketsQuery();
+  const { data, isLoading, isError, refetch } = useGetTicketsQuery(configPage);
 
-  useEffect(() => {
-    if (data?.data) setTickets(data.data);
-  }, [data]);
+  const [deleteTicket, { isLoading: isDeleting }] = useDeleteTicketMutation();
 
-  console.log(data?.data)
+  const tickets = data?.data || [];
+  const lastPage = data?.last_page || 1;
+  const currentPage = data?.current_page || 1;
 
-  useEffect(() => {
-    if (location.state?.refresh) {
-      refetch();
-    }
-  }, [location.state]);
+  const handleDeleteClick = (id) => {
+    setTicketToDelete(id);
+    setIsModalOpen(true);
+  };
 
-  const handleDelete = async (id) => {
+  const confirmDelete = async () => {
+    if (!ticketToDelete) return;
     try {
-      const res = await deleteTicket(id).unwrap();
-      if (res.status === true) {
-        toast.success(res.message || "Ticket deleted successfully!");
-      } else {
-        toast.error(res.message || "Failed to delete ticket");
-      }
+      const res = await deleteTicket(ticketToDelete).unwrap();
+      toast.success(res.message || "Ticket deleted successfully!");
       refetch();
-    } catch (err) {
-      console.error(err);
-      toast.error(err?.data?.message || "Failed to delete ticket");
+    } catch {
+      toast.error("Failed to delete ticket.");
+    } finally {
+      setIsModalOpen(false);
+      setTicketToDelete(null);
     }
   };
 
-  const handleSort = (column) => {
-    setSortBy(column);
-    setSortOrder((prev) =>
-      sortBy === column && prev === "asc" ? "desc" : "asc"
-    );
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTicketToDelete(null);
   };
+
+  const formatDate = (dateString) =>
+    new Date(dateString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
 
   const getStatusBadge = (status) => {
-    const badgeMap = {
+    const statusStyles = {
       booked: "bg-green-100 text-green-800 border-green-200",
-      cancelled: "bg-red-100 text-red-800 border-red-200",
+      refunded: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      canceled: "bg-red-100 text-red-800 border-red-200",
     };
     return (
       <span
         className={`px-2 py-1 text-xs font-medium rounded-full border ${
-          badgeMap[status] || ""
+          statusStyles[status] || "bg-gray-100 text-gray-800 border-gray-200"
         }`}
       >
         {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -78,159 +80,158 @@ export const TicketsList = () => {
     );
   };
 
-  const formatDate = (date) =>
-    new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-
-  const filteredTickets = useMemo(() => {
-    return tickets
-      .filter(
-        (t) =>
-          t.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          t.event.title.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      .filter((t) => statusFilter === "all" || t.status === statusFilter)
-      .sort((a, b) => {
-        const aVal =
-          typeof a[sortBy] === "string" ? a[sortBy].toLowerCase() : a[sortBy];
-        const bVal =
-          typeof b[sortBy] === "string" ? b[sortBy].toLowerCase() : b[sortBy];
-        return sortOrder === "asc"
-          ? aVal > bVal
-            ? 1
-            : -1
-          : aVal < bVal
-          ? 1
-          : -1;
-      });
-  }, [tickets, searchTerm, statusFilter, sortBy, sortOrder]);
-
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-semibold text-gray-900">Tickets</h1>
+            <h1 className="text-3xl font-semibold text-gray-900">
+              All Tickets
+            </h1>
             <p className="mt-2 text-gray-600">
-              All tickets issued with event and user info.
+              Manage all tickets with user and event info
             </p>
           </div>
           <Link
             to="/admin/tickets/create-ticket"
-            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
-            <Plus size={20} /> Add Tickets
+            <Plus size={20} /> Create Ticket
           </Link>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-col sm:flex-row gap-4 flex-1">
-              <div className="relative flex-1 max-w-md">
+        {/* Filters */}
+        <div className="bg-white rounded-lg border p-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex-1 flex gap-2 w-full flex-wrap">
+              <div className="relative flex-1 min-w-[180px]">
                 <Search
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                   size={20}
                 />
                 <input
                   type="text"
-                  placeholder="Search tickets by user or event..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder="Search by user or event..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setConfigPage((prev) => ({ ...prev, search, page: 1 }));
+                    }
+                  }}
+                  className="w-full pl-10 pr-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  aria-label="Search tickets"
                 />
               </div>
 
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              <button
+                onClick={() =>
+                  setConfigPage((prev) => ({ ...prev, search, page: 1 }))
+                }
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1"
               >
-                <option value="all">All Status</option>
+                Search
+              </button>
+
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setStatus("");
+                  setConfigPage((prev) => ({
+                    ...prev,
+                    search: "",
+                    status: "",
+                    page: 1,
+                  }));
+                }}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Clear
+              </button>
+            </div>
+
+            <div className="flex gap-2 flex-wrap">
+              <select
+                value={status}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setStatus(value);
+                  setConfigPage((prev) => ({
+                    ...prev,
+                    status: value,
+                    page: 1,
+                  }));
+                }}
+                className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              >
+                <option value="">All Status</option>
                 <option value="booked">Booked</option>
                 <option value="refunded">Refunded</option>
                 <option value="canceled">Canceled</option>
               </select>
-
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                <Filter size={16} /> Filter
-              </button>
-            </div>
-
-            <div className="flex gap-2">
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 flex items-center gap-2">
-                <Download size={16} /> Export
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                <MoreVertical size={16} />
-              </button>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+        {/* Table */}
+        <div className="bg-white rounded-lg border overflow-hidden">
           {isError ? (
-            <div className="text-center py-12 text-red-500">
+            <div className="p-6 text-center text-red-500">
               Failed to load tickets.
             </div>
           ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b">
-                    <tr>
-                      {[
-                        "id",
-                        "user",
-                        "event",
-                        "ticket_quantity",
-                        "price_per_ticket",
-                        "Total_Price",
-                        "status",
-                        "purchased_at",
-                      ].map((col) => (
-                        <th
-                          key={col}
-                          className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
-                          onClick={() => handleSort(col)}
-                        >
-                          {col.replace("_", " ").toUpperCase()}
-                          {sortBy === col && (
-                            <span className="ml-1">
-                              {sortOrder === "asc" ? "↑" : "↓"}
-                            </span>
-                          )}
-                        </th>
-                      ))}
-                      
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {filteredTickets.map((ticket) => (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b">
+                  <tr>
+                    {[
+                      "ID",
+                      "User",
+                      "Event",
+                      "Quantity",
+                      "Price per Ticket",
+                      "Total Price",
+                      "Status",
+                      "Purchased At",
+                      "Actions",
+                    ].map((heading, i) => (
+                      <th
+                        key={i}
+                        className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase"
+                      >
+                        {heading}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {isLoading ? (
+                    <TableRowSkeleton count={4} />
+                  ) : tickets.length > 0 ? (
+                    tickets.map((ticket) => (
                       <tr key={ticket.id} className="hover:bg-gray-50">
-                        <Link to={`/admin/tickets/${ticket.id}`}>
-                          <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                            #{ticket.id}
-                          </td>
-                        </Link>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          {ticket.user.name}
-                           
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          #{ticket.id}
                         </td>
-                       
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          {ticket.ticket_category.event.title}
+                          {ticket.user?.name || "N/A"}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          {ticket.ticket_category?.event?.title || "N/A"}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
                           {ticket.quantity}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          {ticket.ticket_category.price}
+                          ${ticket.ticket_category?.price || 0}
                         </td>
-                        <td className="px-6 py-4 text-sm">
-                         ${ticket.quantity * ticket.ticket_category.price }
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          $
+                          {(
+                            ticket.quantity *
+                            (ticket.ticket_category?.price || 0)
+                          ).toFixed(2)}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-500">
                           {getStatusBadge(ticket.status)}
@@ -238,25 +239,114 @@ export const TicketsList = () => {
                         <td className="px-6 py-4 text-sm text-gray-500">
                           {formatDate(ticket.created_at)}
                         </td>
-                      
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex gap-2 justify-center">
+                            <Link
+                              to={`/admin/tickets/${ticket.id}`}
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                            >
+                              <Eye size={16} />
+                            </Link>
+                            <Link
+                              to={`/admin/ticket-edit/${ticket.id}`}
+                              className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
+                            >
+                              <Edit size={16} />
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteClick(ticket.id)}
+                              className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded"
+                              disabled={isDeleting}
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {filteredTickets.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-gray-500">
-                    No tickets found matching your criteria.
-                  </p>
-                </div>
-              )}
-            </>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="9"
+                        className="text-center py-12 text-gray-500"
+                      >
+                        No tickets found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
+
+        {/* Pagination */}
+        {lastPage > 1 && (
+          <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.max(1, currentPage - 1),
+                }))
+              }
+              disabled={currentPage === 1}
+              className={`px-4 py-2 text-sm rounded-md border transition ${
+                currentPage === 1
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                  : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+              }`}
+            >
+              Previous
+            </button>
+
+            {[...Array(lastPage)].map((_, idx) => {
+              const pageNum = idx + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() =>
+                    setConfigPage((prev) => ({ ...prev, page: pageNum }))
+                  }
+                  className={`px-4 py-2 text-sm rounded-md border transition ${
+                    pageNum === currentPage
+                      ? "bg-amber-600 text-white border-amber-600"
+                      : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() =>
+                setConfigPage((prev) => ({
+                  ...prev,
+                  page: Math.min(lastPage, currentPage + 1),
+                }))
+              }
+              disabled={currentPage === lastPage}
+              className={`px-4 py-2 text-sm rounded-md border transition ${
+                currentPage === lastPage
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                  : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
+
+        <ConfirmModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={confirmDelete}
+          message="Are you sure you want to delete this ticket?"
+        />
       </div>
     </div>
   );
 };
 
-export default TicketsList;
+export default AllTicketsList;
