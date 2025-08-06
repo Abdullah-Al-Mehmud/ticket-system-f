@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useGetEventByIdQuery } from "../../../../redux/features/event/EventApiSlice";
 import PageLoading from "../../../../components/LoaderComponent/PageLoading";
 import exportToPDF from "../../../../../utils/exportToPDF";
+import { Download } from "lucide-react";
 
 const TicketList = () => {
   const { id } = useParams();
@@ -64,18 +65,10 @@ const TicketList = () => {
 
         <button
           onClick={handlePDFExport}
-          className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-5 py-2.5 rounded-xl shadow-md transition duration-200"
+          className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-all duration-200 transform hover:-translate-y-0.5"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 5v14m7-7H5" />
-          </svg>
-          Export PDF
+          <Download className="w-4 h-4" />
+          Export pdf
         </button>
       </div>
 
