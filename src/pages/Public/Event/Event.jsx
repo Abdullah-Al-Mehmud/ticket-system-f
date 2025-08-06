@@ -16,6 +16,7 @@ const Event = () => {
     count: 10,
     search: "",
     category: "",
+    orderbyStatus: true,
   });
   const { data, isFetching, isLoading, isError } =
     useGetEventsQuery(pageConfig);
