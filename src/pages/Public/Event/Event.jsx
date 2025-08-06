@@ -26,7 +26,6 @@ const Event = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-orange-50/20">
-      {/* Hero Section */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-8">
@@ -106,7 +105,6 @@ const Event = () => {
         </div>
       </div>
 
-      {/* Events Section */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {isError && (
           <div className="text-center py-20">
@@ -121,7 +119,6 @@ const Event = () => {
 
         {!isLoading && !isError && (
           <>
-            {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-gray-900">
                 {selectedCategory === ""
