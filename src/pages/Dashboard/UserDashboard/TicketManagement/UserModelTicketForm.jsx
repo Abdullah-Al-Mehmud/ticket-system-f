@@ -127,16 +127,14 @@ function UserModelTicketForm() {
                       <div className="flex-1 p-4 flex flex-col justify-between">
                         {/* Header */}
                         <div className="border-b border-amber-300 border-dashed pb-3 mb-3">
-                          <h3 className="text-sm font-bold text-amber-900 mb-2 line-clamp-3 leading-tight">
+                          
+                          <div className="flex items-start justify-between ">
+                            <h3 className="text-sm font-bold text-amber-900 mb-2 line-clamp-3 leading-tight">
                             {booking?.ticket_category?.event?.title ||
                               "Untitled Event"}
                           </h3>
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs text-amber-700 font-mono">
-                              #{booking.id}
-                            </span>
-                            <span
-                              className={`text-xs px-2 py-1 rounded-full font-bold ${
+                             <span
+                              className={`text-[10px] px-2 py-[2px] rounded-full font-semibold ${
                                 booking.status === "Confirmed"
                                   ? "bg-green-200 text-green-800"
                                   : "bg-gray-200 text-gray-800"
@@ -144,6 +142,14 @@ function UserModelTicketForm() {
                             >
                               {booking.status.toUpperCase()}
                             </span>
+                          </div>
+                          
+
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-amber-700 font-mono">
+                              {booking.ticket_category.name}
+                            </span>
+                           
                           </div>
                         </div>
 
