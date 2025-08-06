@@ -2,8 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetEventByIdQuery } from "../../../../redux/features/event/EventApiSlice";
 import PageLoading from "../../../../components/LoaderComponent/PageLoading";
-import jsPDF from "jspdf";
-import { autoTable } from "jspdf-autotable";
+import exportToPDF from "../../../../../utils/exportToPDF";
 
 const TicketList = () => {
   const { id } = useParams();
@@ -28,12 +27,17 @@ const TicketList = () => {
     }
   };
 
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text(`Ticket List for Event: ${event.title}`, 14, 15);
+  const handlePDFExport = () => {
+    const headers = [
+      "Ticket ID",
+      "User ID",
+      "Category",
+      "Quantity",
+      "Status",
+      "Purchased At",
+    ];
 
-    const tableData = tickets.map((ticket) => [
+    const rows = tickets.map((ticket) => [
       ticket.id,
       ticket.user_id,
       getCategoryName(ticket.ticket_category_id),
@@ -42,34 +46,15 @@ const TicketList = () => {
       formatDate(ticket.created_at),
     ]);
 
-    autoTable(doc, {
-      startY: 25,
-      head: [
-        [
-          "Ticket ID",
-          "User ID",
-          "Category",
-          "Quantity",
-          "Status",
-          "Purchased At",
-        ],
-      ],
-      body: tableData,
-      headStyles: {
-        fillColor: [251, 191, 36],
-        textColor: 0,
-        fontStyle: "bold",
-      },
-      alternateRowStyles: {
-        fillColor: [255, 251, 235],
-      },
-      styles: {
-        fontSize: 10,
-        cellPadding: 4,
-      },
+    exportToPDF({
+      title: `Ticket List for Event: ${event.title}`,
+      subtitle: `Exported on: ${new Date().toLocaleDateString()} | Total Tickets: ${
+        tickets.length
+      }`,
+      headers,
+      rows,
+      fileName: `tickets_event_${event.id}.pdf`,
     });
-
-    doc.save(`tickets_event_${event.id}.pdf`);
   };
 
   return (
@@ -78,7 +63,7 @@ const TicketList = () => {
         <h1 className="text-2xl font-bold text-gray-800">Ticket List</h1>
 
         <button
-          onClick={exportToPDF}
+          onClick={handlePDFExport}
           className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-5 py-2.5 rounded-xl shadow-md transition duration-200"
         >
           <svg
