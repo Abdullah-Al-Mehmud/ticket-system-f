@@ -17,6 +17,7 @@ import { useGetEventByIdQuery } from "../../../redux/features/event/EventApiSlic
 import { useCreateTicketMutation } from "../../../redux/features/tickets/ticketsApiSlice";
 import toast from "react-hot-toast";
 import PageLoading from "../../../components/LoaderComponent/PageLoading";
+import BookingModal from "./BookingModal";
 
 const EventDetailsPage = () => {
   const { id } = useParams();
@@ -379,35 +380,14 @@ const EventDetailsPage = () => {
       </div>
 
       {/* Modal */}
-      {showBookingModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none   bg-opacity-30">
-          <div className="absolute inset-0 bg-black opacity-50 rounded-2xl pointer-events-auto -z-10"></div>
-          <div className="bg-white rounded-2xl p-8 w-full max-w-md  pointer-events-auto">
-            <h3 className="text-2xl font-bold mb-4">Booking Confirmation</h3>
-            <p className="mb-6 text-gray-600">
-              You're about to book <strong>{getTotalTickets()}</strong>{" "}
-              ticket(s) for
-              <strong> ${getTotalAmount().toFixed(2)}</strong>.
-            </p>
-
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setShowBookingModal(false)}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-xl"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={handleConfirmBooking}
-                className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700  transition-all duration-200 cursor-pointer  text-white py-3 px-6 rounded-xl"
-              >
-                {bookingLoading ? "Processing..." : "Confirm"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <BookingModal
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        onConfirm={handleConfirmBooking}
+        totalTickets={getTotalTickets()}
+        totalAmount={getTotalAmount()}
+        isLoading={bookingLoading}
+      />
     </div>
   );
 };
