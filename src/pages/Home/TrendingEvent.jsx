@@ -1,10 +1,7 @@
-import React, { useState } from "react";
-import { Calendar, MapPin, Clock, CalendarDays } from "lucide-react";
-import { Link } from "react-router-dom";
+import React from "react";
+import {  CalendarDays } from "lucide-react";
 import { useGetEventsQuery } from "../../redux/features/event/EventApiSlice";
-import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
-import { Skeleton } from "../../components/ui/skeleton";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 import EventCardLoadingSkeleton from "../../components/LoaderComponent/EventCardLoadingSkeleton";
 import EventCard from "../../pages/Public/Event/EventCard";
