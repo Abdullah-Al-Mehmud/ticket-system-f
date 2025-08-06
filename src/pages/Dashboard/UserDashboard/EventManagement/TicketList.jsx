@@ -65,7 +65,7 @@ const TicketList = () => {
 
         <button
           onClick={handlePDFExport}
-          className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-all duration-200 transform hover:-translate-y-0.5"
+          className="inline-flex items-center gap-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-amber-700 text-white font-medium px-4 py-2 rounded-lg text-sm transition-all duration-200 transform hover:-translate-y-0.5"
         >
           <Download className="w-4 h-4" />
           Export pdf
