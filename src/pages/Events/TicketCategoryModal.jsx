@@ -93,7 +93,7 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
     <div className="fixed inset-0   flex justify-center items-center z-50 p-4 animate-in fade-in duration-300">
       <div className="bg-white rounded-2xl w-full max-w-lg transform animate-in slide-in-from-bottom-4 duration-500 ">
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-orange-600 via-orange-600 to-orange-600 p-6 rounded-t-2xl">
+        <div className="relative bg-gradient-to-r from-amber-600 via-amber-600 to-amber-600 p-6 rounded-t-2xl">
           <div className="absolute inset-0 bg-opacity-10 rounded-t-2xl"></div>
           <div className="relative flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -127,7 +127,7 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="e.g., VIP, General"
-                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:border-transparent focus:bg-white"
+                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:bg-white"
                 required
               />
             </div>
@@ -147,7 +147,7 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
                   onChange={handleChange}
                   type="number"
                   placeholder="100"
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:border-transparent focus:bg-white"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:bg-white"
                   required
                 />
               </div>
@@ -165,7 +165,7 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
                   onChange={handleChange}
                   type="number"
                   placeholder="0"
-                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-orange-500 focus:border-transparent focus:bg-white"
+                  className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:bg-white"
                 />
               </div>
             </div>
@@ -241,7 +241,7 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-gradient-to-r from-green-400 to-orange-500 h-2 rounded-full transition-all duration-500"
+                  className="bg-gradient-to-r from-green-400 to-amber-500 h-2 rounded-full transition-all duration-500"
                   style={{
                     width: `${Math.min(
                       (form.sold_quantity / form.total_quantity) * 100,
@@ -264,7 +264,7 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
             </button>
             <button
               type="submit"
-              className="px-8 py-3 bg-gradient-to-r from-orange-600 to-orange-600 hover:from-orange-700 hover:to-orange-700 text-white rounded-xl transition-all duration-200 font-medium transform hover:scale-105"
+              className="px-8 py-3 bg-gradient-to-r from-amber-600 to-amber-600 hover:from-amber-700 hover:to-amber-700 text-white rounded-xl transition-all duration-200 font-medium transform hover:scale-105"
             >
               {initialData ? "Update Category" : "Create Category"}
             </button>
