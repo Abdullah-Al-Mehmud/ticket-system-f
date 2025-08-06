@@ -114,10 +114,6 @@ const UserList = () => {
           </Link>
         </div>
 
-        {/* <div className="mb-6 px-6">
-          <AdminDashboard />
-        </div> */}
-
         {/* Search & Filter */}
         <div className="bg-white rounded-lg border p-6 mb-6">
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -165,7 +161,7 @@ const UserList = () => {
                   page: 1,
                 }));
               }}
-              className="w-full sm:w-48 px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full sm:w-48 px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
             >
               <option value="">All Roles</option>
               <option value="admin">Admin</option>
