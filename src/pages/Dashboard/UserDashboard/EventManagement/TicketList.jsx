@@ -2,6 +2,8 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetEventByIdQuery } from "../../../../redux/features/event/EventApiSlice";
 import PageLoading from "../../../../components/LoaderComponent/PageLoading";
+import jsPDF from "jspdf";
+import { autoTable } from "jspdf-autotable";
 
 const TicketList = () => {
   const { id } = useParams();
@@ -17,6 +19,7 @@ const TicketList = () => {
     const category = ticketCategories.find((c) => c.id === catId);
     return category ? category.name : "Unknown Category";
   };
+
   const formatDate = (dateStr) => {
     try {
       return new Date(dateStr).toLocaleString();
@@ -25,9 +28,71 @@ const TicketList = () => {
     }
   };
 
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text(`Ticket List for Event: ${event.title}`, 14, 15);
+
+    const tableData = tickets.map((ticket) => [
+      ticket.id,
+      ticket.user_id,
+      getCategoryName(ticket.ticket_category_id),
+      ticket.quantity,
+      ticket.status,
+      formatDate(ticket.created_at),
+    ]);
+
+    autoTable(doc, {
+      startY: 25,
+      head: [
+        [
+          "Ticket ID",
+          "User ID",
+          "Category",
+          "Quantity",
+          "Status",
+          "Purchased At",
+        ],
+      ],
+      body: tableData,
+      headStyles: {
+        fillColor: [251, 191, 36],
+        textColor: 0,
+        fontStyle: "bold",
+      },
+      alternateRowStyles: {
+        fillColor: [255, 251, 235],
+      },
+      styles: {
+        fontSize: 10,
+        cellPadding: 4,
+      },
+    });
+
+    doc.save(`tickets_event_${event.id}.pdf`);
+  };
+
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Ticket List</h1>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <h1 className="text-2xl font-bold text-gray-800">Ticket List</h1>
+
+        <button
+          onClick={exportToPDF}
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium px-5 py-2.5 rounded-xl shadow-md transition duration-200"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 5v14m7-7H5" />
+          </svg>
+          Export PDF
+        </button>
+      </div>
 
       {tickets.length === 0 ? (
         <p className="text-gray-600 text-center">
