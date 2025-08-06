@@ -493,7 +493,7 @@ const EventDetailsAdmin = () => {
                     {event.image_url ? (
                       <>
                         <img
-                          src={event.image_url}
+                          src={import.meta.env.VITE_IMG_URL+"/" + event.image_url}
                           alt={event.title}
                           className="rounded-lg object-cover w-full aspect-w-16 aspect-h-9"
                           onError={(e) => {
