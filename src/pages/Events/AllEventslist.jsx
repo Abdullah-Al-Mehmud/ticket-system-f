@@ -139,7 +139,7 @@ const AllEventsList = () => {
                     page: 1,
                   }))
                 }
-                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1"
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium"
               >
                 Search
               </button>
@@ -161,41 +161,25 @@ const AllEventsList = () => {
               </button>
             </div>
 
-            <div className="flex gap-2 flex-wrap">
-              <select
-                value={status}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setStatus(value);
-                  setConfigPage((prev) => ({
-                    ...prev,
-                    status: value,
-                    page: 1,
-                  }));
-                }}
-                className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="">All Status</option>
-                <option value="Upcoming">Upcoming</option>
-                <option value="Live">Live</option>
-                <option value="Done">Done</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-
-              {/* <select
-                value={configPage.category}
-                onChange={(e) =>
-                  setConfigPage((prev) => ({
-                    ...prev,
-                    category: e.target.value,
-                    page: 1,
-                  }))
-                }
-                className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="">All Categories</option>
-              </select> */}
-            </div>
+            <select
+              value={status}
+              onChange={(e) => {
+                const value = e.target.value;
+                setStatus(value);
+                setConfigPage((prev) => ({
+                  ...prev,
+                  status: value,
+                  page: 1,
+                }));
+              }}
+              className="w-full sm:w-48 px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
+              <option value="">All Status</option>
+              <option value="Upcoming">Upcoming</option>
+              <option value="Live">Live</option>
+              <option value="Done">Done</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
           </div>
         </div>
 
