@@ -165,6 +165,7 @@ const AllTicketsList = () => {
               className="w-full sm:w-48 px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
             >
               <option value="">All Status</option>
+              <option value="confirmed">Confirmed</option>
               <option value="booked">Booked</option>
               <option value="refunded">Refunded</option>
               <option value="canceled">Canceled</option>
