@@ -212,52 +212,67 @@ const EventDetailsPage = () => {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl  p-8 sticky top-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                <Ticket className="w-6 h-6 mr-2 text-purple-500" />
+                <Ticket className="w-6 h-6 mr-2 text-amber-500" />
                 Select Tickets
               </h2>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {eventData.ticket_categories.map((ticket) => {
                   const available =
                     ticket.total_quantity - ticket.sold_quantity;
                   return (
-                    <div key={ticket.id} className="border rounded-xl p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="font-semibold text-gray-800">
+                    <div
+                      key={ticket.id}
+                      className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-gray-900 mb-1">
                             {ticket.name}
                           </h3>
-                          <p className="text-2xl font-bold text-purple-600">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <span className="text-sm text-gray-500 bg-gray-50 px-2 py-1 rounded-md">
+                              {available} available
+                            </span>
+                          </div>
+                          <p className="text-2xl font-bold text-amber-600">
                             ${parseFloat(ticket.price).toFixed(2)}
                           </p>
                         </div>
-                        <span className="text-sm text-gray-500">
-                          {available} available
-                        </span>
                       </div>
+
                       {isTicketAvailable(ticket) ? (
-                        <div className="flex items-center space-x-3">
-                          <button
-                            onClick={() => updateQuantity(ticket.id, -1)}
-                            className="w-8 h-8 rounded-full bg-orange-200 hover:bg-orange-300 flex items-center justify-center"
-                            disabled={!ticketQuantities[ticket.id]}
-                          >
-                            <Minus className="w-4 h-4 text-orange-700" />
-                          </button>
-                          <span className="w-8 text-center font-semibold text-orange-800">
-                            {ticketQuantities[ticket.id] || 0}
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-gray-700">
+                            Quantity:
                           </span>
-                          <button
-                            onClick={() => updateQuantity(ticket.id, 1)}
-                            className="w-8 h-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center"
-                            disabled={(ticketQuantities[ticket.id] || 0) >= 10}
-                          >
-                            <Plus className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center space-x-4 bg-gray-50 rounded-lg p-2">
+                            <button
+                              onClick={() => updateQuantity(ticket.id, -1)}
+                              className="w-9 h-9 rounded-lg bg-white border border-gray-300 hover:border-amber-300 hover:bg-amber-50 flex items-center justify-center transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300"
+                              disabled={!ticketQuantities[ticket.id]}
+                            >
+                              <Minus className="w-4 h-4 text-gray-600" />
+                            </button>
+                            <span className="w-8 text-center font-semibold text-gray-900 text-lg min-w-[2rem]">
+                              {ticketQuantities[ticket.id] || 0}
+                            </span>
+                            <button
+                              onClick={() => updateQuantity(ticket.id, 1)}
+                              className="w-9 h-9 rounded-lg bg-amber-600 hover:bg-amber-700 text-white flex items-center justify-center transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-600"
+                              disabled={
+                                (ticketQuantities[ticket.id] || 0) >= 10
+                              }
+                            >
+                              <Plus className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       ) : (
-                        <div className="text-red-500 font-medium text-center">
-                          Not Available
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                          <span className="text-red-600 font-medium text-sm">
+                            Currently Unavailable
+                          </span>
                         </div>
                       )}
                     </div>
@@ -271,7 +286,7 @@ const EventDetailsPage = () => {
                     <span className="font-semibold">
                       Total ({getTotalTickets()} tickets)
                     </span>
-                    <span className="text-2xl font-bold text-purple-600">
+                    <span className="text-2xl font-bold text-amber-600">
                       ${getTotalAmount().toFixed(2)}
                     </span>
                   </div>
@@ -291,7 +306,8 @@ const EventDetailsPage = () => {
 
       {/* Modal */}
       {showBookingModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none backdrop-blur-sm  bg-opacity-30">
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none   bg-opacity-30">
+          <div className="absolute inset-0 bg-black opacity-50 rounded-2xl pointer-events-auto -z-10"></div>
           <div className="bg-white rounded-2xl p-8 w-full max-w-md  pointer-events-auto">
             <h3 className="text-2xl font-bold mb-4">Booking Confirmation</h3>
             <p className="mb-6 text-gray-600">
@@ -310,7 +326,7 @@ const EventDetailsPage = () => {
 
               <button
                 onClick={handleConfirmBooking}
-                className="flex-1 bg-gradient-to-r from-orange-500 to-blue-500 hover:from-orange-600 hover:to-orange-600 text-white py-3 px-6 rounded-xl"
+                className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700  transition-all duration-200 cursor-pointer  text-white py-3 px-6 rounded-xl"
               >
                 {bookingLoading ? "Processing..." : "Confirm"}
               </button>
