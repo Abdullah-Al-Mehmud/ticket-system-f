@@ -529,6 +529,9 @@ const EventDetailsAdmin = () => {
                               <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                                 Email
                               </th>
+                              <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
+                                Action
+                              </th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-100">
@@ -543,6 +546,11 @@ const EventDetailsAdmin = () => {
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-700">
                                   {org.email}
+                                </td>
+                                <td className="px-6 py-1 text-sm text-gray-700">
+                                  <Link to={`/admin/user-profile/${org.id}`}>
+                                    <Eye size={16} className="hover:text-amber-600"/>
+                                  </Link>
                                 </td>
                               </tr>
                             ))}
