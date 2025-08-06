@@ -47,7 +47,7 @@ const Event = () => {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 placeholder="Search events title..."
-                className="pl-12 pr-4 py-4 text-base border-gray-200 focus:border-amber-500 focus:ring-amber-500 rounded-xl shadow-sm"
+                className="pl-12 pr-4 py-6 text-base border-gray-200 focus:border-amber-500 focus:ring-amber-500 rounded-xl shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -58,7 +58,7 @@ const Event = () => {
                     search: searchTerm,
                   }))
                 }
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-amber-500 text-white px-3 py-1 rounded-md text-sm hover:bg-amber-600"
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white  transition-all duration-200 cursor-pointer px-3 py-[11px] text-lg  rounded-r-xl font-medium"
               >
                 Search
               </button>
