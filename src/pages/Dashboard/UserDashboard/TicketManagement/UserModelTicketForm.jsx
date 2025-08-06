@@ -147,7 +147,8 @@ function UserModelTicketForm() {
 
                           <div className="flex justify-between items-center">
                             <span className="text-xs text-amber-700 font-mono">
-                              {booking.ticket_category.name}
+                              {booking?.ticket_category?.name ||
+                                ""}
                             </span>
                            
                           </div>
