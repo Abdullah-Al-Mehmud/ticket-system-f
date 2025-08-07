@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 // Layouts
-import Layout from "./components/Layout";
+import Layout from "./Layout/Layout";
 import AdminLayout from "./Layout/AdminLayout";
 
 // Auth wrappers
@@ -12,10 +12,11 @@ import PageLoading from "./components/LoaderComponent/PageLoading";
 
 
 // Lazy-loaded pages
-const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./pages/Public/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
-const Contact = lazy(() => import("./pages/Contact"));
+const Contact = lazy(() => import("./pages/Public/Contact/Contact"));
+const About = lazy(() => import("./pages/Public/About/About"));
 const Event = lazy(() => import("./pages/Public/Event/Event"));
 const EventDetails = lazy(() => import("./pages/Public/Event/EventDetails"));
 
@@ -66,6 +67,7 @@ function App() {
           <Route path="event" element={<Event />} />
           <Route path="event-details/:id" element={<EventDetails />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="about" element={<About />} />
 
           <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
