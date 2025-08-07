@@ -261,10 +261,10 @@ const EventDetailsAdmin = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="bg-white shadow-sm border-b">
+        <div className="bg-white rounded-lg ">
+          <div className="bg-white  border-b">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+              <div className="flex justify-between items-center py-4  border-gray-200">
                 {/* Navigation Tabs - Left Side */}
                 <nav className="flex space-x-8 -mb-px">
                   {[
@@ -277,7 +277,7 @@ const EventDetailsAdmin = () => {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
                         activeTab === tab.id
-                          ? "border-blue-500 text-blue-600"
+                          ? "border-amber-500 text-amber-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                       }`}
                     >
@@ -519,7 +519,7 @@ const EventDetailsAdmin = () => {
                     </h3>
 
                     {event.organizers.length > 0 ? (
-                      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                      <div className="bg-white rounded-2xl  border border-gray-100 overflow-hidden">
                         <table className="min-w-full divide-y divide-gray-200">
                           <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                             <tr>
