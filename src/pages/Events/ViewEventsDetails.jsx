@@ -783,7 +783,7 @@ const EventDetailsAdmin = () => {
                     </select>
                     <button
                       onClick={handleStatusUpdate}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
                     >
                       Update Status
                     </button>
