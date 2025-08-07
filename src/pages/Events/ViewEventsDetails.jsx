@@ -65,7 +65,6 @@ const EventDetailsAdmin = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  console.log(showModal);
 
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
