@@ -8,7 +8,6 @@ import {
   Eye,
   Users,
   TrendingUp,
-  DollarSign,
   Settings,
   Edit,
   Trash2,
@@ -66,7 +65,6 @@ const EventDetailsAdmin = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  console.log(showModal);
 
   const event = data?.data;
   const [activeTab, setActiveTab] = useState("overview");
@@ -149,7 +147,7 @@ const EventDetailsAdmin = () => {
     setIsModalOpenDelete(true);
   };
 
-  const confiramDelete = async () => {
+  const confirmDelete = async () => {
     if (!userToDelete) return;
     await handleDeleteCategory(userToDelete);
     setIsModalOpenDelete(false);
@@ -241,11 +239,11 @@ const EventDetailsAdmin = () => {
             </div>
           </div>
           <div className="bg-white rounded-lg shadow p-6 flex items-center">
-            <DollarSign className="h-8 w-8 text-yellow-600" />
+            <span className="h-8 w-8 text-amber-600 text-3xl font-bold">৳</span>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">Revenue</p>
               <p className="text-2xl font-semibold text-gray-900">
-                ${totalRevenue.toFixed(2)}
+                {totalRevenue.toFixed(2)}
               </p>
             </div>
           </div>
@@ -263,10 +261,10 @@ const EventDetailsAdmin = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="bg-white shadow-sm border-b">
+        <div className="bg-white rounded-lg ">
+          <div className="bg-white  border-b">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between items-center py-4 border-b border-gray-200">
+              <div className="flex justify-between items-center py-4  border-gray-200">
                 {/* Navigation Tabs - Left Side */}
                 <nav className="flex space-x-8 -mb-px">
                   {[
@@ -279,7 +277,7 @@ const EventDetailsAdmin = () => {
                       onClick={() => setActiveTab(tab.id)}
                       className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
                         activeTab === tab.id
-                          ? "border-blue-500 text-blue-600"
+                          ? "border-amber-500 text-amber-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                       }`}
                     >
@@ -493,7 +491,9 @@ const EventDetailsAdmin = () => {
                     {event.image_url ? (
                       <>
                         <img
-                          src={import.meta.env.VITE_IMG_URL+"/" + event.image_url}
+                          src={
+                            import.meta.env.VITE_IMG_URL + "/" + event.image_url
+                          }
                           alt={event.title}
                           className="rounded-lg object-cover w-full aspect-w-16 aspect-h-9"
                           onError={(e) => {
@@ -503,7 +503,7 @@ const EventDetailsAdmin = () => {
                             ).style.display = "flex";
                           }}
                         />
-                        <div className="fallback-banner hidden h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <div className="fallback-banner hidden h-48 bg-gray-200 rounded-lg items-center justify-center">
                           <p className="text-gray-500">TapKori</p>
                         </div>
                       </>
@@ -519,7 +519,7 @@ const EventDetailsAdmin = () => {
                     </h3>
 
                     {event.organizers.length > 0 ? (
-                      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                      <div className="bg-white rounded-2xl  border border-gray-100 overflow-hidden">
                         <table className="min-w-full divide-y divide-gray-200">
                           <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                             <tr>
@@ -549,7 +549,10 @@ const EventDetailsAdmin = () => {
                                 </td>
                                 <td className="px-6 py-1 text-sm text-gray-700">
                                   <Link to={`/admin/user-profile/${org.id}`}>
-                                    <Eye size={16} className="hover:text-amber-600"/>
+                                    <Eye
+                                      size={16}
+                                      className="hover:text-amber-600"
+                                    />
                                   </Link>
                                 </td>
                               </tr>
@@ -671,7 +674,7 @@ const EventDetailsAdmin = () => {
 
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className="text-lg font-semibold text-amber-600">
-                                  ${t.price}
+                                  ৳{t.price}
                                 </span>
                               </td>
 
@@ -703,7 +706,7 @@ const EventDetailsAdmin = () => {
 
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className="text-sm font-semibold text-amber-600">
-                                  ${revenue}
+                                  ৳{revenue}
                                 </span>
                               </td>
 
@@ -746,7 +749,7 @@ const EventDetailsAdmin = () => {
                 <ConfirmModal
                   isOpen={isModalOpenDelete}
                   onClose={closeModal}
-                  onConfirm={confiramDelete}
+                  onConfirm={confirmDelete}
                   message="Are you sure you want to delete this Ticket Categories ?"
                 />
               </div>
@@ -780,7 +783,7 @@ const EventDetailsAdmin = () => {
                     </select>
                     <button
                       onClick={handleStatusUpdate}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
                     >
                       Update Status
                     </button>

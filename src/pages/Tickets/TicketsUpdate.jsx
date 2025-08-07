@@ -1,44 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-
 import {
-  useUpdateTicketMutation,
   useGetTicketByIdQuery,
+  useUpdateTicketMutation,
 } from "../../redux/features/tickets/ticketsApiSlice";
-import { useGetEventsQuery } from "../../redux/features/event/EventApiSlice";
-
+import { useGetTicketCategoriesQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
 const TicketsUpdate = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Ticket ID
+  const { id } = useParams();
 
   const [formData, setFormData] = useState({
-    event_id: "",
-    ticket_quantity: 1,
-    status: "booked",
+    ticket_category_id: "",
+    quantity: 1,
+    status: "Confirmed",
   });
 
-  // Fetch ticket by ID
   const { data: ticketData, isLoading: loadingTicket } =
     useGetTicketByIdQuery(id);
+  const { data: categoriesData, isLoading: loadingCategories } =
+    useGetTicketCategoriesQuery({ all: true });
   const [updateTicket, { isLoading }] = useUpdateTicketMutation();
 
-  // Fetch events
-  const { data: eventsData, isLoading: eventsLoading } = useGetEventsQuery();
-
-  // Prefill form when ticket data arrives
   useEffect(() => {
     if (ticketData?.data) {
-      const { event_id, ticket_quantity, status } = ticketData.data;
+      const { ticket_category_id, quantity, status } = ticketData.data;
       setFormData({
-        event_id: event_id ?? "",
-        ticket_quantity: ticket_quantity ?? 1,
-        status: status ?? "booked",
+        ticket_category_id: ticket_category_id ?? "",
+        quantity: quantity ?? 1,
+        status: status ?? "Confirmed",
       });
     }
   }, [ticketData]);
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -47,15 +41,14 @@ const TicketsUpdate = () => {
     }));
   };
 
-  // Submit updated data
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await updateTicket({
         id,
         ...formData,
-        event_id: Number(formData.event_id),
-        ticket_quantity: Number(formData.ticket_quantity),
+        ticket_category_id: Number(formData.ticket_category_id),
+        quantity: Number(formData.quantity),
       }).unwrap();
 
       toast.success(res.message || "Ticket updated successfully!");
@@ -70,81 +63,72 @@ const TicketsUpdate = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm border p-6">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-          Update Ticket
-        </h2>
+      <div className="max-w-3xl mx-auto bg-white rounded-lg p-6">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">Update Ticket</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Event Dropdown */}
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Event <span className="text-red-500">*</span>
+              Ticket Category
             </label>
             <select
-              name="event_id"
-              value={formData.event_id}
+              name="ticket_category_id"
+              value={formData.ticket_category_id}
               onChange={handleChange}
               required
-              disabled={eventsLoading}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              disabled={loadingCategories}
+              className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-amber-500 focus:border-amber-500 disabled:bg-gray-100"
             >
-              <option value="">Select an event</option>
-              {eventsLoading ? (
-                <option>Loading events...</option>
-              ) : (
-                eventsData?.data?.map((event) => (
-                  <option key={event.id} value={event.id}>
-                    {event.title} (
-                    {new Date(event.start_date).toLocaleDateString()})
-                  </option>
-                ))
-              )}
+              <option value="">Select Category</option>
+              {categoriesData?.data?.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name} (৳{cat.price})
+                </option>
+              ))}
             </select>
           </div>
 
-          {/* Quantity Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Ticket Quantity <span className="text-red-500">*</span>
+              Quantity
             </label>
             <input
               type="number"
-              name="ticket_quantity"
+              name="quantity"
               min="1"
-              value={formData.ticket_quantity}
+              value={formData.quantity}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 px-4 py-3 rounded-lg  focus:ring-amber-500 focus:border-amber-500"
             />
           </div>
 
-          {/* Status Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Status <span className="text-red-500">*</span>
+              Status
             </label>
             <select
               name="status"
               value={formData.status}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-amber-500 focus:border-amber-500"
             >
-              <option value="booked">Booked</option>
-              <option value="canceled">Canceled</option>
-              <option value="refunded">Refunded</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Refunded">Refunded</option>
             </select>
           </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isLoading ? "Updating..." : "Update Ticket"}
-          </button>
+          <div className="pt-4">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-amber-600 to-amber-600 text-white text-lg font-semibold py-3 rounded-lg hover:from-amber-700 hover:to-amber-700 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {isLoading ? "Updating..." : "Update Ticket"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

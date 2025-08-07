@@ -2,20 +2,26 @@ import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 // Layouts
-import Layout from "./components/Layout";
+import Layout from "./Layout/Layout";
 import AdminLayout from "./Layout/AdminLayout";
 
 // Auth wrappers
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import PageLoading from "./components/LoaderComponent/PageLoading";
-
+import TermsOfService from "./pages/Public/Support/TermsOfService";
+import RefundPolicy from "./pages/Public/Support/RefundPolicy";
+import HelpCenter from "./pages/Public/Support/HelpCenter";
+import Careers from "./pages/Public/Company/Careers";
+import Press from "./pages/Public/Company/Press";
+import PrivacyPolicy from "./pages/Public/Company/PrivacyPolicy";
 
 // Lazy-loaded pages
-const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./pages/Public/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
-const Contact = lazy(() => import("./pages/Contact"));
+const Contact = lazy(() => import("./pages/Public/Contact/Contact"));
+const About = lazy(() => import("./pages/Public/About/About"));
 const Event = lazy(() => import("./pages/Public/Event/Event"));
 const EventDetails = lazy(() => import("./pages/Public/Event/EventDetails"));
 
@@ -29,32 +35,60 @@ const UserEditForm = lazy(() => import("./pages/User/UserEditForm"));
 
 const CategoriesList = lazy(() => import("./pages/Categories/CategoriesList"));
 const CategoryForm = lazy(() => import("./pages/Categories/CategoryForm"));
-const ViewCategoryDetails = lazy(() => import("./pages/Categories/ViewCategoryDetails"));
+const ViewCategoryDetails = lazy(() =>
+  import("./pages/Categories/ViewCategoryDetails")
+);
 const CategoryUpdate = lazy(() => import("./pages/Categories/CategoryUpdate"));
 
 const AllEventslist = lazy(() => import("./pages/Events/AllEventslist"));
 const EventForm = lazy(() => import("./pages/Events/EventForm"));
-const ViewEventsDetails = lazy(() => import("./pages/Events/ViewEventsDetails"));
+const ViewEventsDetails = lazy(() =>
+  import("./pages/Events/ViewEventsDetails")
+);
 const EventEditForm = lazy(() => import("./pages/Events/EventEditForm"));
 
 const TicketsList = lazy(() => import("./pages/Tickets/TicketsList"));
 const TicketsForm = lazy(() => import("./pages/Tickets/TicketsForm"));
 const TicketsUpdate = lazy(() => import("./pages/Tickets/TicketsUpdate"));
-const ViewTicketsDetails = lazy(() => import("./pages/Tickets/ViewTicketsDetails"));
+const ViewTicketsDetails = lazy(() =>
+  import("./pages/Tickets/ViewTicketsDetails")
+);
 
-const TicketCategories = lazy(() => import("./pages/TicketCategories/TicketCategories"));
-const TicketCategoriesDetails = lazy(() => import("./pages/TicketCategories/TicketCategoriesDetails"));
-const TicketCategoriesUpdate = lazy(() => import("./pages/TicketCategories/TicketCategoriesUpdate"));
+const TicketCategories = lazy(() =>
+  import("./pages/TicketCategories/TicketCategories")
+);
+const TicketCategoriesDetails = lazy(() =>
+  import("./pages/TicketCategories/TicketCategoriesDetails")
+);
+const TicketCategoriesUpdate = lazy(() =>
+  import("./pages/TicketCategories/TicketCategoriesUpdate")
+);
 
-const UserDashboard = lazy(() => import("./pages/Dashboard/UserDashboard/UserDashboard"));
-const UserViewTicket = lazy(() => import("./pages/Dashboard/UserDashboard/TicketManagement/UserViewTicket"));
+const UserDashboard = lazy(() =>
+  import("./pages/Dashboard/UserDashboard/UserDashboard")
+);
+const UserViewTicket = lazy(() =>
+  import("./pages/Dashboard/UserDashboard/TicketManagement/UserViewTicket")
+);
 
-const OrganizerDashboard = lazy(() => import("./pages/Dashboard/OrganizerDashboard/OrganizerDashboard"));
-const EventManagement = lazy(() => import("./pages/Dashboard/OrganizerDashboard/EventManagement"));
-const CreateEventOrganizer = lazy(() => import("./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer"));
-const EventDetailsDetails = lazy(() => import("./pages/Dashboard/OrganizerDashboard/EventDetailsDetails"));
-const SalesOverview = lazy(() => import("./pages/Dashboard/UserDashboard/EventManagement/SalesOverview"));
-const TicketList = lazy(() => import("./pages/Dashboard/UserDashboard/EventManagement/TicketList"));
+const OrganizerDashboard = lazy(() =>
+  import("./pages/Dashboard/OrganizerDashboard/OrganizerDashboard")
+);
+const EventManagement = lazy(() =>
+  import("./pages/Dashboard/OrganizerDashboard/EventManagement")
+);
+const CreateEventOrganizer = lazy(() =>
+  import("./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer")
+);
+const EventDetailsDetails = lazy(() =>
+  import("./pages/Dashboard/OrganizerDashboard/EventDetailsDetails")
+);
+const SalesOverview = lazy(() =>
+  import("./pages/Dashboard/UserDashboard/EventManagement/SalesOverview")
+);
+const TicketList = lazy(() =>
+  import("./pages/Dashboard/UserDashboard/EventManagement/TicketList")
+);
 
 function App() {
   return (
@@ -66,6 +100,14 @@ function App() {
           <Route path="event" element={<Event />} />
           <Route path="event-details/:id" element={<EventDetails />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="about" element={<About />} />
+          <Route path="terms-of-service" element={<TermsOfService />} />
+          <Route path="refund-policy" element={<RefundPolicy />} />
+          <Route path="help-center" element={<HelpCenter />} />
+
+          <Route path="careers" element={<Careers />} />
+          <Route path="press" element={<Press />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
 
           <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
@@ -94,8 +136,14 @@ function App() {
             <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
             <Route path="tickets/:id" element={<ViewTicketsDetails />} />
             <Route path="ticket-categories" element={<TicketCategories />} />
-            <Route path="ticket-categories/:id" element={<TicketCategoriesDetails />} />
-            <Route path="ticket-categories/:id/edit" element={<TicketCategoriesUpdate />} />
+            <Route
+              path="ticket-categories/:id"
+              element={<TicketCategoriesDetails />}
+            />
+            <Route
+              path="ticket-categories/:id/edit"
+              element={<TicketCategoriesUpdate />}
+            />
           </Route>
         </Route>
 
@@ -116,7 +164,10 @@ function App() {
             <Route path="dashboard" element={<OrganizerDashboard />} />
             <Route path="event-management" element={<EventManagement />} />
             <Route path="create-event" element={<CreateEventOrganizer />} />
-            <Route path="events-details/:id" element={<EventDetailsDetails />} />
+            <Route
+              path="events-details/:id"
+              element={<EventDetailsDetails />}
+            />
           </Route>
         </Route>
 

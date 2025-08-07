@@ -9,10 +9,15 @@ import {
   ShoppingCart,
   Plus,
   Minus,
+  Users,
+  Info,
+  ShieldCheck,
 } from "lucide-react";
 import { useGetEventByIdQuery } from "../../../redux/features/event/EventApiSlice";
 import { useCreateTicketMutation } from "../../../redux/features/tickets/ticketsApiSlice";
 import toast from "react-hot-toast";
+import PageLoading from "../../../components/LoaderComponent/PageLoading";
+import BookingModal from "./BookingModal";
 
 const EventDetailsPage = () => {
   const { id } = useParams();
@@ -21,14 +26,26 @@ const EventDetailsPage = () => {
     useCreateTicketMutation();
   const [ticketQuantities, setTicketQuantities] = useState({});
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  if (isLoading) return <div className="text-center p-10">Loading...</div>;
+  const eventData = data?.data;
+  const MAX_LENGTH = 200;
+  const isLongText = eventData?.event_description.length > MAX_LENGTH;
+  const hasOrganizers =
+    eventData?.organizers && eventData?.organizers.length > 0;
+
+  const toggleExpand = () => setIsExpanded((prev) => !prev);
+
+  if (isLoading)
+    return (
+      <div className="text-center p-10">
+        <PageLoading />
+      </div>
+    );
   if (isError || !data?.data)
     return (
       <div className="text-center p-10 text-red-500">Error loading event.</div>
     );
-
-  const eventData = data.data;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -114,7 +131,7 @@ const EventDetailsPage = () => {
       setTicketQuantities({});
       refetch();
     } catch (error) {
-      alert("Booking failed. Please try again.");
+      toast.error("Booking failed. Please try again.");
       console.error("Booking error:", error);
     }
   };
@@ -122,7 +139,6 @@ const EventDetailsPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       <div className="max-w-6xl mx-auto p-6">
-        {/* Header */}
         <div className="bg-white rounded-2xl  overflow-hidden mb-8">
           <div className="relative h-96">
             {eventData.image_url ? (
@@ -170,45 +186,104 @@ const EventDetailsPage = () => {
           </div>
         </div>
 
-        {/* Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white rounded-2xl  p-8">
+            <div className="bg-white rounded-2xl p-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 About This Event
               </h2>
               <p className="text-gray-600 text-lg">
-                {eventData.event_description}
+                {isExpanded || !isLongText
+                  ? eventData.event_description
+                  : `${eventData.event_description.slice(0, MAX_LENGTH)}...`}
               </p>
+              {isLongText && (
+                <button
+                  onClick={toggleExpand}
+                  className="text-amber-600 mt-2 hover:text-amber-800 transition"
+                >
+                  {isExpanded ? "...See less" : "...See more"}
+                </button>
+              )}
             </div>
 
-            <div className="bg-white rounded-2xl  p-8">
+            <div className="bg-white rounded-2xl p-8">
               <h2 className="text-2xl font-bold text-gray-800 mb-6">
                 Event Details
               </h2>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <MapPin className="w-6 h-6 text-blue-500 mr-4" />
+
+              <div className="space-y-5">
+                <div className="flex items-start">
+                  <MapPin className="w-6 h-6 text-blue-500 mr-4 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-800">Location</h3>
                     <p className="text-gray-600">{eventData.location}</p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <User className="w-6 h-6 text-green-500 mr-4" />
+
+                <div className="flex items-start">
+                  <User className="w-6 h-6 text-green-500 mr-4 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-800">
                       Organized by
                     </h3>
-                    <p className="text-gray-600">{eventData.creator.name}</p>
+                    <p className="text-gray-600">{eventData.creator?.name}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <Users className="w-6 h-6 text-purple-500 mr-4 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Additional Organizers
+                    </h3>
+                    {hasOrganizers ? (
+                      <ul className="text-gray-600 list-disc list-inside">
+                        {eventData.organizers.map((org, index) => (
+                          <li key={index}>{org.name}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-600 italic">
+                        No additional organizers
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <Info className="w-6 h-6 text-yellow-500 mr-4 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">Status</h3>
+                    <p
+                      className={`text-sm font-medium px-3 py-1 rounded-full inline-block 
+              ${
+                eventData.status === "Cancelled"
+                  ? "bg-red-100 text-red-700"
+                  : "bg-green-100 text-green-700"
+              }`}
+                    >
+                      {eventData.status}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <ShieldCheck className="w-6 h-6 text-indigo-500 mr-4 mt-1" />
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      Privacy Policy
+                    </h3>
+                    <p className="text-gray-600 whitespace-pre-line">
+                      {eventData.privacy_policy ||
+                        "No privacy policy provided."}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl  p-8 sticky top-6">
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
@@ -223,7 +298,7 @@ const EventDetailsPage = () => {
                   return (
                     <div
                       key={ticket.id}
-                      className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
+                      className="bg-white border border-amber-200 rounded-2xl p-6  duration-200"
                     >
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex-1">
@@ -236,7 +311,7 @@ const EventDetailsPage = () => {
                             </span>
                           </div>
                           <p className="text-2xl font-bold text-amber-600">
-                            ${parseFloat(ticket.price).toFixed(2)}
+                            ৳{parseFloat(ticket.price).toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -287,7 +362,7 @@ const EventDetailsPage = () => {
                       Total ({getTotalTickets()} tickets)
                     </span>
                     <span className="text-2xl font-bold text-amber-600">
-                      ${getTotalAmount().toFixed(2)}
+                      ৳{getTotalAmount().toFixed(2)}
                     </span>
                   </div>
                   <button
@@ -305,35 +380,14 @@ const EventDetailsPage = () => {
       </div>
 
       {/* Modal */}
-      {showBookingModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none   bg-opacity-30">
-          <div className="absolute inset-0 bg-black opacity-50 rounded-2xl pointer-events-auto -z-10"></div>
-          <div className="bg-white rounded-2xl p-8 w-full max-w-md  pointer-events-auto">
-            <h3 className="text-2xl font-bold mb-4">Booking Confirmation</h3>
-            <p className="mb-6 text-gray-600">
-              You're about to book <strong>{getTotalTickets()}</strong>{" "}
-              ticket(s) for
-              <strong> ${getTotalAmount().toFixed(2)}</strong>.
-            </p>
-
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setShowBookingModal(false)}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-xl"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={handleConfirmBooking}
-                className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700  transition-all duration-200 cursor-pointer  text-white py-3 px-6 rounded-xl"
-              >
-                {bookingLoading ? "Processing..." : "Confirm"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <BookingModal
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        onConfirm={handleConfirmBooking}
+        totalTickets={getTotalTickets()}
+        totalAmount={getTotalAmount()}
+        isLoading={bookingLoading}
+      />
     </div>
   );
 };

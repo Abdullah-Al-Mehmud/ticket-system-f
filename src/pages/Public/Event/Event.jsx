@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, Search } from "lucide-react";
@@ -7,8 +7,10 @@ import { useGetCategoriesQuery } from "../../../redux/features/categories/catego
 import EventCard from "./EventCard";
 import EventCardLoadingSkeleton from "../../../components/LoaderComponent/EventCardLoadingSkeleton";
 import CategoryLoadingSkeleton from "../../../components/LoaderComponent/CategoryLoadingSkeleton";
+import { useLocation } from "react-router-dom";
 
 const Event = () => {
+  const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [pageConfig, setPageConfig] = useState({
@@ -16,7 +18,9 @@ const Event = () => {
     count: 10,
     search: "",
     category: "",
+    orderbyStatus: true,
   });
+  const { id } = location.state || {};
   const { data, isFetching, isLoading, isError } =
     useGetEventsQuery(pageConfig);
   const { data: categoryData, isLoading: isLoadingCategory } =
@@ -24,9 +28,17 @@ const Event = () => {
   const events = data?.data ?? [];
   const categories = categoryData?.data ?? [];
 
+  useEffect(() => {
+    if (id) {
+      setSelectedCategory(id);
+      setPageConfig((prev) => ({
+        ...prev,
+        category: id,
+      }));
+    }
+  }, [id]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-orange-50/20">
-      {/* Hero Section */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-8">
@@ -106,7 +118,6 @@ const Event = () => {
         </div>
       </div>
 
-      {/* Events Section */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {isError && (
           <div className="text-center py-20">
@@ -121,7 +132,6 @@ const Event = () => {
 
         {!isLoading && !isError && (
           <>
-            {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-gray-900">
                 {selectedCategory === ""

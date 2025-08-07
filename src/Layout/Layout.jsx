@@ -1,7 +1,8 @@
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import Header from "./Header";
-import Footer from "./Footer";
+
 
 const Layout = () => {
   const [user, setUser] = useState(null);

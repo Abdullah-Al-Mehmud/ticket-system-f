@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, Clock, MapPin, Ticket } from "lucide-react";
 
 const EventCard = ({ event }) => {
   return (
@@ -86,6 +86,14 @@ const EventCard = ({ event }) => {
             <div className="flex items-center text-sm text-slate-600">
               <MapPin className="w-4 h-4 mr-3 text-amber-600 flex-shrink-0" />
               <span className="truncate">{event.location}</span>
+              <Ticket className="w-4 h-4 ml-4 mr-2 text-amber-600" />
+              <span>
+                {event.ticket_categories.length > 0
+                  ? `starting from ৳${Math.min(
+                      ...event.ticket_categories.map((t) => parseFloat(t.price))
+                    ).toFixed(2)}`
+                  : "No tickets available"}
+              </span>
             </div>
           </div>
         </CardContent>

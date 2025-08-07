@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../redux/features/auth/AuthApiSlice";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -43,11 +45,14 @@ const Login = () => {
     setApiError("");
 
     try {
-      const response = await login(formData).unwrap();
+      const response = await login({
+        ...formData,
+        remember: rememberMe,
+      }).unwrap();
 
-      localStorage.setItem("token", JSON.stringify(response.token));
+      // Store user data only (token is in cookie)
       localStorage.setItem("data", JSON.stringify(response.data));
-
+      toast.success(response.message);
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
@@ -61,81 +66,70 @@ const Login = () => {
     }
   };
 
-  // Demo credentials
   const demoCredentials = {
     admin: { email: "admin@gmail.com", password: "password" },
     user: { email: "user@gmail.com", password: "password" },
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow border border-gray-200 p-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded border border-gray-100 p-8 transition-all">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <User className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
-            Welcome Back
-          </h1>
-          <p className="text-gray-500 text-sm">
-            Sign in to your account to continue
-          </p>
+          <h1 className="text-2xl font-bold text-gray-800">Welcome Back</h1>
+          <p className="text-gray-500 text-sm mt-1">Sign in to continue</p>
         </div>
 
-        {/* API error */}
         {apiError && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+          <div className="mb-6 p-3 bg-red-50 border border-red-100 rounded-lg">
             <p className="text-sm text-red-600 text-center">{apiError}</p>
           </div>
         )}
 
-        {/* Form */}
         <div className="space-y-5">
-          {/* Email */}
+          {/* Email Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Mail className="absolute left-3 top-1/2 w-5 h-5 -translate-y-1/2 text-gray-400" />
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter your email"
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+                  errors.email ? "border-red-300" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                placeholder="name@example.com"
               />
             </div>
             {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.email}</p>
             )}
           </div>
 
-          {/* Password */}
+          {/* Password Field */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Lock className="absolute left-3 top-1/2 w-5 h-5 -translate-y-1/2 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-12 py-3 border rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder="Enter your password"
+                className={`w-full pl-10 pr-12 py-3 border rounded-lg ${
+                  errors.password ? "border-red-300" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
               >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
@@ -145,48 +139,47 @@ const Login = () => {
               </button>
             </div>
             {errors.password && (
-              <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.password}</p>
             )}
           </div>
 
-          {/* Remember Me & Forgot password */}
-          <div className="flex items-center justify-between">
-            <label className="flex items-center">
+          {/* Remember Me */}
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
-                className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded border-gray-300 text-amber-600"
               />
-              <span className="ml-2 text-sm text-gray-600">Remember me</span>
+              <span className="text-gray-600">Remember me</span>
             </label>
-            <button
-              type="button"
-              className="text-sm text-amber-600 hover:text-amber-700 transition-colors"
-            >
+            <button className="text-amber-600 hover:text-amber-700 font-medium">
               Forgot password?
             </button>
           </div>
 
-          {/* Demo Login Buttons */}
-          <div className="space-y-3">
+          {/* Demo Access */}
+          <div className="space-y-3 mt-6">
             <div className="text-center">
-              <span className="text-xs text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
+              <span className="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded">
                 Quick Demo Access
               </span>
             </div>
-            <div className="flex justify-between gap-10">
+            <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
                 onClick={() => setFormData(demoCredentials.admin)}
-                className="text-xs w-full bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
+                className="text-xs font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded py-2"
               >
-                Demo Admin
+                Admin Demo
               </button>
               <button
                 type="button"
                 onClick={() => setFormData(demoCredentials.user)}
-                className="text-xs w-full bg-gray-50 hover:bg-gray-100  text-gray-700 px-3 py-2 rounded-md border border-gray-200 transition-colors"
+                className="text-xs font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded py-2"
               >
-                Demo User
+                User Demo
               </button>
             </div>
           </div>
@@ -195,11 +188,11 @@ const Login = () => {
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="w-full bg-amber-600 text-white py-3 px-4 rounded-md font-medium hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="w-full mt-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded flex items-center justify-center gap-2 disabled:opacity-70"
           >
             {isLoading ? (
               <>
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 <span>Signing in...</span>
               </>
             ) : (
@@ -211,13 +204,13 @@ const Login = () => {
           </button>
         </div>
 
-        {/* Signup link */}
+        {/* Sign Up */}
         <div className="text-center mt-6 text-sm text-gray-600">
           <p>
             Don’t have an account?{" "}
             <Link
               to="/register"
-              className="text-blue-600 hover:text-blue-500 font-medium"
+              className="text-amber-600 hover:text-amber-700 font-medium"
             >
               Sign up
             </Link>

@@ -248,18 +248,6 @@ const Header = ({ user }) => {
                           <User className="w-4 h-4 mr-2" />
                           Admin Dashboard
                         </Button>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                        >
-                          🧑‍💼 Manage Users
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                        >
-                          📊 Analytics
-                        </Button>
                       </>
                     ) : (
                       <>
@@ -270,18 +258,6 @@ const Header = ({ user }) => {
                         >
                           <User className="w-4 h-4 mr-2" />
                           Profile
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                        >
-                          🎟 My Tickets
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                        >
-                          ❤️ Favorites
                         </Button>
                       </>
                     )}

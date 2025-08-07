@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Eye, Trash2, Search } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
 import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
@@ -10,6 +10,7 @@ import {
 } from "../../redux/features/tickets/ticketsApiSlice";
 
 const AllTicketsList = () => {
+  const location = useLocation();
   const [configPage, setConfigPage] = useState({
     page: 1,
     count: 10,
@@ -29,7 +30,11 @@ const AllTicketsList = () => {
   const tickets = data?.data || [];
   const lastPage = data?.last_page || 1;
   const currentPage = data?.current_page || 1;
-
+  useEffect(() => {
+    if (location.state?.refresh) {
+      refetch();
+    }
+  }, [location.state, refetch]);
   const handleDeleteClick = (id) => {
     setTicketToDelete(id);
     setIsModalOpen(true);
@@ -129,7 +134,7 @@ const AllTicketsList = () => {
                 onClick={() =>
                   setConfigPage((prev) => ({ ...prev, search, page: 1 }))
                 }
-                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1"
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium"
               >
                 Search
               </button>
@@ -151,26 +156,25 @@ const AllTicketsList = () => {
               </button>
             </div>
 
-            <div className="flex gap-2 flex-wrap">
-              <select
-                value={status}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setStatus(value);
-                  setConfigPage((prev) => ({
-                    ...prev,
-                    status: value,
-                    page: 1,
-                  }));
-                }}
-                className="w-full sm:w-auto px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="">All Status</option>
-                <option value="booked">Booked</option>
-                <option value="refunded">Refunded</option>
-                <option value="canceled">Canceled</option>
-              </select>
-            </div>
+            <select
+              value={status}
+              onChange={(e) => {
+                const value = e.target.value;
+                setStatus(value);
+                setConfigPage((prev) => ({
+                  ...prev,
+                  status: value,
+                  page: 1,
+                }));
+              }}
+              className="w-full sm:w-48 px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
+              <option value="">All Status</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="booked">Booked</option>
+              <option value="refunded">Refunded</option>
+              <option value="canceled">Canceled</option>
+            </select>
           </div>
         </div>
 
@@ -224,10 +228,10 @@ const AllTicketsList = () => {
                           {ticket.quantity}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          ${ticket.ticket_category?.price || 0}
+                          ৳{ticket.ticket_category?.price || 0}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          $
+                          ৳
                           {(
                             ticket.quantity *
                             (ticket.ticket_category?.price || 0)
