@@ -46,9 +46,7 @@ export const ticketsApiSlice = apiSlice.injectEndpoints({
 
     // GET tickets for the logged-in user
     getUserTickets: builder.query({
-      query: () => ({
-        url: "/tickets",
-      }),
+      query: (id) => `/tickets${id ? `?user_id=${id}` : ""}`,
       providesTags: ["Ticket"],
     }),
   }),

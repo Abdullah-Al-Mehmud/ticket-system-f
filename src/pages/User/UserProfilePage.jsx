@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   User,
   Mail,
@@ -10,19 +9,31 @@ import {
   Calendar,
   Settings,
   Activity,
-  Clock,
-  MapPin,
 } from "lucide-react";
 import { useGetUserByIdQuery } from "../../redux/features/user/userApiSlice";
 import { Link, useParams } from "react-router-dom";
 import PageLoading from "../../components/LoaderComponent/PageLoading";
+import { useGetOrganizerEventsQuery } from "../../redux/features/event/EventApiSlice";
+import { useGetUserTicketsQuery } from "../../redux/features/tickets/ticketsApiSlice";
 
 export default function UserProfilePage() {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetUserByIdQuery(id);
+  const {
+    data: eventData,
+    isLoading: isEventLoading,
+    isError: isEventError,
+  } = useGetOrganizerEventsQuery(id);
+
+  const {
+    data: ticketData,
+    isLoading: isTicketLoading,
+    isError: isTicketError,
+  } = useGetUserTicketsQuery(id);
+
   const userData = data?.data;
 
-  if (isLoading) {
+  if (isLoading || isTicketLoading || isEventLoading) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
         <div className="text-gray-500">
@@ -32,7 +43,7 @@ export default function UserProfilePage() {
     );
   }
 
-  if (isError || !userData) {
+  if (isError || !userData || isTicketError || isEventError) {
     return (
       <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
         <Card className="p-8 text-center max-w-md border">
@@ -187,7 +198,7 @@ export default function UserProfilePage() {
                       Total Tickets
                     </span>
                     <span className="text-sm font-semibold text-gray-900">
-                      --
+                      {ticketData?.data?.length || 0}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-t border-gray-100">
@@ -195,7 +206,7 @@ export default function UserProfilePage() {
                       Running Events
                     </span>
                     <span className="text-sm font-semibold text-gray-900">
-                      --
+                      {eventData?.data?.length || 0}
                     </span>
                   </div>
                 </div>
@@ -214,20 +225,103 @@ export default function UserProfilePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-8">
-              <div className="text-center py-8">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Ticket className="w-6 h-6 text-gray-400" />
+              {ticketData?.data?.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border border-gray-200 text-sm">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          #
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Event
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Category
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Price (৳)
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Quantity
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Total (৳)
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Status
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Date
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ticketData.data.map((ticket, index) => {
+                        const category = ticket.ticket_category;
+                        const event = category?.event;
+                        const totalPrice =
+                          parseFloat(category?.price || 0) * ticket.quantity;
+
+                        return (
+                          <tr
+                            key={ticket.id}
+                            className="border-b border-gray-100 hover:bg-gray-50 transition"
+                          >
+                            <td className="px-4 py-2 text-gray-900">
+                              {index + 1}
+                            </td>
+                            <td className="px-4 py-2 text-gray-900">
+                              {event?.title || "N/A"}
+                            </td>
+                            <td className="px-4 py-2 text-gray-900">
+                              {category?.name || "N/A"}
+                            </td>
+                            <td className="px-4 py-2 text-gray-900">
+                              {category?.price || "0.00"}
+                            </td>
+                            <td className="px-4 py-2 text-gray-900">
+                              {ticket.quantity}
+                            </td>
+                            <td className="px-4 py-2 text-gray-900">
+                              {totalPrice.toFixed(2)}
+                            </td>
+                            <td className="px-4 py-2">
+                              <span
+                                className={`px-2 py-1 text-xs font-medium rounded-full ${
+                                  ticket.status === "Confirmed"
+                                    ? "bg-green-100 text-green-700"
+                                    : "bg-yellow-100 text-yellow-700"
+                                }`}
+                              >
+                                {ticket.status}
+                              </span>
+                            </td>
+                            <td className="px-4 py-2 text-gray-900">
+                              {new Date(ticket.created_at).toLocaleDateString()}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-                <h3 className="text-base font-medium text-gray-900 mb-2">
-                  No Tickets Yet
-                </h3>
-                <p className="text-sm text-gray-500 mb-1">
-                  No ticket purchases found
-                </p>
-                <p className="text-xs text-gray-400">
-                  Purchase history will appear here
-                </p>
-              </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Ticket className="w-6 h-6 text-gray-400" />
+                  </div>
+                  <h3 className="text-base font-medium text-gray-900 mb-2">
+                    No Tickets Yet
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-1">
+                    No ticket purchases found
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Purchase history will appear here
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -239,18 +333,88 @@ export default function UserProfilePage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-8">
-              <div className="text-center py-8">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="w-6 h-6 text-gray-400" />
+              {eventData?.data.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200 border rounded-lg">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          #
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          Title
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          Category
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          Location
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          Start Date
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          End Date
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          Status
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {eventData?.data.map((event, index) => (
+                        <tr key={event.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 text-sm text-gray-700">
+                            {index + 1}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-900 font-medium">
+                            {event.title}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-700">
+                            {event.category?.name}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-700">
+                            {event.location}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-700">
+                            {new Date(event.start_date).toLocaleString()}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-700">
+                            {new Date(event.end_date).toLocaleString()}
+                          </td>
+                          <td className="px-4 py-2 text-sm">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-semibold 
+                  ${
+                    event.status === "Upcoming"
+                      ? "bg-green-100 text-green-800"
+                      : event.status === "Cancelled"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                            >
+                              {event.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <h3 className="text-base font-medium text-gray-900 mb-2">
-                  No Active Events
-                </h3>
-                <p className="text-sm text-gray-500 mb-1">No active events</p>
-                <p className="text-xs text-gray-400">
-                  Active events will appear here
-                </p>
-              </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="w-6 h-6 text-gray-400" />
+                  </div>
+                  <h3 className="text-base font-medium text-gray-900 mb-2">
+                    No Active Events
+                  </h3>
+                  <p className="text-sm text-gray-500 mb-1">No active events</p>
+                  <p className="text-xs text-gray-400">
+                    Active events will appear here
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
