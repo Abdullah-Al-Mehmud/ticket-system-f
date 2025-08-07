@@ -9,6 +9,9 @@ import AdminLayout from "./Layout/AdminLayout";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import PageLoading from "./components/LoaderComponent/PageLoading";
+import TermsOfService from "./pages/Public/Support/TermsOfService";
+import RefundPolicy from "./pages/Public/Support/RefundPolicy";
+import HelpCenter from "./pages/Public/Support/HelpCenter";
 
 
 // Lazy-loaded pages
@@ -68,6 +71,9 @@ function App() {
           <Route path="event-details/:id" element={<EventDetails />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
+          <Route path="terms-of-service" element={<TermsOfService />} />
+          <Route path="refund-policy" element={<RefundPolicy />} />
+          <Route path="help-center" element={<HelpCenter />} />
 
           <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />

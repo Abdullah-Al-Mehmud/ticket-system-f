@@ -99,24 +99,36 @@ const Footer = () => {
               <h5 className="font-semibold mb-4">Support</h5>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/help-center"}
+                    className="hover:text-white transition-colors"
+                  >
                     Help Center
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/contact"}
+                    className="hover:text-white transition-colors"
+                  >
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/refund-policy"}
+                    className="hover:text-white transition-colors"
+                  >
                     Refund Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/terms-of-service"}
+                    className="hover:text-white transition-colors"
+                  >
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
