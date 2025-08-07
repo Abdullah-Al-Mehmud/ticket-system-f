@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ArrowLeft,
   Calendar,
   MapPin,
   Users,
   Ticket,
-  DollarSign,
   Clock,
   Eye,
   Download,
@@ -16,6 +15,7 @@ import { useGetTicketCategoryByIdQuery } from "../../redux/features/ticketcatego
 import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 function TicketCategoriesDetails() {
+  const [showFullDescription, setShowFullDescription] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -89,6 +89,13 @@ function TicketCategoriesDetails() {
     }
   };
 
+  const maxLength = 300;
+  const descriptionText = event?.event_description || "";
+  const shortDescription =
+    descriptionText.length > maxLength
+      ? descriptionText.slice(0, maxLength) + "…"
+      : descriptionText;
+
   const soldPercentage =
     (category.sold_quantity / category.total_quantity) * 100;
   return (
@@ -111,16 +118,6 @@ function TicketCategoriesDetails() {
                 <p className="text-sm text-gray-500">ID: #{category.id}</p>
               </div>
             </div>
-            {/* <div className="flex items-center space-x-2">
-              <button className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors flex items-center space-x-2">
-                <Share2 className="w-4 h-4" />
-                <span>Share</span>
-              </button>
-              <button className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors flex items-center space-x-2">
-                <Download className="w-4 h-4" />
-                <span>Export</span>
-              </button>
-            </div> */}
           </div>
         </div>
       </div>
@@ -298,11 +295,26 @@ function TicketCategoriesDetails() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-8">
               <div className="relative">
-                <img
-                  src={event.image_url}
-                  alt={event.title}
-                  className="w-full h-48 object-cover"
-                />
+                {event.image_url ? (
+                  <>
+                    <img
+                      src={import.meta.env.VITE_IMG_URL + "/" + event.image_url}
+                      alt={event.title}
+                      className="w-full h-48 object-cover rounded-lg"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                        e.currentTarget.parentNode.querySelector(
+                          ".fallback-banner"
+                        ).style.display = "flex";
+                      }}
+                    />
+                  </>
+                ) : (
+                  <div className="h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <p className="text-gray-500 font-bold">TapKori</p>
+                  </div>
+                )}
+
                 <div className="absolute top-4 right-4">
                   <span
                     className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
@@ -357,8 +369,18 @@ function TicketCategoriesDetails() {
                     Description
                   </div>
                   <p className="text-sm text-gray-500 leading-relaxed">
-                    {event.event_description}
+                    {showFullDescription ? descriptionText : shortDescription}
                   </p>
+                  {descriptionText.length > maxLength && (
+                    <button
+                      onClick={() =>
+                        setShowFullDescription(!showFullDescription)
+                      }
+                      className="text-amber-600 hover:underline text-sm mt-1"
+                    >
+                      {showFullDescription ? "See less" : "See more"}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
