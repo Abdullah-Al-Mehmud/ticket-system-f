@@ -2,7 +2,9 @@ import React from "react";
 import { Shield, User, Database, Share2, Lock, Mail } from "lucide-react";
 
 const Card = ({ children, className = "" }) => (
-  <div className={`bg-white rounded-xl shadow-sm border border-amber-200 ${className}`}>
+  <div
+    className={`bg-white rounded-xl shadow-sm border border-amber-200 ${className}`}
+  >
     {children}
   </div>
 );
@@ -15,9 +17,7 @@ const CardTitle = ({ children }) => (
   <h3 className="text-lg font-semibold text-amber-900">{children}</h3>
 );
 
-const CardContent = ({ children }) => (
-  <div className="p-6">{children}</div>
-);
+const CardContent = ({ children }) => <div className="p-6">{children}</div>;
 
 const PolicySection = ({ icon: Icon, title, children }) => (
   <Card className="mb-6">
@@ -30,9 +30,7 @@ const PolicySection = ({ icon: Icon, title, children }) => (
       </div>
     </CardHeader>
     <CardContent>
-      <div className="prose prose-amber max-w-none">
-        {children}
-      </div>
+      <div className="prose prose-amber max-w-none">{children}</div>
     </CardContent>
   </Card>
 );
@@ -45,7 +43,8 @@ const PrivacyPolicy = () => {
       content: (
         <div>
           <p className="text-amber-700 leading-relaxed mb-3">
-            We collect information you provide during registration, ticket purchases, and event creation, including:
+            We collect information you provide during registration, ticket
+            purchases, and event creation, including:
           </p>
           <ul className="text-amber-600 space-y-1 ml-4">
             <li>• Personal details (name, email, phone number)</li>
@@ -79,7 +78,10 @@ const PrivacyPolicy = () => {
       content: (
         <div>
           <p className="text-amber-700 leading-relaxed mb-3">
-            <strong className="text-amber-900">We never sell your personal data.</strong> We may share information only when necessary:
+            <strong className="text-amber-900">
+              We never sell your personal data.
+            </strong>{" "}
+            We may share information only when necessary:
           </p>
           <ul className="text-amber-600 space-y-1 ml-4">
             <li>• With event organizers for ticket verification</li>
@@ -125,7 +127,12 @@ const PrivacyPolicy = () => {
               <strong>Have privacy concerns?</strong> We're here to help.
             </p>
             <div className="text-sm space-y-1">
-              <p>Email: <span className="font-semibold text-slate-700">privacy@tapkori.com</span></p>
+              <p>
+                Email:{" "}
+                <span className="font-semibold text-slate-700">
+                  privacy@tapkori.com
+                </span>
+              </p>
               <p>Response time: Within 48 hours</p>
             </div>
           </div>
@@ -146,7 +153,8 @@ const PrivacyPolicy = () => {
             Privacy Policy
           </h1>
           <p className="text-xl text-amber-600 max-w-2xl mx-auto leading-relaxed">
-            Learn how TapKori collects, uses, and protects your personal data with complete transparency.
+            Learn how TapKori collects, uses, and protects your personal data
+            with complete transparency.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 text-sm text-amber-500 bg-amber-100 px-3 py-1 rounded-full">
             <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
@@ -171,8 +179,9 @@ const PrivacyPolicy = () => {
         <footer className="mt-8 text-center">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-blue-800 text-sm">
-              <strong>Transparency Promise:</strong> We believe in clear, honest communication about your data. 
-              This policy is written in plain language - no legal jargon.
+              <strong>Transparency Promise:</strong> We believe in clear, honest
+              communication about your data. This policy is written in plain
+              language - no legal jargon.
             </p>
           </div>
         </footer>

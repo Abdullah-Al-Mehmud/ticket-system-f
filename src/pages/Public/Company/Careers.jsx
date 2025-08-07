@@ -2,7 +2,9 @@ import React from "react";
 import { User, MapPin, Clock, Briefcase } from "lucide-react";
 
 const Card = ({ children, className = "" }) => (
-  <div className={`bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 ${className}`}>
+  <div
+    className={`bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 ${className}`}
+  >
     {children}
   </div>
 );
@@ -15,9 +17,7 @@ const CardTitle = ({ children }) => (
   <h3 className="text-lg font-semibold text-gray-900">{children}</h3>
 );
 
-const CardContent = ({ children }) => (
-  <div className="p-6">{children}</div>
-);
+const CardContent = ({ children }) => <div className="p-6">{children}</div>;
 
 const JobCard = ({ job }) => (
   <Card>
@@ -46,19 +46,22 @@ const Careers = () => {
       title: "Frontend Developer",
       location: "Remote",
       type: "Full-Time",
-      description: "We're looking for a React developer to help us build delightful UIs for our users.",
+      description:
+        "We're looking for a React developer to help us build delightful UIs for our users.",
     },
     {
-      title: "Customer Support Specialist", 
+      title: "Customer Support Specialist",
       location: "Dhaka, Bangladesh",
       type: "Part-Time",
-      description: "Help users get the most out of TapKori by responding to questions and resolving issues.",
+      description:
+        "Help users get the most out of TapKori by responding to questions and resolving issues.",
     },
     {
       title: "Marketing Executive",
-      location: "Remote or Dhaka", 
+      location: "Remote or Dhaka",
       type: "Contract",
-      description: "Plan and execute digital marketing campaigns to grow event reach.",
+      description:
+        "Plan and execute digital marketing campaigns to grow event reach.",
     },
   ];
 
@@ -83,7 +86,9 @@ const Careers = () => {
         <section>
           <div className="flex items-center gap-2 mb-6">
             <Briefcase className="w-5 h-5 text-gray-700" />
-            <h2 className="text-2xl font-semibold text-gray-900">Open Positions</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Open Positions
+            </h2>
           </div>
           <div className="space-y-6">
             {jobOpenings.map((job, index) => (

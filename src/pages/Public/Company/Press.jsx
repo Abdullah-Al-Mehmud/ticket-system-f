@@ -2,7 +2,9 @@ import React from "react";
 import { FileText, Calendar, Building2, ExternalLink } from "lucide-react";
 
 const Card = ({ children, className = "" }) => (
-  <div className={`bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 ${className}`}>
+  <div
+    className={`bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 ${className}`}
+  >
     {children}
   </div>
 );
@@ -12,12 +14,12 @@ const CardHeader = ({ children }) => (
 );
 
 const CardTitle = ({ children }) => (
-  <h3 className="text-lg font-semibold text-gray-900 hover:text-amber-600 transition-colors duration-200">{children}</h3>
+  <h3 className="text-lg font-semibold text-gray-900 hover:text-amber-600 transition-colors duration-200">
+    {children}
+  </h3>
 );
 
-const CardContent = ({ children }) => (
-  <div className="p-6">{children}</div>
-);
+const CardContent = ({ children }) => <div className="p-6">{children}</div>;
 
 const PressCard = ({ article }) => (
   <Card className="cursor-pointer group">
@@ -49,19 +51,22 @@ const Press = () => {
       title: "TapKori Raises Series A Funding",
       source: "TechCrunch BD",
       date: "March 15, 2025",
-      summary: "TapKori has secured $5M in Series A to expand its ticketing platform across South Asia.",
+      summary:
+        "TapKori has secured $5M in Series A to expand its ticketing platform across South Asia.",
     },
     {
       title: "EventTech 2025: Spotlight on TapKori",
-      source: "Event Insider", 
+      source: "Event Insider",
       date: "June 10, 2025",
-      summary: "TapKori is making waves in the event industry with their intuitive tools and fast growth.",
+      summary:
+        "TapKori is making waves in the event industry with their intuitive tools and fast growth.",
     },
     {
       title: "How TapKori Helped 1000+ Organizers in 2024",
       source: "Dhaka Tribune",
-      date: "January 5, 2025", 
-      summary: "With over 1000 successful events, TapKori continues to be the go-to platform for organizers.",
+      date: "January 5, 2025",
+      summary:
+        "With over 1000 successful events, TapKori continues to be the go-to platform for organizers.",
     },
   ];
 
@@ -77,7 +82,8 @@ const Press = () => {
             Press & Media
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Read what the media is saying about TapKori's impact on the event industry
+            Read what the media is saying about TapKori's impact on the event
+            industry
           </p>
         </header>
 
@@ -85,7 +91,9 @@ const Press = () => {
         <section>
           <div className="flex items-center gap-2 mb-6">
             <FileText className="w-5 h-5 text-gray-700" />
-            <h2 className="text-2xl font-semibold text-gray-900">Recent Coverage</h2>
+            <h2 className="text-2xl font-semibold text-gray-900">
+              Recent Coverage
+            </h2>
           </div>
           <div className="space-y-6">
             {pressArticles.map((article, index) => (
@@ -98,13 +106,26 @@ const Press = () => {
         <section className="mt-16">
           <Card className="bg-gradient-to-r from-amber-50 to-purple-50 border-amber-200">
             <CardContent className="text-center">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Media Inquiries</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Media Inquiries
+              </h3>
               <p className="text-gray-600 mb-4">
-                For press inquiries, interviews, or additional information about TapKori
+                For press inquiries, interviews, or additional information about
+                TapKori
               </p>
               <div className="text-sm text-gray-700">
-                <p>Email: <span className="font-medium text-amber-600">press@tapkori.com</span></p>
-                <p>Phone: <span className="font-medium text-amber-600">+880 1XXX-XXXXXX</span></p>
+                <p>
+                  Email:{" "}
+                  <span className="font-medium text-amber-600">
+                    press@tapkori.com
+                  </span>
+                </p>
+                <p>
+                  Phone:{" "}
+                  <span className="font-medium text-amber-600">
+                    +880 1XXX-XXXXXX
+                  </span>
+                </p>
               </div>
             </CardContent>
           </Card>
