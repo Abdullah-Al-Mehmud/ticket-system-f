@@ -138,24 +138,36 @@ const Footer = () => {
               <h5 className="font-semibold mb-4">Company</h5>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/about"}
+                    className="hover:text-white transition-colors"
+                  >
                     About Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/careers"}
+                    className="hover:text-white transition-colors"
+                  >
                     Careers
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/press"}
+                    className="hover:text-white transition-colors"
+                  >
                     Press
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <Link
+                    to={"/privacy-policy"}
+                    className="hover:text-white transition-colors"
+                  >
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
