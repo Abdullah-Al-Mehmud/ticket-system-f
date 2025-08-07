@@ -76,7 +76,7 @@ const About = () => {
             create, manage, and attend events — all in just a few taps.
           </p>
           <div className="mt-8 flex justify-center">
-            <button className="bg-amber-600 hover:bg-amber-700 text-black font-semibold px-8 py-3 rounded-lg transition-colors duration-300   flex items-center space-x-2">
+            <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
               <Link to="/login">Get Started Today</Link>
               <ArrowRight className="w-5 h-5" />
             </button>
@@ -247,12 +247,10 @@ const About = () => {
             events successful. Start creating memorable experiences today!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-amber-600 hover:bg-amber-700 text-black font-semibold px-8 py-3 rounded-lg transition-colors duration-300 hover: flex items-center justify-center space-x-2">
-              <Calendar className="w-5 h-5" />
+            <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
               <Link to="/login">Get Started</Link>
             </button>
-            <button className="border-2 border-amber-600 text-black-600 hover:bg-amber-600 hover:text-black font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
-              <Smartphone className="w-5 h-5" />
+            <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
               <Link to="/event">View Demo</Link>
             </button>
           </div>
