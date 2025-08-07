@@ -25,7 +25,12 @@ function TicketCategoriesDetails() {
     isError,
   } = useGetTicketCategoryByIdQuery(id);
 
-  if (isLoading) return <div className="p-6"><PageLoading/></div>;
+  if (isLoading)
+    return (
+      <div className="p-6">
+        <PageLoading />
+      </div>
+    );
   if (isError || !response?.data)
     return <div className="p-6">Failed to load data.</div>;
 
@@ -44,11 +49,29 @@ function TicketCategoriesDetails() {
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
+    return `৳${amount.toLocaleString("en-BD", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
   };
+
+  const TakaSign = ({ className = "" }) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+      className={className}
+    >
+      {/* Custom Taka (৳) Icon - stylized */}
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 6h8M12 4v16m0 0c-4 0-6-2-6-5.5S8 9 12 9s6 1.5 6 5.5S16 20 12 20z"
+      />
+    </svg>
+  );
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -153,7 +176,7 @@ function TicketCategoriesDetails() {
 
                   <div className="text-center">
                     <div className="bg-purple-100 rounded-lg p-3 w-12 h-12 flex items-center justify-center mx-auto mb-2">
-                      <DollarSign className="w-6 h-6 text-purple-600" />
+                      <TakaSign className="w-6 h-6 text-purple-600" />
                     </div>
                     <div className="text-2xl font-bold text-gray-900">
                       {formatCurrency(category.price * category.sold_quantity)}

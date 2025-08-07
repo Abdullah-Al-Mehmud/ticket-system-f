@@ -17,7 +17,7 @@ const BookingModal = ({
         <h3 className="text-2xl font-bold mb-4">Booking Confirmation</h3>
         <p className="mb-6 text-gray-600">
           You're about to book <strong>{totalTickets}</strong> ticket(s) for{" "}
-          <strong>${totalAmount.toFixed(2)}</strong>.
+          <strong>৳{totalAmount.toFixed(2)}</strong>.
         </p>
 
         <div className="flex space-x-4">

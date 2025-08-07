@@ -241,11 +241,11 @@ const EventDetailsAdmin = () => {
             </div>
           </div>
           <div className="bg-white rounded-lg shadow p-6 flex items-center">
-            <DollarSign className="h-8 w-8 text-yellow-600" />
+            <span className="h-8 w-8 text-amber-600 text-3xl font-bold">৳</span>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">Revenue</p>
               <p className="text-2xl font-semibold text-gray-900">
-                ${totalRevenue.toFixed(2)}
+                {totalRevenue.toFixed(2)}
               </p>
             </div>
           </div>
@@ -493,7 +493,9 @@ const EventDetailsAdmin = () => {
                     {event.image_url ? (
                       <>
                         <img
-                          src={import.meta.env.VITE_IMG_URL+"/" + event.image_url}
+                          src={
+                            import.meta.env.VITE_IMG_URL + "/" + event.image_url
+                          }
                           alt={event.title}
                           className="rounded-lg object-cover w-full aspect-w-16 aspect-h-9"
                           onError={(e) => {
@@ -549,7 +551,10 @@ const EventDetailsAdmin = () => {
                                 </td>
                                 <td className="px-6 py-1 text-sm text-gray-700">
                                   <Link to={`/admin/user-profile/${org.id}`}>
-                                    <Eye size={16} className="hover:text-amber-600"/>
+                                    <Eye
+                                      size={16}
+                                      className="hover:text-amber-600"
+                                    />
                                   </Link>
                                 </td>
                               </tr>
@@ -671,7 +676,7 @@ const EventDetailsAdmin = () => {
 
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className="text-lg font-semibold text-amber-600">
-                                  ${t.price}
+                                  ৳{t.price}
                                 </span>
                               </td>
 
@@ -703,7 +708,7 @@ const EventDetailsAdmin = () => {
 
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className="text-sm font-semibold text-amber-600">
-                                  ${revenue}
+                                  ৳{revenue}
                                 </span>
                               </td>
 

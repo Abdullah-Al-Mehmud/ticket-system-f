@@ -193,7 +193,7 @@ export default function TicketCategories() {
                         {category.event?.title || "-"}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-800">
-                        ${category.price}
+                        ৳{category.price}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600">
                         {formatDateOnly(category.sales_start)}

@@ -311,7 +311,7 @@ const EventDetailsPage = () => {
                             </span>
                           </div>
                           <p className="text-2xl font-bold text-amber-600">
-                            ${parseFloat(ticket.price).toFixed(2)}
+                            ৳{parseFloat(ticket.price).toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -362,7 +362,7 @@ const EventDetailsPage = () => {
                       Total ({getTotalTickets()} tickets)
                     </span>
                     <span className="text-2xl font-bold text-amber-600">
-                      ${getTotalAmount().toFixed(2)}
+                      ৳{getTotalAmount().toFixed(2)}
                     </span>
                   </div>
                   <button

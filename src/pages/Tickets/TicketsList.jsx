@@ -223,10 +223,10 @@ const AllTicketsList = () => {
                           {ticket.quantity}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          ${ticket.ticket_category?.price || 0}
+                          ৳{ticket.ticket_category?.price || 0}
                         </td>
                         <td className="px-6 py-4 text-sm text-gray-900">
-                          $
+                          ৳
                           {(
                             ticket.quantity *
                             (ticket.ticket_category?.price || 0)
