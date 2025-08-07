@@ -9,6 +9,7 @@ import {
   Calendar,
   Settings,
   Activity,
+  Eye,
 } from "lucide-react";
 import { useGetUserByIdQuery } from "../../redux/features/user/userApiSlice";
 import { Link, useParams } from "react-router-dom";
@@ -224,7 +225,7 @@ export default function UserProfilePage() {
                 Ticket Purchase History
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8">
+            <CardContent>
               {ticketData?.data?.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full border border-gray-200 text-sm">
@@ -253,6 +254,9 @@ export default function UserProfilePage() {
                         </th>
                         <th className="px-4 py-2 text-left font-semibold text-gray-700">
                           Date
+                        </th>
+                        <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                          Action
                         </th>
                       </tr>
                     </thead>
@@ -300,6 +304,14 @@ export default function UserProfilePage() {
                             <td className="px-4 py-2 text-gray-900">
                               {new Date(ticket.created_at).toLocaleDateString()}
                             </td>
+                            <td className="px-4 py-2 text-gray-900">
+                              <Link
+                                to={`/admin/tickets/${ticket.id}`}
+                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                              >
+                                <Eye size={16} />
+                              </Link>
+                            </td>
                           </tr>
                         );
                       })}
@@ -332,7 +344,7 @@ export default function UserProfilePage() {
                 Running Events
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8">
+            <CardContent>
               {eventData?.data.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200 border rounded-lg">
@@ -358,6 +370,9 @@ export default function UserProfilePage() {
                         </th>
                         <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
                           Status
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-medium text-gray-500">
+                          Action
                         </th>
                       </tr>
                     </thead>
@@ -395,6 +410,14 @@ export default function UserProfilePage() {
                             >
                               {event.status}
                             </span>
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-700">
+                            <Link
+                              to={`/admin/events-details/${event?.id}`}
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
+                            >
+                              <Eye size={16} />
+                            </Link>
                           </td>
                         </tr>
                       ))}
