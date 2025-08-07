@@ -210,7 +210,7 @@ const UserList = () => {
                           to={`/admin/user-profile/${user.id}`}
                           className="hover:underline"
                         >
-                          #{user.id.toString().padStart(3, "0")}
+                          #{user.id.toString()}
                         </Link>
                       </td>
                       <td className="px-6 py-4 text-sm">
