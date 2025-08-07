@@ -4,14 +4,8 @@ import { useGetTicketByIdQuery } from "../../redux/features/tickets/ticketsApiSl
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Ticket,
-  DollarSign,
-  Calendar,
-  Hash,
-  Layers,
-  Edit,
-} from "lucide-react";
+import { Ticket, DollarSign, Calendar, Hash, Layers, Edit } from "lucide-react";
+import PageLoading from "../../components/LoaderComponent/PageLoading";
 
 const ViewTicketsDetails = () => {
   const { id } = useParams();

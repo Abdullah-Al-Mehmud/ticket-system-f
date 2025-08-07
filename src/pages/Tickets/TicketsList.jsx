@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Eye, Trash2, Search } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
 import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
@@ -10,6 +10,7 @@ import {
 } from "../../redux/features/tickets/ticketsApiSlice";
 
 const AllTicketsList = () => {
+  const location = useLocation();
   const [configPage, setConfigPage] = useState({
     page: 1,
     count: 10,
@@ -29,7 +30,11 @@ const AllTicketsList = () => {
   const tickets = data?.data || [];
   const lastPage = data?.last_page || 1;
   const currentPage = data?.current_page || 1;
-
+  useEffect(() => {
+    if (location.state?.refresh) {
+      refetch();
+    }
+  }, [location.state, refetch]);
   const handleDeleteClick = (id) => {
     setTicketToDelete(id);
     setIsModalOpen(true);
