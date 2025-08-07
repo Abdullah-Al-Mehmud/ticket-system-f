@@ -8,7 +8,6 @@ import {
   Eye,
   Users,
   TrendingUp,
-  DollarSign,
   Settings,
   Edit,
   Trash2,
@@ -149,7 +148,7 @@ const EventDetailsAdmin = () => {
     setIsModalOpenDelete(true);
   };
 
-  const confiramDelete = async () => {
+  const confirmDelete = async () => {
     if (!userToDelete) return;
     await handleDeleteCategory(userToDelete);
     setIsModalOpenDelete(false);
@@ -505,7 +504,7 @@ const EventDetailsAdmin = () => {
                             ).style.display = "flex";
                           }}
                         />
-                        <div className="fallback-banner hidden h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <div className="fallback-banner hidden h-48 bg-gray-200 rounded-lg items-center justify-center">
                           <p className="text-gray-500">TapKori</p>
                         </div>
                       </>
@@ -751,7 +750,7 @@ const EventDetailsAdmin = () => {
                 <ConfirmModal
                   isOpen={isModalOpenDelete}
                   onClose={closeModal}
-                  onConfirm={confiramDelete}
+                  onConfirm={confirmDelete}
                   message="Are you sure you want to delete this Ticket Categories ?"
                 />
               </div>
