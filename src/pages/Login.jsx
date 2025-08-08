@@ -52,6 +52,7 @@ const Login = () => {
 
       // Store user data only (token is in cookie)
       localStorage.setItem("data", JSON.stringify(response.data));
+      localStorage.setItem("token", response.token);
       toast.success(response.message);
       navigate("/");
     } catch (error) {
