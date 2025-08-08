@@ -2,9 +2,7 @@ import React from "react";
 import { Shield, User, Database, Share2, Lock, Mail } from "lucide-react";
 
 const Card = ({ children, className = "" }) => (
-  <div
-    className={`bg-white rounded-xl shadow-sm border border-amber-200 ${className}`}
-  >
+  <div className={`bg-white rounded-xl  border border-amber-200 ${className}`}>
     {children}
   </div>
 );

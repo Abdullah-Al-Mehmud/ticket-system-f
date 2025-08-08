@@ -3,9 +3,7 @@ import { FileText } from "lucide-react";
 
 // Reusable Components (reuse or import if already defined)
 const Card = ({ children, className = "" }) => (
-  <div
-    className={`bg-white rounded-xl shadow-sm border border-gray-200 ${className}`}
-  >
+  <div className={`bg-white rounded-xl border border-gray-200 ${className}`}>
     {children}
   </div>
 );

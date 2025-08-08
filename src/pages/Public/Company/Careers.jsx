@@ -3,7 +3,7 @@ import { User, MapPin, Clock, Briefcase } from "lucide-react";
 
 const Card = ({ children, className = "" }) => (
   <div
-    className={`bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 ${className}`}
+    className={`bg-white rounded-xl border border-gray-200 duration-200 ${className}`}
   >
     {children}
   </div>

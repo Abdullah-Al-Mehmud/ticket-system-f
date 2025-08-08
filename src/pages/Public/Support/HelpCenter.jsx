@@ -12,9 +12,7 @@ import {
 
 // Reusable Components (you can move these into a shared file if needed)
 const Card = ({ children, className = "" }) => (
-  <div
-    className={`bg-white rounded-xl border border-amber-200 ${className}`}
-  >
+  <div className={`bg-white rounded-xl border border-amber-200 ${className}`}>
     {children}
   </div>
 );
@@ -106,7 +104,9 @@ const HelpCenter = () => {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-amber-100 rounded-full mb-6">
             <HelpCircle className="w-10 h-10 text-amber-600" />
           </div>
-          <h1 className="text-4xl font-bold text-amber-900 mb-4">Help Center</h1>
+          <h1 className="text-4xl font-bold text-amber-900 mb-4">
+            Help Center
+          </h1>
           <p className="text-xl text-amber-600 max-w-2xl mx-auto">
             Find answers to your questions and get the support you need
           </p>
@@ -129,10 +129,7 @@ const HelpCenter = () => {
         {/* Categories */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {categories.map((category, index) => (
-            <Card
-              key={index}
-              className=" transition-shadow cursor-pointer"
-            >
+            <Card key={index} className=" cursor-pointer">
               <CardContent className="text-center p-6">
                 <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-4 text-amber-600">
                   {category.icon}

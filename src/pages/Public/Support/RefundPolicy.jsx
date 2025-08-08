@@ -3,9 +3,7 @@ import { Clock, RefreshCw, AlertCircle } from "lucide-react";
 
 // Reusable Components (same as used in your main file)
 const Card = ({ children, className = "" }) => (
-  <div
-    className={`bg-white rounded-xl shadow-sm border border-gray-200 ${className}`}
-  >
+  <div className={`bg-white rounded-xl border border-gray-200 ${className}`}>
     {children}
   </div>
 );
@@ -70,7 +68,7 @@ const RefundPolicy = () => {
         {/* Refund Types */}
         <div className="grid md:grid-cols-3 gap-6 mb-12">
           {refundTypes.map((type, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
+            <Card key={index}>
               <CardContent className="text-center p-6">
                 <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-4 text-amber-600">
                   {type.icon}
