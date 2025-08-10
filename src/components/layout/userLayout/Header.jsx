@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "../components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Header = ({ user }) => {

@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import PageLoading from "./components/common/loaderComponent/PageLoading";
+import Home from "./components/pages/userManagementPages/publicPage/Home";
+import UserLayout from "./components/layout/userLayout/UserLayout";
 const NotFound = lazy(() => import("./components/pages/authPage/NotFound"));
 
 function App() {
@@ -8,9 +10,9 @@ function App() {
     <Suspense fallback={<PageLoading />}>
       <Routes>
         {/* Public layout */}
-        {/* <Route path="/" element={<Layout />}>
+        <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
-          <Route path="event" element={<Event />} />
+          {/* <Route path="event" element={<Event />} />
           <Route path="event-details/:id" element={<EventDetails />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
@@ -25,8 +27,8 @@ function App() {
           <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
-          </Route>
-        </Route> */}
+          </Route> */}
+        </Route>
 
         {/* Admin Layout */}
         {/* <Route element={<PrivateRoute allowRole="admin" />}>

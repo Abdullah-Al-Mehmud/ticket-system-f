@@ -1,7 +1,7 @@
 import React from "react";
 import { Facebook, Twitter, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useGetCategoriesQuery } from "../redux/features/categories/categoriesApiSlice";
+import { useGetCategoriesQuery } from "../../../store/features/categories/categoriesApiSlice";
 
 const Footer = () => {
   const { data, isLoading, isError } = useGetCategoriesQuery({ count: 4 });

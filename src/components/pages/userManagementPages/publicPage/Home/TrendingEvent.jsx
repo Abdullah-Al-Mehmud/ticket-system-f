@@ -1,10 +1,10 @@
 import React from "react";
 import {  CalendarDays } from "lucide-react";
-import { useGetEventsQuery } from "../../../redux/features/event/EventApiSlice";
-import { Badge } from "../../../components/ui/badge";
-import { Alert, AlertDescription } from "../../../components/ui/alert";
-import EventCardLoadingSkeleton from "../../../components/LoaderComponent/EventCardLoadingSkeleton";
+import { Alert, AlertDescription } from "../../../../../components/ui/alert";
 import EventCard from "../Event/EventCard";
+import { useGetEventsQuery } from "../../../../../store/features/event/EventApiSlice";
+import { Badge } from "../../../../../components/ui/badge";
+import EventCardLoadingSkeleton from "../../../../../components/common/loaderComponent/EventCardLoadingSkeleton";
 
 const TrendingEvent = () => {
   const { data, isLoading, isError } = useGetEventsQuery({
