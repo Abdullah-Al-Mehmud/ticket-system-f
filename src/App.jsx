@@ -1,104 +1,63 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+const PageLoading = lazy(() =>import("./components/common/loaderComponent/PageLoading"));
+const Home = lazy(() =>import("./components/pages/userManagementPages/publicPage/Home"));
+const UserLayout = lazy(() =>import("./components/layout/userLayout/UserLayout"));
+const Event = lazy(() =>import("./components/pages/userManagementPages/publicPage/EventPage/Event"));
+const Contact = lazy(() =>import("./components/pages/userManagementPages/publicPage/ContactPage/Contact"));
+const About = lazy(() => import("./components/pages/userManagementPages/publicPage/AboutPage/About"));
+const TermsOfService = lazy(() =>import("./components/pages/userManagementPages/publicPage/SupportPage/TermsOfService"));
+const RefundPolicy = lazy(() =>import("./components/pages/userManagementPages/publicPage/SupportPage/RefundPolicy"));
+const HelpCenter = lazy(() =>import("./components/pages/userManagementPages/publicPage/SupportPage/HelpCenter"));
+const Careers = lazy(() =>import("./components/pages/userManagementPages/publicPage/CompanyPage/Careers"));
+const Press = lazy(() =>import("./components/pages/userManagementPages/publicPage/CompanyPage/Press"));
+const PrivacyPolicy = lazy(() =>import("./components/pages/userManagementPages/publicPage/CompanyPage/PrivacyPolicy"));
+const NotFound = lazy(() => import("./components/pages/authPage/NotFound"));
+const EventDetailsPage = lazy(() => import("./components/pages/userManagementPages/publicPage/EventPage/EventDetails"));
+const PublicRoute = lazy(() => import("./components/layout/PublicRoute"));
+const Register = lazy(() => import("./components/pages/authPage/Register"));
+const Login = lazy(() => import("./components/pages/authPage/Login"));
+const PrivateRoute = lazy(() => import("./components/layout/PrivateRoute"));
+const AdminLayout = lazy(() => import("./components/layout/adminLayout/AdminLayout"));
+const AdminDashboard = lazy(() => import("./components/pages/adminManagementPages/adminDashboardPage/AdminDashboard"));
 
-// Layouts
-import Layout from "./Layout/Layout";
-import AdminLayout from "./Layout/AdminLayout";
+const UserList = lazy(() => import("./components/pages/adminManagementPages/usersPage/UserList"));
+const UserCreate = lazy(() => import("./components/pages/adminManagementPages/usersPage/UserCreate"));
+const UserEdit = lazy(() => import("./components/pages/adminManagementPages/usersPage/UserEdit"));
+const UserProfile = lazy(() => import("./components/pages/adminManagementPages/usersPage/UserProfile"));
 
-// Auth wrappers
-import PrivateRoute from "./components/PrivateRoute";
-import PublicRoute from "./components/PublicRoute";
-import PageLoading from "./components/LoaderComponent/PageLoading";
-import TermsOfService from "./pages/Public/Support/TermsOfService";
-import RefundPolicy from "./pages/Public/Support/RefundPolicy";
-import HelpCenter from "./pages/Public/Support/HelpCenter";
-import Careers from "./pages/Public/Company/Careers";
-import Press from "./pages/Public/Company/Press";
-import PrivacyPolicy from "./pages/Public/Company/PrivacyPolicy";
+const CategoryList = lazy(() => import("./components/pages/adminManagementPages/categoriesPage/CategoryList"));
+const CategoryCreate = lazy(() => import("./components/pages/adminManagementPages/categoriesPage/CategoryCreate"));
+const CategoryEdit = lazy(() => import("./components/pages/adminManagementPages/categoriesPage/CategoryEdit"));
+const CategoryDetails = lazy(() => import("./components/pages/adminManagementPages/categoriesPage/CategoryDetails"));
 
-// Lazy-loaded pages
-const Home = lazy(() => import("./pages/Public/Home"));
-const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
-const Contact = lazy(() => import("./pages/Public/Contact/Contact"));
-const About = lazy(() => import("./pages/Public/About/About"));
-const Event = lazy(() => import("./pages/Public/Event/Event"));
-const EventDetails = lazy(() => import("./pages/Public/Event/EventDetails"));
+const EventsList = lazy(() => import("./components/pages/adminManagementPages/eventsPage/EventsList"));
+const EventsCreate = lazy(() => import("./components/pages/adminManagementPages/eventsPage/EventsCreate"));
+const EventsEdit = lazy(() => import("./components/pages/adminManagementPages/eventsPage/EventsEdit"));
+const EventsDetails = lazy(() => import("./components/pages/adminManagementPages/eventsPage/EventsDetails"));
 
-const NotFound = lazy(() => import("./pages/Notfound"));
+const TicketsList = lazy(() => import("./components/pages/adminManagementPages/ticketsPage/TicketsList"));
+const TicketsEdit = lazy(() => import("./components/pages/adminManagementPages/ticketsPage/TicketsEdit"));
+const TicketsDetails = lazy(() => import("./components/pages/adminManagementPages/ticketsPage/TicketsDetails"));
 
-const AdminDashboard = lazy(() => import("./pages/Dashboard/AdminDashboard"));
-const UserList = lazy(() => import("./pages/User/UserList"));
-const CreateUser = lazy(() => import("./pages/User/CreateUser"));
-const UserProfilePage = lazy(() => import("./pages/User/UserProfilePage"));
-const UserEditForm = lazy(() => import("./pages/User/UserEditForm"));
+const TicketCategoriesList = lazy(() => import("./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesList"));
+const TicketCategoriesDetails = lazy(() => import("./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesDetails"));
+const TicketCategoriesEdit = lazy(() => import("./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesEdit"));
 
-const CategoriesList = lazy(() => import("./pages/Categories/CategoriesList"));
-const CategoryForm = lazy(() => import("./pages/Categories/CategoryForm"));
-const ViewCategoryDetails = lazy(() =>
-  import("./pages/Categories/ViewCategoryDetails")
-);
-const CategoryUpdate = lazy(() => import("./pages/Categories/CategoryUpdate"));
-
-const AllEventslist = lazy(() => import("./pages/Events/AllEventslist"));
-const EventForm = lazy(() => import("./pages/Events/EventForm"));
-const ViewEventsDetails = lazy(() =>
-  import("./pages/Events/ViewEventsDetails")
-);
-const EventEditForm = lazy(() => import("./pages/Events/EventEditForm"));
-
-const TicketsList = lazy(() => import("./pages/Tickets/TicketsList"));
-const TicketsForm = lazy(() => import("./pages/Tickets/TicketsForm"));
-const TicketsUpdate = lazy(() => import("./pages/Tickets/TicketsUpdate"));
-const ViewTicketsDetails = lazy(() =>
-  import("./pages/Tickets/ViewTicketsDetails")
-);
-
-const TicketCategories = lazy(() =>
-  import("./pages/TicketCategories/TicketCategories")
-);
-const TicketCategoriesDetails = lazy(() =>
-  import("./pages/TicketCategories/TicketCategoriesDetails")
-);
-const TicketCategoriesUpdate = lazy(() =>
-  import("./pages/TicketCategories/TicketCategoriesUpdate")
-);
-
-const UserDashboard = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/UserDashboard")
-);
-const UserViewTicket = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/TicketManagement/UserViewTicket")
-);
-
-const OrganizerDashboard = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/OrganizerDashboard")
-);
-const EventManagement = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/EventManagement")
-);
-const CreateEventOrganizer = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer")
-);
-const EventDetailsDetails = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/EventDetailsDetails")
-);
-const SalesOverview = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/EventManagement/SalesOverview")
-);
-const TicketList = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/EventManagement/TicketList")
-);
+const UserDashboard = lazy(() => import("./components/pages/userManagementPages/userDashboardPage/UserDashboard"));
+const BookingTicketDetails = lazy(() => import("./components/pages/userManagementPages/ticketManagement/BookingTicketDetails"));
+const EventSalesOverview = lazy(() => import("./components/pages/userManagementPages/eventManagementPage/EventSalesOverview"));
+const EventTicketList = lazy(() => import("./components/pages/userManagementPages/eventManagementPage/EventTicketList"));
 
 function App() {
   return (
     <Suspense fallback={<PageLoading />}>
       <Routes>
         {/* Public layout */}
-        <Route path="/" element={<Layout />}>
+        <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="event" element={<Event />} />
-          <Route path="event-details/:id" element={<EventDetails />} />
+          <Route path="event-details/:id" element={<EventDetailsPage />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
           <Route path="terms-of-service" element={<TermsOfService />} />
@@ -120,54 +79,41 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="user-list" element={<UserList />} />
-            <Route path="create-user" element={<CreateUser />} />
-            <Route path="user-profile/:id" element={<UserProfilePage />} />
-            <Route path="edit/:id" element={<UserEditForm />} />
-            <Route path="categories" element={<CategoriesList />} />
-            <Route path="create-category" element={<CategoryForm />} />
-            <Route path="categories/:id" element={<ViewCategoryDetails />} />
-            <Route path="categories/edit/:id" element={<CategoryUpdate />} />
-            <Route path="events" element={<AllEventslist />} />
-            <Route path="create-event" element={<EventForm />} />
-            <Route path="events-details/:id" element={<ViewEventsDetails />} />
-            <Route path="event-edit/:id" element={<EventEditForm />} />
-            <Route path="tickets" element={<TicketsList />} />
-            <Route path="tickets/create-ticket" element={<TicketsForm />} />
-            <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
-            <Route path="tickets/:id" element={<ViewTicketsDetails />} />
-            <Route path="ticket-categories" element={<TicketCategories />} />
-            <Route
-              path="ticket-categories/:id"
-              element={<TicketCategoriesDetails />}
-            />
-            <Route
-              path="ticket-categories/:id/edit"
-              element={<TicketCategoriesUpdate />}
-            />
+            <Route path="user-create" element={<UserCreate />} />
+            <Route path="user-edit/:id" element={<UserEdit />} />
+            <Route path="user-profile/:id" element={<UserProfile />} />
+
+            <Route path="categories-list" element={<CategoryList />} />
+            <Route path="categories-create" element={<CategoryCreate />} />
+            <Route path="categories-edit/:id" element={<CategoryEdit />} />
+            <Route path="categories-details/:id"element={<CategoryDetails />} />
+
+            <Route path="events-list" element={<EventsList />} />
+            <Route path="events-create" element={<EventsCreate />} />
+            <Route path="events-edit/:id" element={<EventsEdit />} />
+            <Route path="events-details/:id" element={<EventsDetails />} />
+
+            <Route path="tickets-list" element={<TicketsList />} />
+            <Route path="tickets-edit/:id" element={<TicketsEdit />} />
+            <Route path="tickets-details/:id" element={<TicketsDetails />} />
+            {/* <Route path="tickets-create" element={<TicketsCreate />} /> */}
+
+            <Route path="ticket-categories-list" element={<TicketCategoriesList />}/>
+            <Route path="ticket-categories-details/:id" element={<TicketCategoriesDetails />} />
+            <Route path="ticket-categories-edit/:id" element={<TicketCategoriesEdit />} />
           </Route>
         </Route>
 
         {/* User Layout */}
         <Route element={<PrivateRoute allowRole="user" />}>
-          <Route path="/user" element={<Layout />}>
-            <Route index element={<UserDashboard />} />
+          <Route path="/user" element={<UserLayout />}>
+            {/* <Route index element={<UserDashboard />} /> */}
             <Route path="dashboard" element={<UserDashboard />} />
-            <Route path="user-view-ticket/:id" element={<UserViewTicket />} />
-            <Route path="sales-overview/:id" element={<SalesOverview />} />
-            <Route path="ticket-list/:id" element={<TicketList />} />
-          </Route>
-        </Route>
+            <Route path="booking-ticket-details/:id" element={<BookingTicketDetails />} />
 
-        {/* Organizer Layout */}
-        <Route element={<PrivateRoute allowRole="organizer" />}>
-          <Route path="/organizer" element={<Layout />}>
-            <Route path="dashboard" element={<OrganizerDashboard />} />
-            <Route path="event-management" element={<EventManagement />} />
-            <Route path="create-event" element={<CreateEventOrganizer />} />
-            <Route
-              path="events-details/:id"
-              element={<EventDetailsDetails />}
-            />
+            <Route path="events-sales-overview/:id" element={<EventSalesOverview />} />
+            <Route path="events-ticket-list/:id" element={<EventTicketList />} />
+
           </Route>
         </Route>
 
