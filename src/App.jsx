@@ -72,6 +72,9 @@ import EventsDetails from "./components/pages/adminManagementPages/eventsPage/Ev
 import TicketsList from "./components/pages/adminManagementPages/ticketsPage/TicketsList";
 import TicketsEdit from './components/pages/adminManagementPages/ticketsPage/TicketsEdit';
 import TicketsDetails from './components/pages/adminManagementPages/ticketsPage/TicketsDetails';
+import TicketCategoriesList from "./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesList";
+import TicketCategoriesDetails from "./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesDetails";
+import TicketCategoriesEdit from "./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesEdit";
 
 function App() {
   return (
@@ -121,16 +124,10 @@ function App() {
             <Route path="tickets-edit/:id" element={<TicketsEdit />} />
             <Route path="tickets-details/:id" element={<TicketsDetails />} />
             {/* <Route path="tickets-create" element={<TicketsCreate />} /> */}
-            
-            {/* <Route path="ticket-categories" element={<TicketCategories />} /> */}
-           {/* <Route
-              path="ticket-categories/:id"
-              element={<TicketCategoriesDetails />}
-            />
-            <Route
-              path="ticket-categories/:id/edit"
-              element={<TicketCategoriesUpdate />}
-            /> */}
+
+            <Route path="ticket-categories-list" element={<TicketCategoriesList />} />
+            <Route path="ticket-categories-details/:id" element={<TicketCategoriesDetails />} />
+            <Route path="ticket-categories-edit/:id" element={<TicketCategoriesEdit />} />
           </Route>
         </Route>
 

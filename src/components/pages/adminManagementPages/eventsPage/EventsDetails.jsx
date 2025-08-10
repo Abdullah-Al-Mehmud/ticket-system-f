@@ -658,7 +658,7 @@ const EventsDetails = () => {
                                 <div>
                                   <div className="flex items-center">
                                     <a
-                                      href={`/admin/ticket-categories/${t.id}`}
+                                      href={`/admin/ticket-categories-details/${t.id}`}
                                       className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900"
                                     >
                                       {t.name}

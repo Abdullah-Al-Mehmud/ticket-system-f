@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   useUpdateTicketCategoryMutation,
   useGetTicketCategoryByIdQuery,
-} from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+} from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 
 import {
   Calendar,
@@ -17,9 +17,9 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
+import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
 
-const TicketCategoriesUpdate = () => {
+const TicketCategoriesEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -377,4 +377,4 @@ const TicketCategoriesUpdate = () => {
   );
 };
 
-export default TicketCategoriesUpdate;
+export default TicketCategoriesEdit;

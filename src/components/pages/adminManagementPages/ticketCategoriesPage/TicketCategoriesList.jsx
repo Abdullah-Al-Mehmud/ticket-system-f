@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
+import ConfirmModal from "../../../../components/common/ConfirmModel/ConfirmModal";
+import TableRowSkeleton from "../../../../components/common/LoaderComponent/TableRowSkeleton";
 import {
   useGetTicketCategoriesQuery,
   useDeleteTicketCategoryMutation,
-} from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+} from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 
-export default function TicketCategories() {
+export default function TicketCategoriesList() {
   const [pageConfig, setPageConfig] = useState({
     page: 1,
     count: 10,
@@ -176,7 +176,7 @@ export default function TicketCategories() {
                       <td className="px-6 py-4 text-sm text-gray-800 font-medium">
                         <Link
                           className="hover:underline"
-                          to={`/admin/ticket-categories/${category.id}`}
+                          to={`/admin/ticket-categories-details/${category.id}`}
                         >
                           #{category.id}
                         </Link>
@@ -184,7 +184,7 @@ export default function TicketCategories() {
                       <td className="px-6 py-4 text-sm text-gray-800">
                         <Link
                           className="hover:underline"
-                          to={`/admin/ticket-categories/${category.id}`}
+                          to={`/admin/ticket-categories-details/${category.id}`}
                         >
                           {category.name}
                         </Link>
@@ -210,14 +210,14 @@ export default function TicketCategories() {
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
                           <Link
-                            to={`/admin/ticket-categories/${category.id}`}
+                            to={`/admin/ticket-categories-details/${category.id}`}
                             className="p-2 text-blue-600 hover:bg-blue-100 rounded-md"
                             title="View"
                           >
                             <Eye size={16} />
                           </Link>
                           <Link
-                            to={`/admin/ticket-categories/${category.id}/edit`}
+                            to={`/admin/ticket-categories-edit/${category.id}`}
                             className="p-2 text-green-600 hover:bg-green-100 rounded-md"
                             title="Edit"
                           >

@@ -11,8 +11,8 @@ import {
   Share2,
 } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useGetTicketCategoryByIdQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
+import { useGetTicketCategoryByIdQuery } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
+import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
 
 function TicketCategoriesDetails() {
   const [showFullDescription, setShowFullDescription] = useState(false);
