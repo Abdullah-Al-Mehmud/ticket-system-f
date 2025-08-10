@@ -24,15 +24,15 @@ function App() {
           <Route index element={<Home />} />
           <Route path="event" element={<Event />} />
           <Route path="event-details/:id" element={<EventDetailsPage />} />
-          {/* <Route path="contact" element={<Contact />} /> */}
-          {/* <Route path="about" element={<About />} /> */}
-          {/* <Route path="terms-of-service" element={<TermsOfService />} /> */}
-          {/* <Route path="refund-policy" element={<RefundPolicy />} /> */}
-          {/* <Route path="help-center" element={<HelpCenter />} /> */}
+          <Route path="contact" element={<Contact />} />
+          <Route path="about" element={<About />} />
+          <Route path="terms-of-service" element={<TermsOfService />} />
+          <Route path="refund-policy" element={<RefundPolicy />} />
+          <Route path="help-center" element={<HelpCenter />} />
 
-          {/* <Route path="careers" element={<Careers />} /> */}
-          {/* <Route path="press" element={<Press />} /> */}
-          {/* <Route path="privacy-policy" element={<PrivacyPolicy />} /> */}
+          <Route path="careers" element={<Careers />} />
+          <Route path="press" element={<Press />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
 
           {/* <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
