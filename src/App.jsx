@@ -4,7 +4,7 @@ const PageLoading = lazy(() => import("./components/common/loaderComponent/PageL
 const Home = lazy(() => import("./components/pages/userManagementPages/publicPage/Home"));
 const UserLayout = lazy(() => import("./components/layout/userLayout/UserLayout"));
 const Event = lazy(() => import("./components/pages/userManagementPages/publicPage/EventPage/Event"));
-const EventDetailsAdmin = lazy(() => import("./components/pages/adminManagementPages/eventsPage/ViewEventsDetails"));
+import EventDetailsPage from "./components/pages/userManagementPages/publicPage/EventPage/EventDetails";
 const Contact = lazy(() => import("./components/pages/userManagementPages/publicPage/ContactPage/Contact"));
 const About = lazy(() => import("./components/pages/userManagementPages/publicPage/AboutPage/About"));
 const TermsOfService = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/TermsOfService"));
@@ -23,16 +23,16 @@ function App() {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="event" element={<Event />} />
-          {/* <Route path="event-details/:id" element={<EventDetailsAdmin />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="about" element={<About />} />
-          <Route path="terms-of-service" element={<TermsOfService />} />
-          <Route path="refund-policy" element={<RefundPolicy />} />
-          <Route path="help-center" element={<HelpCenter />} />
+          <Route path="event-details/:id" element={<EventDetailsPage />} />
+          {/* <Route path="contact" element={<Contact />} /> */}
+          {/* <Route path="about" element={<About />} /> */}
+          {/* <Route path="terms-of-service" element={<TermsOfService />} /> */}
+          {/* <Route path="refund-policy" element={<RefundPolicy />} /> */}
+          {/* <Route path="help-center" element={<HelpCenter />} /> */}
 
-          <Route path="careers" element={<Careers />} />
-          <Route path="press" element={<Press />} />
-          <Route path="privacy-policy" element={<PrivacyPolicy />} /> */}
+          {/* <Route path="careers" element={<Careers />} /> */}
+          {/* <Route path="press" element={<Press />} /> */}
+          {/* <Route path="privacy-policy" element={<PrivacyPolicy />} /> */}
 
           {/* <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />

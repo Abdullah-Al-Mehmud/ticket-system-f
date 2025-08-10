@@ -13,11 +13,11 @@ import {
   Info,
   ShieldCheck,
 } from "lucide-react";
-import { useGetEventByIdQuery } from "../../../redux/features/event/EventApiSlice";
-import { useCreateTicketMutation } from "../../../redux/features/tickets/ticketsApiSlice";
+import { useGetEventByIdQuery } from "../../../../../store/features/event/EventApiSlice";
+import { useCreateTicketMutation } from "../../../../../store/features/tickets/ticketsApiSlice";
 import toast from "react-hot-toast";
-import PageLoading from "../../../components/LoaderComponent/PageLoading";
 import BookingModal from "./BookingModal";
+import PageLoading from "../../../../../components/common/loaderComponent/PageLoading";
 
 const EventDetailsPage = () => {
   const { id } = useParams();
