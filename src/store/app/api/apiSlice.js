@@ -5,17 +5,12 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_URL,
     prepareHeaders: (headers, { getState }) => {
-      let token = localStorage.getItem("token"); 
-
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-
-      if (!headers.get("Content-Type")) {
-        headers.set("Accept", "application/json");
-      }
+      const token = getState().auth?.token ?? localStorage.getItem("token");
+      if (token) headers.set("Authorization", `Bearer ${token}`);
+      headers.set("Accept", "application/json");
       return headers;
     },
+    credentials: "include",
   }),
   tagTypes: ["User", "Event", "Other"],
   endpoints: (builder) => ({}), // Inject endpoints later

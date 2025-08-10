@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { apiSlice } from './api/apiSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import { apiSlice } from "./api/apiSlice";
 
 export const store = configureStore({
   reducer: {
@@ -7,5 +7,5 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: process.env.NODE_ENV !== 'production',
+  devTools: import.meta.env.NODE_ENV !== "production",
 });
