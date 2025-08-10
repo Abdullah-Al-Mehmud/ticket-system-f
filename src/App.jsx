@@ -5,6 +5,9 @@ const Home = lazy(() => import("./components/pages/userManagementPages/publicPag
 const UserLayout = lazy(() => import("./components/layout/userLayout/UserLayout"));
 const Event = lazy(() => import("./components/pages/userManagementPages/publicPage/EventPage/Event"));
 import EventDetailsPage from "./components/pages/userManagementPages/publicPage/EventPage/EventDetails";
+import PublicRoute from "./components/layout/PublicRoute";
+import Register from "./components/pages/authPage/Register";
+import Login from "./components/pages/authPage/Login";
 const Contact = lazy(() => import("./components/pages/userManagementPages/publicPage/ContactPage/Contact"));
 const About = lazy(() => import("./components/pages/userManagementPages/publicPage/AboutPage/About"));
 const TermsOfService = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/TermsOfService"));
@@ -34,10 +37,10 @@ function App() {
           <Route path="press" element={<Press />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
 
-          {/* <Route element={<PublicRoute />}>
+          <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
-          </Route> */}
+          </Route>
         </Route>
 
         {/* Admin Layout */}

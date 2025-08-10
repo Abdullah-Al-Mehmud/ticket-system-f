@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../redux/features/auth/AuthApiSlice";
 import toast from "react-hot-toast";
+import { useRegisterMutation } from "../../../store/features/auth/AuthApiSlice";
 
 const Register = () => {
   const navigate = useNavigate();
