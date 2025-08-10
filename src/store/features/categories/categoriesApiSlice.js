@@ -1,4 +1,4 @@
-import queryGenerator from "../../../../utils/queryGenerator";
+import queryGenerator from "../../../utils/queryGenerator";
 import { apiSlice } from "../../app/api/apiSlice";
 
 export const categoriesApiSlice = apiSlice.injectEndpoints({

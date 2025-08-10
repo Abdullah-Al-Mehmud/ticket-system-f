@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetEventByIdQuery } from "../../../../redux/features/event/EventApiSlice";
 import PageLoading from "../../../../components/LoaderComponent/PageLoading";
-import exportToPDF from "../../../../../utils/exportToPDF";
+import exportToPDF from "../../../../utils/exportToPDF";
 import { Download } from "lucide-react";
 
 const TicketList = () => {

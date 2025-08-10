@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Calendar, MapPin, Upload } from "lucide-react";
-import { useCreateEventMutation } from "../../redux/features/event/EventApiSlice";
-import { useGetCategoriesQuery } from "../../redux/features/categories/categoriesApiSlice";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useCreateEventMutation } from "../../../../store/features/event/EventApiSlice";
+import { useGetCategoriesQuery } from "../../../../store/features/categories/categoriesApiSlice";
 
-const EventForm = () => {
+const EventsCreate = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     category_id: "",
@@ -20,7 +20,7 @@ const EventForm = () => {
 
   const [errors, setErrors] = useState({});
   const [createEvent, { isLoading }] = useCreateEventMutation();
-  const { data: categories } = useGetCategoriesQuery({all: true});
+  const { data: categories } = useGetCategoriesQuery({ all: true });
   const CategoriesList = categories?.data || [];
 
   const handleChange = (e) => {
@@ -92,7 +92,7 @@ const EventForm = () => {
     try {
       await createEvent(submissionData).unwrap();
       toast.success("Event created successfully!");
-      navigate("/admin/events");
+      navigate("/admin/events-list");
     } catch (err) {
       console.error("Error creating event:", err);
       toast.error(err?.data?.message || "Something went wrong!");
@@ -175,7 +175,7 @@ const EventForm = () => {
 
           {/* Location */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+            <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
               <MapPin size={16} /> Location
             </label>
             <input
@@ -193,7 +193,7 @@ const EventForm = () => {
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+              <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
                 <Calendar size={16} /> Start Date
               </label>
               <input
@@ -209,7 +209,7 @@ const EventForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+              <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
                 <Calendar size={16} /> End Date
               </label>
               <input
@@ -227,7 +227,7 @@ const EventForm = () => {
 
           {/* Image Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+            <label className=" text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
               <Upload size={16} /> Upload Event Image
             </label>
             <input
@@ -286,4 +286,4 @@ const EventForm = () => {
   );
 };
 
-export default EventForm;
+export default EventsCreate;

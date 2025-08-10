@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../../../components/common/loaderComponent/TableRowSkeleton";
+import ConfirmModal from "../../../../components/common/confirmModel/ConfirmModal";
 import {
-  useGetEventsQuery,
   useDeleteEventMutation,
-} from "../../redux/features/event/EventApiSlice";
+  useGetEventsQuery,
+} from "../../../../store/features/event/EventApiSlice";
 
-const AllEventsList = () => {
+const EventsList = () => {
   const [configPage, setConfigPage] = useState({
     page: 1,
     count: 10,
@@ -96,7 +96,7 @@ const AllEventsList = () => {
             <p className="mt-2 text-gray-600">Manage all your events</p>
           </div>
           <Link
-            to="/admin/create-event"
+            to="/admin/events-create"
             className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
             <Plus size={20} /> Create Event
@@ -272,7 +272,7 @@ const AllEventsList = () => {
                               <Eye size={16} />
                             </Link>
                             <Link
-                              to={`/admin/event-edit/${event.id}`}
+                              to={`/admin/events-edit/${event.id}`}
                               className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
                             >
                               <Edit size={16} />
@@ -375,4 +375,4 @@ const AllEventsList = () => {
   );
 };
 
-export default AllEventsList;
+export default EventsList;

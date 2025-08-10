@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { Upload } from "lucide-react";
+import { useGetCategoriesQuery } from "../../../../store/features/categories/categoriesApiSlice";
 import {
   useGetEventByIdQuery,
   useUpdateEventMutation,
-} from "../../redux/features/event/EventApiSlice";
-import { useGetCategoriesQuery } from "../../redux/features/categories/categoriesApiSlice";
-import { Upload } from "lucide-react";
+} from "../../../../store/features/event/EventApiSlice";
 
-const EventEditForm = () => {
+const EventsEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -119,7 +119,7 @@ const EventEditForm = () => {
     if (!validateForm()) return;
 
     const finalForm = new FormData();
-    finalForm.append("_method", "PATCH"); // for Laravel
+    finalForm.append("_method", "PATCH");
     finalForm.append("title", formData.title);
     finalForm.append("category_id", formData.category_id);
     finalForm.append("event_description", formData.event_description);
@@ -133,7 +133,7 @@ const EventEditForm = () => {
     try {
       await updateEvent({ id, formData: finalForm }).unwrap();
       toast.success("Event updated successfully!");
-      navigate("/admin/events");
+      navigate("/admin/events-list");
     } catch (err) {
       toast.error(err?.data?.message || "Update failed.");
     }
@@ -244,7 +244,7 @@ const EventEditForm = () => {
 
           {/* Image Upload + Preview */}
           <div>
-            <label className="block mb-1 flex items-center gap-1">
+            <label className=" mb-1 flex items-center gap-1">
               <Upload size={16} /> Upload Image
             </label>
             <input
@@ -307,4 +307,4 @@ const EventEditForm = () => {
   );
 };
 
-export default EventEditForm;
+export default EventsEdit;

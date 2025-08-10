@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Calendar,
@@ -15,32 +16,30 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import {
-  useAssignOrganizerMutation,
-  useDeleteEventMutation,
-  useGetEventByIdQuery,
-  useUpdateEventStatusMutation,
-} from "../../redux/features/event/EventApiSlice";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
-import toast from "react-hot-toast";
-import { useDeleteTicketCategoryMutation } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
-import TicketCategoryModal from "./TicketCategoryModal";
-import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import { useGetUserListQuery } from "../../redux/features/user/userApiSlice";
-import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "../../components/ui/popover";
-import { Button } from "../../components/ui/button";
-import { cn } from "../../lib/utils";
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   Command,
   CommandInput,
   CommandGroup,
   CommandItem,
-} from "../../components/ui/command";
-
-const EventDetailsAdmin = () => {
+} from "@/components/ui/command";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
+import TicketCategoryCreate from "./TicketCategoryCreateEdit";
+import ConfirmModal from "../../../../components/common/confirmModel/ConfirmModal";
+import {
+  useAssignOrganizerMutation,
+  useDeleteEventMutation,
+  useGetEventByIdQuery,
+  useUpdateEventStatusMutation,
+} from "../../../../store/features/event/EventApiSlice";
+import { useGetUserListQuery } from "../../../../store/features/user/userApiSlice";
+import { useDeleteTicketCategoryMutation } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
+const EventsDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -184,7 +183,7 @@ const EventDetailsAdmin = () => {
   const handleDeleteEvent = async () => {
     try {
       await deleteEvent(event?.id).unwrap();
-      navigate("/admin/events");
+      navigate("/admin/events-list");
       toast.success("Event deleted successfully!");
     } catch (error) {
       toast.error("Failed to delete event.");
@@ -610,7 +609,7 @@ const EventDetailsAdmin = () => {
                 </div>
 
                 {/* Modal */}
-                <TicketCategoryModal
+                <TicketCategoryCreate
                   isOpen={isModalOpen}
                   onClose={handleModalClose}
                   initialData={selectedCategory}
@@ -857,4 +856,4 @@ const EventDetailsAdmin = () => {
   );
 };
 
-export default EventDetailsAdmin;
+export default EventsDetails;

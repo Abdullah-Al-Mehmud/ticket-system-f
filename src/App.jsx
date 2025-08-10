@@ -12,22 +12,6 @@ const UserLayout = lazy(() =>
 const Event = lazy(() =>
   import("./components/pages/userManagementPages/publicPage/EventPage/Event")
 );
-import EventDetailsPage from "./components/pages/userManagementPages/publicPage/EventPage/EventDetails";
-import PublicRoute from "./components/layout/PublicRoute";
-import Register from "./components/pages/authPage/Register";
-import Login from "./components/pages/authPage/Login";
-import PrivateRoute from "./components/layout/PrivateRoute";
-import AdminLayout from "./components/layout/adminLayout/AdminLayout";
-import AdminDashboard from "./components/pages/adminManagementPages/adminDashboardPage/AdminDashboard";
-import UserList from "./components/pages/adminManagementPages/usersPage/UserList";
-import UserCreate from "./components/pages/adminManagementPages/usersPage/UserCreate";
-import UserEdit from "./components/pages/adminManagementPages/usersPage/UserEdit";
-import UserProfile from "./components/pages/adminManagementPages/usersPage/UserProfile";
-import CategoryList from "./components/pages/adminManagementPages/categoriesPage/CategoryList";
-import CategoryCreate from "./components/pages/adminManagementPages/categoriesPage/CategoryCreate";
-import CategoryEdit from "./components/pages/adminManagementPages/categoriesPage/CategoryEdit";
-import CategoryDetails from "./components/pages/adminManagementPages/categoriesPage/CategoryDetails";
-
 
 const Contact = lazy(() =>
   import(
@@ -66,6 +50,25 @@ const PrivacyPolicy = lazy(() =>
   )
 );
 const NotFound = lazy(() => import("./components/pages/authPage/NotFound"));
+import EventDetailsPage from "./components/pages/userManagementPages/publicPage/EventPage/EventDetails";
+import PublicRoute from "./components/layout/PublicRoute";
+import Register from "./components/pages/authPage/Register";
+import Login from "./components/pages/authPage/Login";
+import PrivateRoute from "./components/layout/PrivateRoute";
+import AdminLayout from "./components/layout/adminLayout/AdminLayout";
+import AdminDashboard from "./components/pages/adminManagementPages/adminDashboardPage/AdminDashboard";
+import UserList from "./components/pages/adminManagementPages/usersPage/UserList";
+import UserCreate from "./components/pages/adminManagementPages/usersPage/UserCreate";
+import UserEdit from "./components/pages/adminManagementPages/usersPage/UserEdit";
+import UserProfile from "./components/pages/adminManagementPages/usersPage/UserProfile";
+import CategoryList from "./components/pages/adminManagementPages/categoriesPage/CategoryList";
+import CategoryCreate from "./components/pages/adminManagementPages/categoriesPage/CategoryCreate";
+import CategoryEdit from "./components/pages/adminManagementPages/categoriesPage/CategoryEdit";
+import CategoryDetails from "./components/pages/adminManagementPages/categoriesPage/CategoryDetails";
+import EventsList from "./components/pages/adminManagementPages/eventsPage/Eventslist";
+import EventsCreate from "./components/pages/adminManagementPages/eventsPage/EventsCreate";
+import EventsEdit from "./components/pages/adminManagementPages/eventsPage/EventsEdit";
+import EventsDetails from "./components/pages/adminManagementPages/eventsPage/EventsDetails";
 
 function App() {
   return (
@@ -106,16 +109,17 @@ function App() {
             <Route path="categories-edit/:id" element={<CategoryEdit />} />
             <Route path="categories-details/:id" element={<CategoryDetails />} />
 
-            {/* <Route path="events" element={<AllEventslist />} />
-            <Route path="create-event" element={<EventForm />} />
-            <Route path="events-details/:id" element={<ViewEventsDetails />} />
-            <Route path="event-edit/:id" element={<EventEditForm />} />
-            <Route path="tickets" element={<TicketsList />} />
+            <Route path="events-list" element={<EventsList />} />
+            <Route path="events-create" element={<EventsCreate />} />
+            <Route path="events-edit/:id" element={<EventsEdit />} />
+            <Route path="events-details/:id" element={<EventsDetails />} />
+
+            {/* <Route path="tickets" element={<TicketsList />} />
             <Route path="tickets/create-ticket" element={<TicketsForm />} />
             <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
             <Route path="tickets/:id" element={<ViewTicketsDetails />} />
-            <Route path="ticket-categories" element={<TicketCategories />} /> */}
-            {/* <Route
+            <Route path="ticket-categories" element={<TicketCategories />} />
+            <Route
               path="ticket-categories/:id"
               element={<TicketCategoriesDetails />}
             />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   useUpdateTicketCategoryMutation,
   useCreateTicketCategoryMutation,
-} from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
+} from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import {
@@ -14,7 +14,7 @@ import {
   X,
 } from "lucide-react";
 
-const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
+const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
   const { id } = useParams();
 
   const [form, setForm] = useState({
@@ -277,4 +277,4 @@ const TicketCategoryModal = ({ isOpen, onClose, initialData }) => {
   );
 };
 
-export default TicketCategoryModal;
+export default TicketCategoryCreate;
