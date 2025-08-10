@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, Search } from "lucide-react";
-import { useGetEventsQuery } from "../../../redux/features/event/EventApiSlice";
-import { useGetCategoriesQuery } from "../../../redux/features/categories/categoriesApiSlice";
 import EventCard from "./EventCard";
-import EventCardLoadingSkeleton from "../../../components/LoaderComponent/EventCardLoadingSkeleton";
-import CategoryLoadingSkeleton from "../../../components/LoaderComponent/CategoryLoadingSkeleton";
 import { useLocation } from "react-router-dom";
+import { useGetEventsQuery } from "../../../../../store/features/event/EventApiSlice";
+import { useGetCategoriesQuery } from "../../../../../store/features/categories/categoriesApiSlice";
+import CategoryLoadingSkeleton from "../../../../../components/common/loaderComponent/CategoryLoadingSkeleton";
+import EventCardLoadingSkeleton from "../../../../../components/common/loaderComponent/EventCardLoadingSkeleton";
 
 const Event = () => {
   const location = useLocation();

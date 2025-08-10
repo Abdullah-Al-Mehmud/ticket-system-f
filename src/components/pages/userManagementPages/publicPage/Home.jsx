@@ -1,8 +1,8 @@
-import TrendingEvent from "./Home/TrendingEvent";
-import Hero from "./Home/Hero";
-import Trusted from "./Home/Trusted";
-import Newsletter from "./Home/Newsletter";
-import FAQ from "./Home/FAQ";
+import TrendingEvent from "./HomePage/TrendingEvent";
+import Hero from "./HomePage/Hero";
+import Trusted from "./HomePage/Trusted";
+import Newsletter from "./HomePage/Newsletter";
+import FAQ from "./HomePage/FAQ";
 
 const Home = () => {
   return (

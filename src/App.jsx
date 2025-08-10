@@ -1,8 +1,18 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import PageLoading from "./components/common/loaderComponent/PageLoading";
-import Home from "./components/pages/userManagementPages/publicPage/Home";
-import UserLayout from "./components/layout/userLayout/UserLayout";
+const PageLoading = lazy(() => import("./components/common/loaderComponent/PageLoading"));
+const Home = lazy(() => import("./components/pages/userManagementPages/publicPage/Home"));
+const UserLayout = lazy(() => import("./components/layout/userLayout/UserLayout"));
+const Event = lazy(() => import("./components/pages/userManagementPages/publicPage/EventPage/Event"));
+const EventDetailsAdmin = lazy(() => import("./components/pages/adminManagementPages/eventsPage/ViewEventsDetails"));
+const Contact = lazy(() => import("./components/pages/userManagementPages/publicPage/ContactPage/Contact"));
+const About = lazy(() => import("./components/pages/userManagementPages/publicPage/AboutPage/About"));
+const TermsOfService = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/TermsOfService"));
+const RefundPolicy = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/RefundPolicy"));
+const HelpCenter = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/HelpCenter"));
+const Careers = lazy(() => import("./components/pages/userManagementPages/publicPage/CompanyPage/Careers"));
+const Press = lazy(() => import("./components/pages/userManagementPages/publicPage/CompanyPage/Press"));
+const PrivacyPolicy = lazy(() => import("./components/pages/userManagementPages/publicPage/CompanyPage/PrivacyPolicy"));
 const NotFound = lazy(() => import("./components/pages/authPage/NotFound"));
 
 function App() {
@@ -12,8 +22,8 @@ function App() {
         {/* Public layout */}
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
-          {/* <Route path="event" element={<Event />} />
-          <Route path="event-details/:id" element={<EventDetails />} />
+          <Route path="event" element={<Event />} />
+          {/* <Route path="event-details/:id" element={<EventDetailsAdmin />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
           <Route path="terms-of-service" element={<TermsOfService />} />
@@ -22,9 +32,9 @@ function App() {
 
           <Route path="careers" element={<Careers />} />
           <Route path="press" element={<Press />} />
-          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} /> */}
 
-          <Route element={<PublicRoute />}>
+          {/* <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
           </Route> */}
