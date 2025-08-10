@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Ticket, Banknote, Gift, ChartBar } from "lucide-react";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
 const MetricCard = ({ title, value, icon, colorClass = "bg-white", textColorClass = "text-gray-900" }) => (
   <Card className={cn("duration-200", colorClass)}>
     <CardContent className="flex items-center justify-between space-x-4">
@@ -22,7 +23,7 @@ const EventSalesOverview = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetEventByIdQuery(id);
 
-  if (isLoading) return <p >loading</p>;
+  if (isLoading) return <p ><PageLoading/></p>;
 
   if (isError || !data?.data) {
     return <p>Failed to load sales data</p>;
