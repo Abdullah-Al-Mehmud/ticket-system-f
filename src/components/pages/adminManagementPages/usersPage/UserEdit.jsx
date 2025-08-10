@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { User, ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
-import {
-  useUpdateUserMutation,
-  useGetUserByIdQuery,
-} from "../../redux/features/user/userApiSlice";
 import { useParams, useNavigate } from "react-router-dom";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
+import {
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+} from "../../../../store/features/user/userApiSlice";
 
-export default function UserEditForm() {
+export default function UserEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 

@@ -11,13 +11,13 @@ import {
   Activity,
   Eye,
 } from "lucide-react";
-import { useGetUserByIdQuery } from "../../redux/features/user/userApiSlice";
 import { Link, useParams } from "react-router-dom";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
-import { useGetOrganizerEventsQuery } from "../../redux/features/event/EventApiSlice";
-import { useGetUserTicketsQuery } from "../../redux/features/tickets/ticketsApiSlice";
+import { useGetUserByIdQuery } from "../../../../store/features/user/userApiSlice";
+import { useGetOrganizerEventsQuery } from "../../../../store/features/event/EventApiSlice";
+import { useGetUserTicketsQuery } from "../../../../store/features/tickets/ticketsApiSlice";
+import PageLoading from "../../../common/loaderComponent/PageLoading";
 
-export default function UserProfilePage() {
+export default function UserProfile() {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetUserByIdQuery(id);
   const {
@@ -102,7 +102,7 @@ export default function UserProfilePage() {
             </div>
             <div>
               <Link
-                to={`/admin/edit/${id}`}
+                to={`/admin/user-edit/${id}`}
                 className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
               >
                 <Settings className="w-4 h-4" />

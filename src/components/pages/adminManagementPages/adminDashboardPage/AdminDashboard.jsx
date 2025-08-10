@@ -1,6 +1,6 @@
 import React from "react";
 import { Users, UserCheck, Crown } from "lucide-react";
-import { useGetDashboardQuery } from "../../redux/features/user/userApiSlice";
+import { useGetDashboardQuery } from "../../../../store/features/user/userApiSlice";
 
 const StatCard = ({ title, value, icon: Icon }) => (
   <div className="bg-white rounded-lg p-6 border border-gray-200">

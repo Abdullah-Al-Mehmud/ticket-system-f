@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, User, Mail, Lock, ArrowRight } from "lucide-react";
-import { useCreateUserMutation } from "../../redux/features/user/userApiSlice"; // adjust path if needed
 import { Button } from "@/components/ui/button";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useCreateUserMutation } from "../../../../store/features/user/userApiSlice";
 
-const CreateUser = () => {
+const UserCreate = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -89,7 +89,9 @@ const CreateUser = () => {
             placeholder="Enter name"
           />
         </div>
-        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        {errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+        )}
       </div>
 
       {/* Email */}
@@ -106,7 +108,9 @@ const CreateUser = () => {
             placeholder="Enter email"
           />
         </div>
-        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+        {errors.email && (
+          <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+        )}
       </div>
 
       {/* Role */}
@@ -122,7 +126,9 @@ const CreateUser = () => {
           <option value="admin">Admin</option>
           <option value="user">User</option>
         </select>
-        {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role}</p>}
+        {errors.role && (
+          <p className="text-red-500 text-sm mt-1">{errors.role}</p>
+        )}
       </div>
 
       {/* Password */}
@@ -146,12 +152,16 @@ const CreateUser = () => {
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
-        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+        {errors.password && (
+          <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+        )}
       </div>
 
       {/* Confirm Password */}
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Confirm Password</label>
+        <label className="block text-sm font-medium mb-1">
+          Confirm Password
+        </label>
         <div className="relative">
           <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
           <input
@@ -171,28 +181,34 @@ const CreateUser = () => {
           </button>
         </div>
         {errors.password_confirmation && (
-          <p className="text-red-500 text-sm mt-1">{errors.password_confirmation}</p>
+          <p className="text-red-500 text-sm mt-1">
+            {errors.password_confirmation}
+          </p>
         )}
       </div>
 
       {/* Submit Button */}
       <div className="mt-6">
         <Button
-  onClick={handleSubmit}
-  disabled={isSubmitting}
-  className="w-full flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-800 transition-colors duration-300 ease-in-out group"
->
-  Create User 
-  <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-</Button>
-
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="w-full flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-800 transition-colors duration-300 ease-in-out group"
+        >
+          Create User
+          <ArrowRight
+            size={16}
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          />
+        </Button>
 
         {submitSuccess && (
-          <p className="text-green-600 text-sm mt-2 text-center">User created successfully!</p>
+          <p className="text-green-600 text-sm mt-2 text-center">
+            User created successfully!
+          </p>
         )}
       </div>
     </div>
   );
 };
 
-export default CreateUser;
+export default UserCreate;

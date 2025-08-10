@@ -3,12 +3,11 @@ import { User, Plus, Edit, Trash2, Eye, Shield, Crown } from "lucide-react";
 import {
   useDeleteUserMutation,
   useGetUserListQuery,
-} from "../../redux/features/user/userApiSlice";
+} from "../../../../store/features/user/userApiSlice";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
-import AdminDashboard from "../../pages/Dashboard/AdminDashboard";
+import ConfirmModal from "../../../../components/common/confirmModel/ConfirmModal";
+import TableRowSkeleton from "../../../../components/common/loaderComponent/TableRowSkeleton";
 
 const UserList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -107,7 +106,7 @@ const UserList = () => {
             </p>
           </div>
           <Link
-            to="/admin/create-user"
+            to="/admin/user-create"
             className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
             <Plus size={20} /> Add User
@@ -274,7 +273,7 @@ const UserList = () => {
                             <Eye size={16} />
                           </Link>
                           <Link
-                            to={`/admin/edit/${user.id}`}
+                            to={`/admin/user-edit/${user.id}`}
                             className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
                           >
                             <Edit size={16} />
