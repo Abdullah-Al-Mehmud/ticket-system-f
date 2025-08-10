@@ -65,7 +65,7 @@ import CategoryList from "./components/pages/adminManagementPages/categoriesPage
 import CategoryCreate from "./components/pages/adminManagementPages/categoriesPage/CategoryCreate";
 import CategoryEdit from "./components/pages/adminManagementPages/categoriesPage/CategoryEdit";
 import CategoryDetails from "./components/pages/adminManagementPages/categoriesPage/CategoryDetails";
-import EventsList from "./components/pages/adminManagementPages/eventsPage/Eventslist";
+import EventsList from "./components/pages/adminManagementPages/eventsPage/EventsList";
 import EventsCreate from "./components/pages/adminManagementPages/eventsPage/EventsCreate";
 import EventsEdit from "./components/pages/adminManagementPages/eventsPage/EventsEdit";
 import EventsDetails from "./components/pages/adminManagementPages/eventsPage/EventsDetails";
