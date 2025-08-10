@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   useGetUserByIdQuery,
   useUpdateUserMutation,
-} from "../../../redux/features/user/userApiSlice";
+} from "../../../../store/features/user/userApiSlice";
 import toast from "react-hot-toast";
 
-const EditUserModal = ({ isOpen, onClose, userId }) => {
+const UserEdit = ({ isOpen, onClose, userId }) => {
   const { data: userData, isLoading } = useGetUserByIdQuery(userId);
   const [updateUser] = useUpdateUserMutation();
 
@@ -147,4 +147,4 @@ const EditUserModal = ({ isOpen, onClose, userId }) => {
   );
 };
 
-export default EditUserModal;
+export default UserEdit;

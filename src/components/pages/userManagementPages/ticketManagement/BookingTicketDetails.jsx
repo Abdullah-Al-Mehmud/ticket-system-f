@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetTicketByIdQuery } from "../../../../redux/features/tickets/ticketsApiSlice";
+import { useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
 import { Loader2, XCircle, MapPin, Scissors } from "lucide-react";
 
-export default function UserViewTicket() {
+export default function BookingTicketDetails() {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetTicketByIdQuery(id);
 

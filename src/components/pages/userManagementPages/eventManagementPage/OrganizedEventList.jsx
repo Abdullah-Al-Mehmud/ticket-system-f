@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetOrganizerEventsQuery } from "../../../../redux/features/event/EventApiSlice";
-import TableRowSkeleton from "../../../../components/LoaderComponent/TableRowSkeleton";
+import { useGetOrganizerEventsQuery } from "../../../../store/features/event/EventApiSlice";
+import TableRowSkeleton from "../../../../components/common/LoaderComponent/TableRowSkeleton";
 import { Eye } from "lucide-react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -10,7 +10,7 @@ dayjs.extend(relativeTime);
 
 const statusTabs = ["All", "Upcoming", "Live", "Done", "Cancelled"];
 
-function UserOrganizedEventForm() {
+function OrganizedEventList() {
   const { data, isLoading, isError } = useGetOrganizerEventsQuery();
   const [activeTab, setActiveTab] = useState("All");
 
@@ -133,13 +133,13 @@ function UserOrganizedEventForm() {
                   {/* Action Buttons */}
                   <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-12 mt-auto pt-15">
                     <Link
-                      to={`/user/sales-overview/${event.id}`}
+                      to={`/user/events-sales-overview/${event.id}`}
                       className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded font-medium text-sm"
                     >
                       Sales Overview
                     </Link>
                     <Link
-                      to={`/user/ticket-list/${event.id}`}
+                      to={`/user/events-ticket-list/${event.id}`}
                       className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded font-medium text-sm"
                     >
                       Ticket Details
@@ -179,4 +179,4 @@ function UserOrganizedEventForm() {
   );
 }
 
-export default UserOrganizedEventForm;
+export default OrganizedEventList;

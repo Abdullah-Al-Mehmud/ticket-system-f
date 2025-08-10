@@ -1,11 +1,11 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetEventByIdQuery } from "../../../../redux/features/event/EventApiSlice";
-import PageLoading from "../../../../components/LoaderComponent/PageLoading";
+import { useGetEventByIdQuery } from "../../../../store/features/event/EventApiSlice";
+import PageLoading from "../../../common/LoaderComponent/PageLoading";
 import exportToPDF from "../../../../utils/exportToPDF";
 import { Download } from "lucide-react";
 
-const TicketList = () => {
+const EventTicketList = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetEventByIdQuery(id);
 
@@ -132,4 +132,4 @@ const TicketList = () => {
   );
 };
 
-export default TicketList;
+export default EventTicketList;

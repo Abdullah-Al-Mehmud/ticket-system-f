@@ -1,10 +1,10 @@
 import React from "react";
-import { useGetUserTicketsQuery } from "../../../../redux/features/tickets/ticketsApiSlice";
+import { useGetUserTicketsQuery } from "../../../../store/features/tickets/ticketsApiSlice";
 import { Bell, ChartBarStacked, MapPinCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import TableRowSkeleton from "../../../../components/LoaderComponent/TableRowSkeleton";
+import TableRowSkeleton from "../../../../components/common/LoaderComponent/TableRowSkeleton";
 
-function UserModelTicketForm() {
+function BookingTicketList() {
   const { data, isLoading, isError } = useGetUserTicketsQuery();
   return (
     <>
@@ -99,7 +99,7 @@ function UserModelTicketForm() {
               {data.data.map((booking) => (
                 <Link
                   key={booking.id}
-                  to={`/user/user-view-ticket/${booking.id}`}
+                  to={`/user/booking-ticket-details/${booking.id}`}
                 >
                   <div
                     className="relative bg-gradient-to-r from-amber-50 to-amber-100 rounded-lg border-2 border-dashed border-amber-400 cursor-pointer "
@@ -127,13 +127,12 @@ function UserModelTicketForm() {
                       <div className="flex-1 p-4 flex flex-col justify-between">
                         {/* Header */}
                         <div className="border-b border-amber-300 border-dashed pb-3 mb-3">
-                          
                           <div className="flex items-start justify-between ">
                             <h3 className="text-sm font-bold text-amber-900 mb-2 line-clamp-3 leading-tight">
-                            {booking?.ticket_category?.event?.title ||
-                              "Untitled Event"}
-                          </h3>
-                             <span
+                              {booking?.ticket_category?.event?.title ||
+                                "Untitled Event"}
+                            </h3>
+                            <span
                               className={`text-[10px] px-2 py-[2px] rounded-full font-semibold ${
                                 booking.status === "Confirmed"
                                   ? "bg-green-200 text-green-800"
@@ -143,14 +142,11 @@ function UserModelTicketForm() {
                               {booking.status.toUpperCase()}
                             </span>
                           </div>
-                          
 
                           <div className="flex justify-between items-center">
                             <span className="text-xs text-amber-700 font-mono">
-                              {booking?.ticket_category?.name ||
-                                ""}
+                              {booking?.ticket_category?.name || ""}
                             </span>
-                           
                           </div>
                         </div>
 
@@ -223,4 +219,4 @@ function UserModelTicketForm() {
   );
 }
 
-export default UserModelTicketForm;
+export default BookingTicketList;

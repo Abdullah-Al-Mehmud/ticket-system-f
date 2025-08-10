@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetEventByIdQuery } from "../../../../redux/features/event/EventApiSlice";
-import PageLoading from "../../../../components/LoaderComponent/PageLoading";
+import { useGetEventByIdQuery } from "../../../../store/features/event/EventApiSlice";
+import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
 
 const ErrorMessage = ({ message = "Something went wrong" }) => (
   <div className="flex items-center justify-center min-h-[400px]">
@@ -153,7 +153,7 @@ const CategoryCard = ({ category, sold, total, left, soldPercent, price }) => {
   );
 };
 
-const SalesOverview = () => {
+const EventSalesOverview = () => {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetEventByIdQuery(id);
 
@@ -312,4 +312,4 @@ const SalesOverview = () => {
   );
 };
 
-export default SalesOverview;
+export default EventSalesOverview;

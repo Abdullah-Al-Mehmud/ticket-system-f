@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Mail, Phone, Calendar, MapPin, Edit } from "lucide-react";
-import UserModelTicketForm from "./TicketManagement/UserModelTicketForm";
-import EditUserModal from "./EditUserModal";
-import UserOrganizedEventForm from "./EventManagement/UserOrganizedEventForm";
-import { useGetUserByIdQuery } from "../../../redux/features/user/userApiSlice";
-import PageLoading from "../../../components/LoaderComponent/PageLoading";
+import { Mail, Phone, Edit } from "lucide-react";
+import { useGetUserByIdQuery } from "../../../../store/features/user/userApiSlice";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
+import BookingTicketList from "../ticketManagement/BookingTicketList";
+import OrganizedEventList from "../eventManagementPage/OrganizedEventList";
+import UserEdit from "../userPage/UserEdit";
 
 const UserDashboard = () => {
   const users = localStorage.getItem("data")
@@ -97,13 +97,13 @@ const UserDashboard = () => {
         </div>
 
         {/* Ticket Card Modal show */}
-        <UserModelTicketForm />
+        <BookingTicketList />
 
         {/* Organized Event Card Modal show */}
-        <UserOrganizedEventForm />
+        <OrganizedEventList />
 
         {/* Edit User Modal */}
-        <EditUserModal
+        <UserEdit
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           userId={user.id}
