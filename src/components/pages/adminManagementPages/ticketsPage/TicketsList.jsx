@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Eye, Trash2, Search } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
 import {
   useGetTicketsQuery,
   useDeleteTicketMutation,
-} from "../../redux/features/tickets/ticketsApiSlice";
+} from "../../../../store/features/tickets/ticketsApiSlice";
+import TableRowSkeleton from "../../../../components/common/loaderComponent/TableRowSkeleton";
+import ConfirmModal from "../../../../components/common/confirmModel/ConfirmModal";
 
-const AllTicketsList = () => {
+const TicketsList = () => {
   const location = useLocation();
   const [configPage, setConfigPage] = useState({
     page: 1,
@@ -99,7 +99,7 @@ const AllTicketsList = () => {
             </p>
           </div>
           {/* <Link
-            to="/admin/tickets/create-ticket"
+            to="/admin/tickets-create"
             className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
             <Plus size={20} /> Create Ticket
@@ -246,7 +246,7 @@ const AllTicketsList = () => {
                         <td className="px-6 py-4 text-center">
                           <div className="flex gap-2 justify-center">
                             <Link
-                              to={`/admin/tickets/${ticket.id}`}
+                              to={`/admin/tickets-details/${ticket.id}`}
                               className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                             >
                               <Eye size={16} />
@@ -353,4 +353,4 @@ const AllTicketsList = () => {
   );
 };
 
-export default AllTicketsList;
+export default TicketsList;

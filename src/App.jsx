@@ -69,6 +69,9 @@ import EventsList from "./components/pages/adminManagementPages/eventsPage/Event
 import EventsCreate from "./components/pages/adminManagementPages/eventsPage/EventsCreate";
 import EventsEdit from "./components/pages/adminManagementPages/eventsPage/EventsEdit";
 import EventsDetails from "./components/pages/adminManagementPages/eventsPage/EventsDetails";
+import TicketsList from "./components/pages/adminManagementPages/ticketsPage/TicketsList";
+import TicketsEdit from './components/pages/adminManagementPages/ticketsPage/TicketsEdit';
+import TicketsDetails from './components/pages/adminManagementPages/ticketsPage/TicketsDetails';
 
 function App() {
   return (
@@ -114,12 +117,13 @@ function App() {
             <Route path="events-edit/:id" element={<EventsEdit />} />
             <Route path="events-details/:id" element={<EventsDetails />} />
 
-            {/* <Route path="tickets" element={<TicketsList />} />
-            <Route path="tickets/create-ticket" element={<TicketsForm />} />
-            <Route path="tickets/edit/:id" element={<TicketsUpdate />} />
-            <Route path="tickets/:id" element={<ViewTicketsDetails />} />
-            <Route path="ticket-categories" element={<TicketCategories />} />
-            <Route
+            <Route path="tickets-list" element={<TicketsList />} />
+            <Route path="tickets-edit/:id" element={<TicketsEdit />} />
+            <Route path="tickets-details/:id" element={<TicketsDetails />} />
+            {/* <Route path="tickets-create" element={<TicketsCreate />} /> */}
+            
+            {/* <Route path="ticket-categories" element={<TicketCategories />} /> */}
+           {/* <Route
               path="ticket-categories/:id"
               element={<TicketCategoriesDetails />}
             />

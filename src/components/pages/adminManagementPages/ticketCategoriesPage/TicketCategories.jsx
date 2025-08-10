@@ -80,7 +80,7 @@ export default function TicketCategories() {
             </p>
           </div>
           {/* <Link
-            to="/admin/tickets/create-ticket"
+            to="/admin/tickets-create"
             className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
             <Plus size={20} /> Create Ticket

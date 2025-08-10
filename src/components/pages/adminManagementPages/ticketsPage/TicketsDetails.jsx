@@ -1,13 +1,13 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetTicketByIdQuery } from "../../redux/features/tickets/ticketsApiSlice";
+import { useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Ticket, DollarSign, Calendar, Hash, Layers, Edit } from "lucide-react";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
+import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
 
-const ViewTicketsDetails = () => {
+const TicketsDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ const ViewTicketsDetails = () => {
   const ticket = data?.data;
 
   const handleEdit = () => {
-    navigate(`/admin/tickets/edit/${ticket.ticket_id}`);
+    navigate(`/admin/tickets-edit/${ticket.ticket_id}`);
   };
 
   if (isLoading)
@@ -171,4 +171,4 @@ const TableRow = ({ label, value, icon }) => (
 const formatDate = (dateStr) =>
   dateStr ? new Date(dateStr).toLocaleString() : "N/A";
 
-export default ViewTicketsDetails;
+export default TicketsDetails;

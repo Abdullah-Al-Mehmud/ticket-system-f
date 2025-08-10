@@ -4,11 +4,11 @@ import toast from "react-hot-toast";
 import {ArrowRight} from 'lucide-react'
 import { Button } from "@/components/ui/button";
 
-import { useCreateTicketMutation } from "../../redux/features/tickets/ticketsApiSlice";
-import { useGetUserQuery } from "../../redux/features/auth/AuthApiSlice";
-import { useGetEventsQuery } from "../../redux/features/event/EventApiSlice";
+import { useCreateTicketMutation } from "../../../../store/features/tickets/ticketsApiSlice";
+import { useGetUserQuery } from "../../../../store/features/auth/AuthApiSlice";
+import { useGetEventsQuery } from "../../../../store/features/event/EventApiSlice";
 
-const TicketsForm = () => {
+const TicketsCreate = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -38,7 +38,7 @@ const TicketsForm = () => {
       }).unwrap();
 
       toast.success(res.message || "Ticket created successfully!");
-      navigate("/admin/tickets", { state: { refresh: true } });
+      navigate("/admin/tickets-list", { state: { refresh: true } });
     } catch (err) {
       toast.error(err?.data?.message || "Failed to create ticket");
     }
@@ -130,4 +130,4 @@ const TicketsForm = () => {
   );
 };
 
-export default TicketsForm;
+export default TicketsCreate;

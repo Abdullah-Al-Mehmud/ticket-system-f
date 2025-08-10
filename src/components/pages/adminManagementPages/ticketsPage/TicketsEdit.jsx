@@ -4,9 +4,9 @@ import toast from "react-hot-toast";
 import {
   useGetTicketByIdQuery,
   useUpdateTicketMutation,
-} from "../../redux/features/tickets/ticketsApiSlice";
-import { useGetTicketCategoriesQuery } from "../../redux/features/ticketcategories/ticketCategoriesApiSlice";
-const TicketsUpdate = () => {
+} from "../../../../store/features/tickets/ticketsApiSlice";
+import { useGetTicketCategoriesQuery } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
+const TicketsEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -52,7 +52,7 @@ const TicketsUpdate = () => {
       }).unwrap();
 
       toast.success(res.message || "Ticket updated successfully!");
-      navigate("/admin/tickets", { state: { refresh: true } });
+      navigate("/admin/tickets-list", { state: { refresh: true } });
     } catch (err) {
       toast.error(err?.data?.message || "Failed to update ticket");
     }
@@ -135,4 +135,4 @@ const TicketsUpdate = () => {
   );
 };
 
-export default TicketsUpdate;
+export default TicketsEdit;

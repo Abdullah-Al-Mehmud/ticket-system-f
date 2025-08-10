@@ -49,7 +49,7 @@ const AdminLayout = () => {
       id: "purchase tickets",
       label: "Purchase Tickets",
       icon: Ticket,
-      path: "/admin/tickets",
+      path: "/admin/tickets-list",
     },
   ];
 
