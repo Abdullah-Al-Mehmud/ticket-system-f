@@ -35,18 +35,17 @@ const EventSalesOverview = () => {
   const totalTickets = ticketCategories.reduce((sum, cat) => sum + cat.total_quantity, 0);
   const totalSold = ticketCategories.reduce((sum, cat) => sum + cat.sold_quantity, 0);
 
-  const paidTickets = tickets.filter((t) => t.status === "Confirmed").reduce((sum, t) => sum + t.quantity, 0);
+  const paidTicketsList = tickets.filter((t) => t.status === "Confirmed");
+  const paidTickets = paidTicketsList.reduce((sum, t) => sum + t.quantity, 0);
 
   const complementaryTickets = totalSold - paidTickets;
 
   let totalAmount = 0;
-  ticketCategories.forEach((cat) => {
-    const compQtyInCat = tickets
-      .filter((t) => t.ticket_category_id === cat.id)
-      .reduce((sum, t) => sum + t.quantity, 0);
-
-    const paidQty = cat.sold_quantity - compQtyInCat;
-    totalAmount += paidQty * parseFloat(cat.price);
+  paidTicketsList.forEach((ticket) => {
+    const category = ticketCategories.find((cat) => cat.id === ticket.ticket_category_id);
+    if (category) {
+      totalAmount += ticket.quantity * parseFloat(category.price);
+    }
   });
 
   const formatCurrency = (amount) => `৳${amount.toLocaleString()}`;
