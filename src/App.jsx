@@ -1,101 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-
-// Layouts
-import Layout from "./Layout/Layout";
-import AdminLayout from "./Layout/AdminLayout";
-
-// Auth wrappers
-import PrivateRoute from "./components/PrivateRoute";
-import PublicRoute from "./components/PublicRoute";
-import PageLoading from "./components/LoaderComponent/PageLoading";
-import TermsOfService from "./pages/Public/Support/TermsOfService";
-import RefundPolicy from "./pages/Public/Support/RefundPolicy";
-import HelpCenter from "./pages/Public/Support/HelpCenter";
-import Careers from "./pages/Public/Company/Careers";
-import Press from "./pages/Public/Company/Press";
-import PrivacyPolicy from "./pages/Public/Company/PrivacyPolicy";
-
-// Lazy-loaded pages
-const Home = lazy(() => import("./pages/Public/Home"));
-const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
-const Contact = lazy(() => import("./pages/Public/Contact/Contact"));
-const About = lazy(() => import("./pages/Public/About/About"));
-const Event = lazy(() => import("./pages/Public/Event/Event"));
-const EventDetails = lazy(() => import("./pages/Public/Event/EventDetails"));
-
-const NotFound = lazy(() => import("./pages/Notfound"));
-
-const AdminDashboard = lazy(() => import("./pages/Dashboard/AdminDashboard"));
-const UserList = lazy(() => import("./pages/User/UserList"));
-const CreateUser = lazy(() => import("./pages/User/CreateUser"));
-const UserProfilePage = lazy(() => import("./pages/User/UserProfilePage"));
-const UserEditForm = lazy(() => import("./pages/User/UserEditForm"));
-
-const CategoriesList = lazy(() => import("./pages/Categories/CategoriesList"));
-const CategoryForm = lazy(() => import("./pages/Categories/CategoryForm"));
-const ViewCategoryDetails = lazy(() =>
-  import("./pages/Categories/ViewCategoryDetails")
-);
-const CategoryUpdate = lazy(() => import("./pages/Categories/CategoryUpdate"));
-
-const AllEventslist = lazy(() => import("./pages/Events/AllEventslist"));
-const EventForm = lazy(() => import("./pages/Events/EventForm"));
-const ViewEventsDetails = lazy(() =>
-  import("./pages/Events/ViewEventsDetails")
-);
-const EventEditForm = lazy(() => import("./pages/Events/EventEditForm"));
-
-const TicketsList = lazy(() => import("./pages/Tickets/TicketsList"));
-const TicketsForm = lazy(() => import("./pages/Tickets/TicketsForm"));
-const TicketsUpdate = lazy(() => import("./pages/Tickets/TicketsUpdate"));
-const ViewTicketsDetails = lazy(() =>
-  import("./pages/Tickets/ViewTicketsDetails")
-);
-
-const TicketCategories = lazy(() =>
-  import("./pages/TicketCategories/TicketCategories")
-);
-const TicketCategoriesDetails = lazy(() =>
-  import("./pages/TicketCategories/TicketCategoriesDetails")
-);
-const TicketCategoriesUpdate = lazy(() =>
-  import("./pages/TicketCategories/TicketCategoriesUpdate")
-);
-
-const UserDashboard = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/UserDashboard")
-);
-const UserViewTicket = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/TicketManagement/UserViewTicket")
-);
-
-const OrganizerDashboard = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/OrganizerDashboard")
-);
-const EventManagement = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/EventManagement")
-);
-const CreateEventOrganizer = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/CreateEventOrganizer")
-);
-const EventDetailsDetails = lazy(() =>
-  import("./pages/Dashboard/OrganizerDashboard/EventDetailsDetails")
-);
-const SalesOverview = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/EventManagement/SalesOverview")
-);
-const TicketList = lazy(() =>
-  import("./pages/Dashboard/UserDashboard/EventManagement/TicketList")
-);
+import PageLoading from "./components/common/loaderComponent/PageLoading";
+const NotFound = lazy(() => import("./components/pages/authPage/NotFound"));
 
 function App() {
   return (
     <Suspense fallback={<PageLoading />}>
       <Routes>
         {/* Public layout */}
-        <Route path="/" element={<Layout />}>
+        {/* <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="event" element={<Event />} />
           <Route path="event-details/:id" element={<EventDetails />} />
@@ -113,10 +26,10 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
           </Route>
-        </Route>
+        </Route> */}
 
         {/* Admin Layout */}
-        <Route element={<PrivateRoute allowRole="admin" />}>
+        {/* <Route element={<PrivateRoute allowRole="admin" />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="user-list" element={<UserList />} />
@@ -145,10 +58,10 @@ function App() {
               element={<TicketCategoriesUpdate />}
             />
           </Route>
-        </Route>
+        </Route> */}
 
         {/* User Layout */}
-        <Route element={<PrivateRoute allowRole="user" />}>
+        {/* <Route element={<PrivateRoute allowRole="user" />}>
           <Route path="/user" element={<Layout />}>
             <Route index element={<UserDashboard />} />
             <Route path="dashboard" element={<UserDashboard />} />
@@ -156,10 +69,10 @@ function App() {
             <Route path="sales-overview/:id" element={<SalesOverview />} />
             <Route path="ticket-list/:id" element={<TicketList />} />
           </Route>
-        </Route>
+        </Route> */}
 
         {/* Organizer Layout */}
-        <Route element={<PrivateRoute allowRole="organizer" />}>
+        {/* <Route element={<PrivateRoute allowRole="organizer" />}>
           <Route path="/organizer" element={<Layout />}>
             <Route path="dashboard" element={<OrganizerDashboard />} />
             <Route path="event-management" element={<EventManagement />} />
@@ -169,7 +82,7 @@ function App() {
               element={<EventDetailsDetails />}
             />
           </Route>
-        </Route>
+        </Route> */}
 
         {/* Not found */}
         <Route path="*" element={<NotFound />} />
