@@ -10,7 +10,7 @@ export default function ConfirmModal({ isOpen, onClose, onConfirm, message }) {
         onClick={onClose}
       />
 
-      <div className="relative bg-white/95 backdrop-blur rounded-3xl shadow-2xl border border-white/20 max-w-md w-full p-8 animate-in fade-in-0 zoom-in-95 duration-300 ease-out">
+      <div className="relative bg-white/95 backdrop-blur rounded shadow-2xl border border-white/20 max-w-md w-full p-8 animate-in fade-in-0 zoom-in-95 duration-300 ease-out">
         <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-3xl pointer-events-none" />
         <div className="relative space-y-6">
           <div className="flex justify-center">

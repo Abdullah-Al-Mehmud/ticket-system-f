@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Eye, Edit, Trash2, Plus } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  useGetCategoriesQuery,
-  useDeleteCategoryMutation,
-} from "../../redux/features/categories/categoriesApiSlice";
 import toast from "react-hot-toast";
-import ConfirmModal from "../../components/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../components/LoaderComponent/TableRowSkeleton";
+import ConfirmModal from "../../../common/confirmModel/ConfirmModal";
+import TableRowSkeleton from "../../../common/loaderComponent/TableRowSkeleton";
+import {
+  useDeleteCategoryMutation,
+  useGetCategoriesQuery,
+} from "../../../../store/features/categories/categoriesApiSlice";
 
-const CategoriesList = () => {
+const CategoryList = () => {
   const location = useLocation();
   const [deleteCategory] = useDeleteCategoryMutation();
 
@@ -94,7 +94,7 @@ const CategoriesList = () => {
             <p className="mt-2 text-gray-600">All available categories</p>
           </div>
           <Link
-            to="/admin/create-category"
+            to="/admin/categories-create"
             className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
           >
             <Plus size={20} /> Add Category
@@ -196,7 +196,7 @@ const CategoriesList = () => {
                     <tr key={category.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">
                         <Link
-                          to={`/admin/categories/${category.id}`}
+                          to={`/admin/categories-details/${category.id}`}
                           className="hover:underline"
                         >
                           #{category.id}
@@ -215,13 +215,13 @@ const CategoriesList = () => {
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <Link
-                            to={`/admin/categories/${category.id}`}
+                            to={`/admin/categories-details/${category.id}`}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                           >
                             <Eye size={16} />
                           </Link>
                           <Link
-                            to={`/admin/categories/edit/${category.id}`}
+                            to={`/admin/categories-edit/${category.id}`}
                             className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded"
                           >
                             <Edit size={16} />
@@ -319,4 +319,4 @@ const CategoriesList = () => {
   );
 };
 
-export default CategoriesList;
+export default CategoryList;

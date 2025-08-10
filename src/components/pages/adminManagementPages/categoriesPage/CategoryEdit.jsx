@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  useUpdateCategoryMutation,
-  useGetCategoryByIdQuery,
-} from "../../redux/features/categories/categoriesApiSlice";
+
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
+import {
+  useGetCategoryByIdQuery,
+  useUpdateCategoryMutation,
+} from "../../../../store/features/categories/categoriesApiSlice";
 
-const CategoryUpdate = () => {
+const CategoryEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -43,7 +44,7 @@ const CategoryUpdate = () => {
     try {
       const res = await updateCategory({ id, ...formData }).unwrap();
       toast.success(res.message || "Category updated successfully!");
-      navigate("/admin/categories", { state: { refresh: true } });
+      navigate("/admin/categories-list", { state: { refresh: true } });
     } catch (err) {
       toast.error(err?.data?.message || "Update failed");
     }
@@ -57,7 +58,7 @@ const CategoryUpdate = () => {
         </h2>
 
         {fetching ? (
-          <p><PageLoading/></p>
+          <PageLoading />
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
@@ -106,4 +107,4 @@ const CategoryUpdate = () => {
   );
 };
 
-export default CategoryUpdate;
+export default CategoryEdit;

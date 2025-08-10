@@ -23,6 +23,12 @@ import UserList from "./components/pages/adminManagementPages/usersPage/UserList
 import UserCreate from "./components/pages/adminManagementPages/usersPage/UserCreate";
 import UserEdit from "./components/pages/adminManagementPages/usersPage/UserEdit";
 import UserProfile from "./components/pages/adminManagementPages/usersPage/UserProfile";
+import CategoryList from "./components/pages/adminManagementPages/categoriesPage/CategoryList";
+import CategoryCreate from "./components/pages/adminManagementPages/categoriesPage/CategoryCreate";
+import CategoryEdit from "./components/pages/adminManagementPages/categoriesPage/CategoryEdit";
+import CategoryDetails from "./components/pages/adminManagementPages/categoriesPage/CategoryDetails";
+
+
 const Contact = lazy(() =>
   import(
     "./components/pages/userManagementPages/publicPage/ContactPage/Contact"
@@ -94,11 +100,13 @@ function App() {
             <Route path="user-create" element={<UserCreate />} />
             <Route path="user-edit/:id" element={<UserEdit />} />
             <Route path="user-profile/:id" element={<UserProfile />} />
-            {/* <Route path="categories" element={<CategoriesList />} />
-            <Route path="create-category" element={<CategoryForm />} />
-            <Route path="categories/:id" element={<ViewCategoryDetails />} />
-            <Route path="categories/edit/:id" element={<CategoryUpdate />} />
-            <Route path="events" element={<AllEventslist />} />
+
+            <Route path="categories-list" element={<CategoryList />} />
+            <Route path="categories-create" element={<CategoryCreate />} />
+            <Route path="categories-edit/:id" element={<CategoryEdit />} />
+            <Route path="categories-details/:id" element={<CategoryDetails />} />
+
+            {/* <Route path="events" element={<AllEventslist />} />
             <Route path="create-event" element={<EventForm />} />
             <Route path="events-details/:id" element={<ViewEventsDetails />} />
             <Route path="event-edit/:id" element={<EventEditForm />} />

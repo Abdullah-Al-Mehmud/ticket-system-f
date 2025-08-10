@@ -36,7 +36,7 @@ const AdminLayout = () => {
       id: "catagories",
       label: "Categories",
       icon: Package,
-      path: "/admin/categories",
+      path: "/admin/categories-list",
     },
     { id: "events", label: "Events", icon: Calendar, path: "/admin/events" },
     {

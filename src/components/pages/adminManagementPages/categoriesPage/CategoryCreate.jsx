@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useCreateCategoryMutation } from "../../redux/features/categories/categoriesApiSlice";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useCreateCategoryMutation } from "../../../../store/features/categories/categoriesApiSlice";
 
-const CategoryForm = () => {
+const CategoryCreate = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -22,7 +22,7 @@ const CategoryForm = () => {
     try {
       const res = await createCategory(formData).unwrap();
       toast.success(res.message || "Category created successfully!");
-      navigate("/admin/categories", { state: { refresh: true } });
+      navigate("/admin/categories-list", { state: { refresh: true } });
     } catch (err) {
       toast.error(err?.data?.message || "Failed to create category");
     }
@@ -70,7 +70,9 @@ const CategoryForm = () => {
             type="submit"
             disabled={isLoading}
             className={`w-full py-3 px-6 rounded font-medium text-white transition-transform duration-150 ${
-              isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-amber-600 hover:bg-amber-700"
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-amber-600 hover:bg-amber-700"
             }`}
           >
             {isLoading ? "Creating..." : "Create Category"}
@@ -81,4 +83,4 @@ const CategoryForm = () => {
   );
 };
 
-export default CategoryForm;
+export default CategoryCreate;

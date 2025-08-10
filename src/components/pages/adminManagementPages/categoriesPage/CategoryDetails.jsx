@@ -1,13 +1,9 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  useGetCategoryByIdQuery,
-  useDeleteCategoryMutation,
-} from "../../redux/features/categories/categoriesApiSlice";
+import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-hot-toast";
+// import { toast } from "react-hot-toast";
 import {
   Hash,
   Shield,
@@ -17,36 +13,44 @@ import {
   Pencil,
   User,
 } from "lucide-react";
-import PageLoading from "../../components/LoaderComponent/PageLoading";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
+import {
+  // useDeleteCategoryMutation,
+  useGetCategoryByIdQuery,
+} from "../../../../store/features/categories/categoriesApiSlice";
 
-const ViewCategoryDetails = () => {
+const CategoryDetails = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { data, isLoading, error } = useGetCategoryByIdQuery(id);
-  const [deleteCategory] = useDeleteCategoryMutation();
+  // const [deleteCategory] = useDeleteCategoryMutation();
 
   const category = data?.data;
 
-  const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      try {
-        await deleteCategory(category.id).unwrap();
-        toast.success("Category deleted successfully");
-        navigate("/admin/categories", { state: { refresh: true } });
-      } catch (err) {
-        toast.error(err?.data?.message || "Failed to delete category");
-        console.error("❌ Delete Error:", err);
-      }
-    }
-  };
+  // const handleDelete = async () => {
+  //   if (window.confirm("Are you sure you want to delete this category?")) {
+  //     try {
+  //       await deleteCategory(category.id).unwrap();
+  //       toast.success("Category deleted successfully");
+  //       navigate("/admin/categories", { state: { refresh: true } });
+  //     } catch (err) {
+  //       toast.error(err?.data?.message || "Failed to delete category");
+  //       console.error("❌ Delete Error:", err);
+  //     }
+  //   }
+  // };
 
-  const handleEdit = () => {
-    navigate(`/admin/categories/edit/${category.id}`);
-  };
+  // const handleEdit = () => {
+  //   navigate(`/admin/categories-edit/${category.id}`);
+  // };
 
   if (isLoading)
-    return <p className="text-center text-gray-500 mt-10"><PageLoading/></p>;
+    return (
+      <p className="text-center text-gray-500 mt-10">
+        <PageLoading />
+      </p>
+    );
 
   if (error || !category)
     return (
@@ -88,8 +92,8 @@ const ViewCategoryDetails = () => {
               className="text-blue-600 hover:bg-blue-100"
             >
               <Pencil size={18} />
-            </Button> */}
-{/* 
+            </Button>
+
             <Button
               variant="ghost"
               size="icon"
@@ -112,9 +116,7 @@ const ViewCategoryDetails = () => {
                 <CardTitle className="text-xl text-gray-900">
                   {category.name}
                 </CardTitle>
-                <p className="text-sm text-gray-500 mt-1">
-                  ID: #{category.id}
-                </p>
+                <p className="text-sm text-gray-500 mt-1">ID: #{category.id}</p>
               </div>
             </div>
           </CardHeader>
@@ -155,4 +157,4 @@ const Info = ({ label, value, icon, className = "" }) => (
   </div>
 );
 
-export default ViewCategoryDetails;
+export default CategoryDetails;
