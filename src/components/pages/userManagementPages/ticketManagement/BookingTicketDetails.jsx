@@ -94,7 +94,7 @@ export default function BookingTicketDetails() {
 
               <div className="absolute right-0 top-0 bottom-0 w-6 flex flex-col justify-center items-center">
                 {Array.from({ length: 12 }).map((_, idx) => (
-                  <div key={idx} className="w-4 h-4 bg-gray-100 rounded-full mb-2" />
+                  <div key={idx} className="w-4 h-4 bg-gray-100 rounded mb-2" />
                 ))}
               </div>
             </div>
