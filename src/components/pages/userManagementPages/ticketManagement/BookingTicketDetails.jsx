@@ -6,6 +6,7 @@ import PageLoading from "../../../../components/common/loaderComponent/PageLoadi
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function BookingTicketDetails() {
   const { id } = useParams();
@@ -42,6 +43,11 @@ export default function BookingTicketDetails() {
     { label: "Quantity", value: `${ticket.quantity} TICKET${ticket.quantity > 1 ? "S" : ""}` },
     { label: "Price Each", value: `৳${ticket.price_per_ticket}` }
   ];
+  const qrPayload = JSON.stringify({
+    user_name: ticket.user?.name,
+    event_id: event?.id,
+    ticket_id: ticket.ticket_id
+  });
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex items-center justify-center">
@@ -99,22 +105,32 @@ export default function BookingTicketDetails() {
               </div>
             </div>
 
-            <div className="w-48 bg-gray-50 p-6 border-l-2 border-dashed border-gray-300 relative">
-              <div className="transform rotate-90 origin-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32">
+            <div className="w-48 bg-gray-50 p-6 border-l-2 border-dashed border-gray-300 relative flex flex-col items-center">
+
+              {/* Vertical Admit One text */}
+              <div className="transform rotate-90 origin-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 pointer-events-none select-none">
                 <div className="text-center">
-                  <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Admit One</div>
-                  <Badge variant="outline" className="text-amber-600 border-amber-600 mb-2">#{ticket.ticket_number}</Badge>
+                  <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                    Admit One
+                  </div>
+                  <Badge variant="outline" className="text-amber-600 border-amber-600 mb-2">
+                    #{ticket.ticket_number}
+                  </Badge>
                   <div className="text-xs text-gray-600">{formatDate(event.start_date)}</div>
                 </div>
               </div>
-
+              {/* QR Code */}
               <div className="absolute bottom-6 left-6 right-6">
                 <Card className="w-24 h-24 mx-auto flex items-center justify-center border-2">
-                  <svg className="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm6 0h2v2h-2V5zm4 0h8v8h-8V3zm2 2v4h4V5h-4zm-8 8H3v8h8v-8zm-2 2v4H5v-4h4zm2-2h2v2h-2v-2zm2 0h2v2h-2v-2zm2 0h2v2h-2v-2zm0 4h2v2h-2v-2zm-4 0h2v2h-2v-2zm4-2v2h2v-2h-2zm0-2h2v2h-2v-2z" />
-                  </svg>
+                  <QRCodeSVG
+                    value={qrPayload}
+                    size={88}
+                    includeMargin={false}
+                  />
                 </Card>
-                <div className="text-center mt-2 text-xs text-gray-500">SCAN AT VENUE</div>
+                <div className="text-center mt-2 text-xs font-medium text-gray-500">
+                  SCAN AT VENUE
+                </div>
               </div>
             </div>
           </div>
