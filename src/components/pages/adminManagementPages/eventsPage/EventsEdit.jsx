@@ -27,7 +27,7 @@ const EventsEdit = () => {
   const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
 
-  const { data: categoriesData } = useGetCategoriesQuery();
+  const { data: categoriesData } = useGetCategoriesQuery({all:true});
   const { data: eventData, isLoading: eventLoading } = useGetEventByIdQuery(id);
   const [updateEvent, { isLoading }] = useUpdateEventMutation();
 
