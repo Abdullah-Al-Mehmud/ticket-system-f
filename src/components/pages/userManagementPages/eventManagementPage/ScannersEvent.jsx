@@ -77,8 +77,9 @@ export default function ScannersEvent() {
       } catch {
         payload = { ticket_id: scannedData };
       }
+      // const res = await fetch("https://api.test.tapkori.com/api/ticket-verify", {
 
-      const res = await fetch("http://192.168.68.112:8000/api/ticket-verify", {
+        const res = await fetch("http://192.168.68.112:8000/api/ticket-verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
