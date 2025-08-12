@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import QrScanner from "qr-scanner";
 import { CheckCircle, XCircle, Loader2, RefreshCw } from "lucide-react";
-import { useVerifyTicketMutation } from "../../../../store/features/tickets/ticketsApiSlice";
+import { useCheckTicketMutation, useVerifyTicketMutation } from "../../../../store/features/tickets/ticketsApiSlice";
 
 export default function ScannersEvent() {
   const videoRef = useRef(null);
@@ -9,14 +9,18 @@ export default function ScannersEvent() {
 
   const [isScanning, setIsScanning] = useState(false);
   const [scannedData, setScannedData] = useState("");
-  const [verifyStatus, setVerifyStatus] = useState(null); 
+  const [ticketInfo, setTicketInfo] = useState(null); // ticket details from check API
+  const [verifyStatus, setVerifyStatus] = useState(null);
 
-  const [verifyTicket, { isLoading }] = useVerifyTicketMutation();
+  const [checkTicket, { isLoading: isChecking }] = useCheckTicketMutation();
+  const [verifyTicket, { isLoading: isVerifying }] = useVerifyTicketMutation();
+
 
   // Start scanning
   const startScanner = () => {
     if (isScanning) return;
     setScannedData("");
+    setTicketInfo(null);
     setVerifyStatus(null);
 
     setIsScanning(true);
@@ -27,7 +31,7 @@ export default function ScannersEvent() {
         stopScanner();
         const data = typeof result === "string" ? result : result?.data;
         setScannedData(data || "");
-        setVerifyStatus(null);
+        handleCheck(data);
       },
       {
         highlightScanRegion: true,
@@ -63,9 +67,31 @@ export default function ScannersEvent() {
     };
   }, []);
 
+  // Call /ticket-check API
+  const handleCheck = async (data) => {
+    let payload;
+    try {
+      payload = JSON.parse(data);
+    } catch {
+      payload = { ticket_id: data };
+    }
+
+    try {
+      const res = await checkTicket(payload).unwrap();
+      if (res?.status) {
+        setTicketInfo(res?.data);
+      } else {
+        setTicketInfo({ error: res.message });
+      }
+    } catch (error) {
+      console.error("Check error:", error);
+      setTicketInfo({ error: "Ticket not found or invalid." });
+    }
+  };
+
+  // Call /ticket-verify API
   const handleVerify = async () => {
     if (!scannedData) return;
-
     setVerifyStatus(null);
 
     let payload;
@@ -89,14 +115,7 @@ export default function ScannersEvent() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 800,
-        margin: "auto",
-        padding: 20,
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
+    <div style={{ maxWidth: 800, margin: "auto", padding: 20, fontFamily: "Arial, sans-serif" }}>
       <h1 style={{ textAlign: "center", marginBottom: 20 }}>QR Code Scanner</h1>
 
       <div style={{ display: "flex", gap: 20 }}>
@@ -133,7 +152,7 @@ export default function ScannersEvent() {
           </button>
         </div>
 
-        {/* Right: Scan result and verify */}
+        {/* Right: Ticket Info + Verify */}
         <div
           style={{
             flex: 1,
@@ -148,80 +167,60 @@ export default function ScannersEvent() {
             boxShadow: "0 0 10px rgba(0,0,0,0.05)",
           }}
         >
-          {!scannedData && <p style={{ color: "#777" }}>Scan a QR code to see data here</p>}
+          {isChecking && <p>Checking ticket...</p>}
 
-          {scannedData && (
-            <>
-              <div
-                style={{
-                  wordBreak: "break-word",
-                  backgroundColor: "white",
-                  padding: 15,
-                  borderRadius: 6,
-                  width: "100%",
-                  boxShadow: "0 0 5px rgba(0,0,0,0.1)",
-                  marginBottom: 20,
-                  maxHeight: 150,
-                  overflowY: "auto",
-                  fontFamily: "monospace",
-                  fontSize: 14,
-                }}
-              >
-                {scannedData}
-              </div>
+          {ticketInfo && !ticketInfo.error && (
+            <div style={{ textAlign: "center" }}>
+              <p><strong>User:</strong> {ticketInfo.user_name}</p>
+              <p><strong>Event:</strong> {ticketInfo.event_name}</p>
+              <p><strong>Status:</strong> {ticketInfo.is_verify ? "✅ Verified" : "❌ Not Verified"}</p>
+            </div>
+          )}
 
-              <button
-                onClick={handleVerify}
-                disabled={isLoading || verifyStatus === "success"}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "10px 20px",
-                  fontSize: 16,
-                  backgroundColor: verifyStatus === "success" ? "#5cb85c" : "#0275d8",
-                  color: "white",
-                  border: "none",
-                  borderRadius: 6,
-                  cursor: isLoading || verifyStatus === "success" ? "not-allowed" : "pointer",
-                }}
-                title={verifyStatus === "success" ? "Ticket Verified" : "Verify Ticket"}
-              >
-                {isLoading ? (
-                  <Loader2 className="lucide-spin" size={20} />
-                ) : verifyStatus === "success" ? (
-                  <CheckCircle size={20} />
-                ) : (
-                  <RefreshCw size={20} />
-                )}
-                {verifyStatus === "success" ? "Verified" : "Verify Ticket"}
-              </button>
+          {ticketInfo?.error && (
+            <div style={{ color: "red", fontWeight: "bold" }}>{ticketInfo.error}</div>
+          )}
 
-              {verifyStatus === "fail" && (
-                <div
-                  style={{
-                    marginTop: 15,
-                    color: "#d9534f",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    fontWeight: "bold",
-                  }}
-                >
-                  <XCircle size={20} />
-                  <span>Verification Failed</span>
-                </div>
+          {ticketInfo && !ticketInfo.error && !ticketInfo.is_verify && (
+            <button
+              onClick={handleVerify}
+              disabled={isVerifying || verifyStatus === "success"}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "10px 20px",
+                fontSize: 16,
+                backgroundColor: verifyStatus === "success" ? "#5cb85c" : "#0275d8",
+                color: "white",
+                border: "none",
+                borderRadius: 6,
+                marginTop: 15,
+                cursor: isVerifying || verifyStatus === "success" ? "not-allowed" : "pointer",
+              }}
+            >
+              {isVerifying ? (
+                <Loader2 className="lucide-spin" size={20} />
+              ) : verifyStatus === "success" ? (
+                <CheckCircle size={20} />
+              ) : (
+                <RefreshCw size={20} />
               )}
-            </>
+              {verifyStatus === "success" ? "Verified" : "Verify Ticket"}
+            </button>
+          )}
+
+          {verifyStatus === "fail" && (
+            <div style={{ marginTop: 15, color: "#d9534f", display: "flex", alignItems: "center", gap: 6, fontWeight: "bold" }}>
+              <XCircle size={20} />
+              <span>Verification Failed</span>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Spinner animation for lucide icon */}
       <style>{`
-        .lucide-spin {
-          animation: spin 1s linear infinite;
-        }
+        .lucide-spin { animation: spin 1s linear infinite; }
         @keyframes spin {
           0% { transform: rotate(0deg);}
           100% { transform: rotate(360deg);}

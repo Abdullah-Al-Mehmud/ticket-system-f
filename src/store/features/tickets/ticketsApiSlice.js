@@ -50,6 +50,14 @@ export const ticketsApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Ticket"],
     }),
 
+    checkTicket: builder.mutation({
+      query: (payload) => ({
+        url: "/ticket-check",
+        method: "POST",
+        body: payload,
+      }),
+    }),
+
     // POST ticket verification
     verifyTicket: builder.mutation({
       query: (payload) => ({
@@ -69,4 +77,5 @@ export const {
   useDeleteTicketMutation,
   useGetUserTicketsQuery,
   useVerifyTicketMutation,
+  useCheckTicketMutation,
 } = ticketsApiSlice;
