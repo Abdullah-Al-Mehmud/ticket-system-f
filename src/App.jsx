@@ -69,6 +69,8 @@ function App() {
           <Route path="press" element={<Press />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
 
+          <Route path="user/scanners-event/:id" element={<ScannersEvent />} />
+
           <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
@@ -114,7 +116,7 @@ function App() {
 
             <Route path="events-sales-overview/:id" element={<EventSalesOverview />} />
             <Route path="events-ticket-list/:id" element={<EventTicketList />} />
-            <Route path="scanners-event/:id" element={<ScannersEvent />} />
+            
 
           </Route>
         </Route>
