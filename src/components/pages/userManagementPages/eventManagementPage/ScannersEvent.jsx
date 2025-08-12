@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import QrScanner from "qr-scanner";
-import { CheckCircle, XCircle, Loader2, RefreshCw } from "lucide-react"; // Lucide icons
+import { CheckCircle, XCircle, Loader2, RefreshCw } from "lucide-react";
+import { useVerifyTicketMutation } from "../../../../store/features/tickets/ticketsApiSlice";
 
 export default function ScannersEvent() {
   const videoRef = useRef(null);
@@ -8,22 +9,21 @@ export default function ScannersEvent() {
 
   const [isScanning, setIsScanning] = useState(false);
   const [scannedData, setScannedData] = useState("");
-  const [verifyStatus, setVerifyStatus] = useState(null); // null, "success", "fail"
-  const [isVerifying, setIsVerifying] = useState(false);
+  const [verifyStatus, setVerifyStatus] = useState(null); 
+
+  const [verifyTicket, { isLoading }] = useVerifyTicketMutation();
 
   // Start scanning
   const startScanner = () => {
     if (isScanning) return;
     setScannedData("");
     setVerifyStatus(null);
-    setIsVerifying(false);
 
     setIsScanning(true);
 
     scannerRef.current = new QrScanner(
       videoRef.current,
       (result) => {
-        // Stop scanner on first successful scan and show scanned data
         stopScanner();
         const data = typeof result === "string" ? result : result?.data;
         setScannedData(data || "");
@@ -63,31 +63,21 @@ export default function ScannersEvent() {
     };
   }, []);
 
-  // Handle verification on button click
   const handleVerify = async () => {
     if (!scannedData) return;
 
-    setIsVerifying(true);
     setVerifyStatus(null);
 
+    let payload;
     try {
-      let payload;
-      try {
-        payload = JSON.parse(scannedData);
-      } catch {
-        payload = { ticket_id: scannedData };
-      }
-      // const res = await fetch("https://api.test.tapkori.com/api/ticket-verify", {
+      payload = JSON.parse(scannedData);
+    } catch {
+      payload = { ticket_id: scannedData };
+    }
 
-        const res = await fetch("http://192.168.68.112:8000/api/ticket-verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (data?.status && data?.ticket?.is_verify) {
+    try {
+      const res = await verifyTicket(payload).unwrap();
+      if (res?.status && res?.ticket?.is_verify) {
         setVerifyStatus("success");
       } else {
         setVerifyStatus("fail");
@@ -95,8 +85,6 @@ export default function ScannersEvent() {
     } catch (error) {
       console.error("Verification error:", error);
       setVerifyStatus("fail");
-    } finally {
-      setIsVerifying(false);
     }
   };
 
@@ -184,7 +172,7 @@ export default function ScannersEvent() {
 
               <button
                 onClick={handleVerify}
-                disabled={isVerifying || verifyStatus === "success"}
+                disabled={isLoading || verifyStatus === "success"}
                 style={{
                   display: "flex",
                   alignItems: "center",
@@ -195,11 +183,11 @@ export default function ScannersEvent() {
                   color: "white",
                   border: "none",
                   borderRadius: 6,
-                  cursor: isVerifying || verifyStatus === "success" ? "not-allowed" : "pointer",
+                  cursor: isLoading || verifyStatus === "success" ? "not-allowed" : "pointer",
                 }}
                 title={verifyStatus === "success" ? "Ticket Verified" : "Verify Ticket"}
               >
-                {isVerifying ? (
+                {isLoading ? (
                   <Loader2 className="lucide-spin" size={20} />
                 ) : verifyStatus === "success" ? (
                   <CheckCircle size={20} />

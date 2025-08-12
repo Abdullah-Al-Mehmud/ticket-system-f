@@ -49,6 +49,15 @@ export const ticketsApiSlice = apiSlice.injectEndpoints({
       query: (id) => `/tickets${id ? `?user_id=${id}` : ""}`,
       providesTags: ["Ticket"],
     }),
+
+    // POST ticket verification
+    verifyTicket: builder.mutation({
+      query: (payload) => ({
+        url: "/ticket-verify",
+        method: "POST",
+        body: payload,
+      }),
+    }),
   }),
 });
 
@@ -59,4 +68,5 @@ export const {
   useUpdateTicketMutation,
   useDeleteTicketMutation,
   useGetUserTicketsQuery,
+  useVerifyTicketMutation,
 } = ticketsApiSlice;
