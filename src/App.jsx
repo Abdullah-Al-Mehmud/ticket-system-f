@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import ScannersEvent from "./components/pages/userManagementPages/eventManagementPage/ScannersEvent";
 const PageLoading = lazy(() =>import("./components/common/loaderComponent/PageLoading"));
 const Home = lazy(() =>import("./components/pages/userManagementPages/publicPage/Home"));
 const UserLayout = lazy(() =>import("./components/layout/userLayout/UserLayout"));
@@ -113,6 +114,7 @@ function App() {
 
             <Route path="events-sales-overview/:id" element={<EventSalesOverview />} />
             <Route path="events-ticket-list/:id" element={<EventTicketList />} />
+            <Route path="scanners-event/:id" element={<ScannersEvent />} />
 
           </Route>
         </Route>
