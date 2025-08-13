@@ -194,10 +194,6 @@ export default function Hero() {
                           </div>
                         )}
 
-                        <div className="absolute top-3 left-3 bg-amber-500 text-white px-2 py-1 rounded flex items-center gap-1 text-xs font-medium">
-                          <Star className="w-3 h-3 fill-current" />
-                          Featured
-                        </div>
                       </div>
 
                       <div className="h-1/3 p-4 bg-white">
