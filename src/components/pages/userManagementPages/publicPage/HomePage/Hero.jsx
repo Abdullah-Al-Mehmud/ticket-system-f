@@ -250,13 +250,6 @@ export default function Hero() {
                         </div>
 
                         <div className="w-1/3 p-8 lg:p-12 flex flex-col justify-center bg-white">
-                          <div className="flex items-center gap-2 mb-4">
-                            <Star className="w-5 h-5 text-amber-500 fill-current" />
-                            <span className="text-slate-600 font-medium">
-                              Featured Event
-                            </span>
-                          </div>
-
                           <h3 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-3">
                             {event.title}
                           </h3>
@@ -265,26 +258,33 @@ export default function Hero() {
                           </p>
 
                           <div className="space-y-3 mb-6 text-slate-700">
-                            {/* Date & Time */}
-                            <div className="flex items-center gap-2">
-                              <Calendar size={16} className="text-amber-600" />
-                              <span className="font-medium">
-                                {event.start_date
-                                  ? dayjs(event.start_date).format("MMM D, YYYY")
-                                  : "Date N/A"}
-                              </span>
-                              <Clock size={16} className="text-amber-600 ml-4" />
-                              <span className="font-medium">
-                                {event.start_date
-                                  ? dayjs(event.start_date).format("h:mm A")
-                                  : "Time N/A"}
-                              </span>
-                              {event.start_date && (
-                                <span className="ml-2 text-sm text-slate-500">
-                                  ({dayjs(event.start_date).fromNow()})
+                            <div className="space-y-1">
+                              {/* Date */}
+                              <div className="flex items-center gap-2">
+                                <Calendar size={16} className="text-amber-600" />
+                                <span className="font-medium">
+                                  {event.start_date
+                                    ? dayjs(event.start_date).format("MMM D, YYYY")
+                                    : "Date N/A"}
                                 </span>
-                              )}
+                                {event.start_date && (
+                                  <span className="ml-2 text-sm text-slate-500">
+                                    ({dayjs(event.start_date).fromNow()})
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Time */}
+                              <div className="flex items-center gap-2">
+                                <Clock size={16} className="text-amber-600" />
+                                <span className="font-medium">
+                                  {event.start_date
+                                    ? dayjs(event.start_date).format("h:mm A")
+                                    : "Time N/A"}
+                                </span>
+                              </div>
                             </div>
+
 
                             {/* Location */}
                             <div className="flex items-center gap-2">
@@ -431,7 +431,6 @@ export default function Hero() {
                     state={{ id: category.id }}
                     className="flex-shrink-0 bg-white/80 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-slate-300 px-4 py-2 sm:py-3 rounded-full transition-all duration-200  transform hover:-translate-y-0.5"
                   >
-                    {/* <span className="text-base sm:text-lg mr-2">{category.emoji || "🎉"}</span> */}
                     <span className="text-slate-700 font-medium text-sm sm:text-base whitespace-nowrap">
                       {category.name}
                     </span>
@@ -441,26 +440,6 @@ export default function Hero() {
             </div>
           )
         }
-        {/* Quick Stats */}
-        {/* <div className="text-center">
-          <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-xs sm:text-sm text-slate-500">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="whitespace-nowrap">Live events updating</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-4 h-4 text-amber-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span className="whitespace-nowrap">4.9★ average rating</span>
-            </div>
-            <div className="whitespace-nowrap">500+ cities worldwide</div>
-          </div>
-        </div> */}
       </div>
 
       <style>{`
@@ -472,6 +451,6 @@ export default function Hero() {
           animation: float 6s ease-in-out infinite;
         }
       `}</style>
-    </section>
+    </section >
   );
 }
