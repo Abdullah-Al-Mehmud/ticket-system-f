@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Calendar,
   Clock,
@@ -27,6 +27,7 @@ const EventDetailsPage = () => {
   const [ticketQuantities, setTicketQuantities] = useState({});
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const eventData = data?.data;
   const MAX_LENGTH = 200;
@@ -98,6 +99,11 @@ const EventDetailsPage = () => {
 
   const handleBooking = () => {
     if (getTotalTickets() > 0) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login", { state: { from: location.pathname } }); 
+        return;
+      }
       setShowBookingModal(true);
     }
   };
@@ -257,11 +263,10 @@ const EventDetailsPage = () => {
                     <h3 className="font-semibold text-gray-800">Status</h3>
                     <p
                       className={`text-sm font-medium px-3 py-1 rounded-full inline-block 
-              ${
-                eventData.status === "Cancelled"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-green-100 text-green-700"
-              }`}
+              ${eventData.status === "Cancelled"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-green-100 text-green-700"
+                        }`}
                     >
                       {eventData.status}
                     </p>

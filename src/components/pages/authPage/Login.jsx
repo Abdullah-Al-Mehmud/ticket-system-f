@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useLoginMutation } from "../../../store/features/auth/AuthApiSlice";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [rememberMe, setRememberMe] = useState(false);
@@ -54,7 +55,8 @@ const Login = () => {
       localStorage.setItem("data", JSON.stringify(response.data));
       localStorage.setItem("token", response.token);
       toast.success(response.message);
-      navigate("/");
+      const redirectPath = location.state?.from || "/";
+      navigate(redirectPath);
     } catch (error) {
       console.error("Login failed:", error);
       if (error?.data?.message) {
@@ -99,9 +101,8 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
-                  errors.email ? "border-red-300" : "border-gray-300"
-                } focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.email ? "border-red-300" : "border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="name@example.com"
               />
             </div>
@@ -122,9 +123,8 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-12 py-3 border rounded-lg ${
-                  errors.password ? "border-red-300" : "border-gray-300"
-                } focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                className={`w-full pl-10 pr-12 py-3 border rounded-lg ${errors.password ? "border-red-300" : "border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="••••••••"
               />
               <button
