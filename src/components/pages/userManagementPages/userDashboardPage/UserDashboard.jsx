@@ -16,7 +16,7 @@ const UserDashboard = () => {
 
   const { data: userData, isLoading } = useGetUserByIdQuery(userId);
   const user = userData?.data;
-
+  
   if (isLoading)
     return (
       <p>
@@ -100,9 +100,7 @@ const UserDashboard = () => {
         <BookingTicketList />
 
         {/* Organized Event Card Modal show */}
-        {/* {!isLoading && eventsData?.length > 0 && ( */}
-          <OrganizedEventList />
-         {/* )} */}
+        <OrganizedEventList />
 
         {/* Edit User Modal */}
         <UserEdit
