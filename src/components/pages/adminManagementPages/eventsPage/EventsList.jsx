@@ -8,8 +8,11 @@ import {
   useDeleteEventMutation,
   useGetEventsQuery,
 } from "../../../../store/features/event/EventApiSlice";
-
+import { Switch } from "../../../../components/ui/switch";
+import { useUpdateEventMutation } from "../../../../store/features/event/EventApiSlice";
 const EventsList = () => {
+
+  const [updateEvent] = useUpdateEventMutation();
   const [configPage, setConfigPage] = useState({
     page: 1,
     count: 10,
@@ -55,6 +58,22 @@ const EventsList = () => {
       setEventToDelete(null);
     }
   };
+
+  const handleFeaturedToggle = async (eventId, checked) => {
+    try {
+      const form = new FormData();
+      form.append("_method", "PATCH");
+      form.append("is_featured", checked ? 1 : 0);
+
+      await updateEvent({ id: eventId, formData: form }).unwrap();
+      toast.success(`Event ${checked ? "featured" : "unfeatured"} successfully!`);
+      refetch();
+    } catch (err) {
+      console.error("Failed to update featured status:", err);
+      toast.error("Failed to update featured status.");
+    }
+  };
+
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -271,7 +290,12 @@ const EventsList = () => {
                         <td className="px-6 py-4 text-sm">
                           {event.creator?.name}
                         </td>
-                        <td className="px-6 py-4 text-sm">{event.is_featured ? "Yes" : "No"}</td>
+                        <td className="px-6 py-4 text-sm">
+                          <Switch
+                            checked={event.is_featured === 1 || event.is_featured === "1"}
+                            onCheckedChange={(checked) => handleFeaturedToggle(event.id, checked)}
+                          />
+                        </td>
                         <td className="px-6 py-4 text-sm">
                           {event.category?.name}
                         </td>

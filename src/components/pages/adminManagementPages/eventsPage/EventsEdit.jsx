@@ -7,6 +7,7 @@ import {
   useGetEventByIdQuery,
   useUpdateEventMutation,
 } from "../../../../store/features/event/EventApiSlice";
+import { Switch } from "../../../../components/ui/switch";
 
 const EventsEdit = () => {
   const { id } = useParams();
@@ -21,13 +22,14 @@ const EventsEdit = () => {
     end_date: "",
     privacy_policy: "",
     status: "",
+    is_featured: "",
   });
 
   const [imagePreview, setImagePreview] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [errors, setErrors] = useState({});
 
-  const { data: categoriesData } = useGetCategoriesQuery({all:true});
+  const { data: categoriesData } = useGetCategoriesQuery({ all: true });
   const { data: eventData, isLoading: eventLoading } = useGetEventByIdQuery(id);
   const [updateEvent, { isLoading }] = useUpdateEventMutation();
 
@@ -43,6 +45,7 @@ const EventsEdit = () => {
         end_date,
         privacy_policy,
         status,
+        is_featured,
         image_url,
       } = eventData.data;
 
@@ -54,6 +57,7 @@ const EventsEdit = () => {
         start_date: start_date.slice(0, 16),
         end_date: end_date.slice(0, 16),
         privacy_policy,
+        is_featured,
         status,
       });
 
@@ -128,6 +132,7 @@ const EventsEdit = () => {
     finalForm.append("end_date", formatForMySQL(formData.end_date));
     finalForm.append("privacy_policy", formData.privacy_policy);
     finalForm.append("status", formData.status);
+    finalForm.append("is_featured", formData.is_featured ? 1 : 0);
     if (imageFile) finalForm.append("image_url", imageFile);
 
     try {
@@ -149,6 +154,15 @@ const EventsEdit = () => {
           Update Event
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={formData.is_featured === 1 || formData.is_featured === "1"}
+              onCheckedChange={(checked) =>
+                setFormData((prev) => ({ ...prev, is_featured: checked ? 1 : 0 }))
+              }
+            />
+            <span>Featured</span>
+          </div>
           {/* Category */}
           <div>
             <label className="block mb-1">Category</label>
