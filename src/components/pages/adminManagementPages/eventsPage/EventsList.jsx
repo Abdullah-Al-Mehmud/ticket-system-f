@@ -27,6 +27,7 @@ const EventsList = () => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [featured, setFeatured] = useState("");
+  const [featuredMap, setFeaturedMap] = useState({});
 
   const { data, isLoading, isError, refetch } = useGetEventsQuery(configPage);
 
@@ -60,6 +61,8 @@ const EventsList = () => {
   };
 
   const handleFeaturedToggle = async (eventId, checked) => {
+    const oldState = featuredMap[eventId] ?? (event.is_featured === 1);
+    setFeaturedMap((prev) => ({ ...prev, [eventId]: checked }));
     try {
       const form = new FormData();
       form.append("_method", "PATCH");
@@ -71,8 +74,10 @@ const EventsList = () => {
     } catch (err) {
       console.error("Failed to update featured status:", err);
       toast.error("Failed to update featured status.");
+      setFeaturedMap((prev) => ({ ...prev, [eventId]: oldState }));
     }
   };
+
 
 
   const closeModal = () => {
@@ -292,7 +297,7 @@ const EventsList = () => {
                         </td>
                         <td className="px-6 py-4 text-sm">
                           <Switch
-                            checked={event.is_featured === 1 || event.is_featured === "1"}
+                            checked={featuredMap[event.id] ?? (event.is_featured === 1 || event.is_featured === "1")}
                             onCheckedChange={(checked) => handleFeaturedToggle(event.id, checked)}
                           />
                         </td>
