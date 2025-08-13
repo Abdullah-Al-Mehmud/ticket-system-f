@@ -10,7 +10,7 @@ function BookingTicketList() {
     <>
       {/* Profile Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded p-6">
           <div className="flex items-center">
             <div className="p-2 bg-amber-100 rounded-lg">
               <ChartBarStacked className="w-6 h-6 text-amber-600" />
@@ -25,7 +25,7 @@ function BookingTicketList() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded p-6">
           <div className="flex items-center">
             <div className="p-2 bg-amber-100 rounded-lg">
               <MapPinCheck className="w-6 h-6 text-amber-600" />
@@ -41,7 +41,7 @@ function BookingTicketList() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white rounded p-6">
           <div className="flex items-center">
             <div className="p-2 bg-amber-100 rounded-lg">
               <Bell className="w-6 h-6 text-amber-600" />
@@ -66,7 +66,7 @@ function BookingTicketList() {
       </div>
 
       {/* MY BOOKINGS */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white rounded overflow-hidden">
         <div className="px-6 py-4 border-b border-amber-200">
           <h2 className="text-lg font-medium text-amber-900">My Bookings</h2>
         </div>
