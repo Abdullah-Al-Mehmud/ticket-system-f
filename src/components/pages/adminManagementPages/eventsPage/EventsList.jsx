@@ -16,12 +16,14 @@ const EventsList = () => {
     search: "",
     status: "",
     category: "",
+    featured: "",
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+  const [featured, setFeatured] = useState("");
 
   const { data, isLoading, isError, refetch } = useGetEventsQuery(configPage);
 
@@ -77,9 +79,8 @@ const EventsList = () => {
     };
     return (
       <span
-        className={`px-2 py-1 text-xs font-medium rounded-full border ${
-          statusStyles[status] || "bg-gray-100 text-gray-800 border-gray-200"
-        }`}
+        className={`px-2 py-1 text-xs font-medium rounded-full border ${statusStyles[status] || "bg-gray-100 text-gray-800 border-gray-200"
+          }`}
       >
         {status}
       </span>
@@ -148,10 +149,12 @@ const EventsList = () => {
                 onClick={() => {
                   setSearch("");
                   setStatus("");
+                  setFeatured("");
                   setConfigPage((prev) => ({
                     ...prev,
                     search: "",
                     status: "",
+                    featured: "",
                     page: 1,
                   }));
                 }}
@@ -180,6 +183,24 @@ const EventsList = () => {
               <option value="Done">Done</option>
               <option value="Cancelled">Cancelled</option>
             </select>
+
+            <select
+              value={featured}
+              onChange={(e) => {
+                const value = e.target.value;
+                setFeatured(value);
+                setConfigPage((prev) => ({
+                  ...prev,
+                  featured: value,
+                  page: 1,
+                }));
+              }}
+              className="w-full sm:w-48 px-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+            >
+              <option value="">All Features</option>
+              <option value="1">Featured</option>
+              <option value="0">Not Featured</option>
+            </select>
           </div>
         </div>
 
@@ -199,6 +220,7 @@ const EventsList = () => {
                       "Event_Image",
                       "Event",
                       "Creator",
+                      "Featured",
                       "Category",
                       "Location",
                       "Status",
@@ -227,9 +249,8 @@ const EventsList = () => {
                         <td className="px-6 py-4 text-sm">
                           {event.image_url ? (
                             <img
-                              src={`${import.meta.env.VITE_IMG_URL}/${
-                                event.image_url
-                              }`}
+                              src={`${import.meta.env.VITE_IMG_URL}/${event.image_url
+                                }`}
                               alt={event.title}
                               className="w-8 h-8 rounded-full object-cover"
                             />
@@ -250,6 +271,7 @@ const EventsList = () => {
                         <td className="px-6 py-4 text-sm">
                           {event.creator?.name}
                         </td>
+                        <td className="px-6 py-4 text-sm">{event.is_featured ? "Yes" : "No"}</td>
                         <td className="px-6 py-4 text-sm">
                           {event.category?.name}
                         </td>
@@ -316,11 +338,10 @@ const EventsList = () => {
                 }))
               }
               disabled={currentPage === 1}
-              className={`px-4 py-2 text-sm rounded-md border transition ${
-                currentPage === 1
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
-                  : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-              }`}
+              className={`px-4 py-2 text-sm rounded-md border transition ${currentPage === 1
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+                }`}
             >
               Previous
             </button>
@@ -334,11 +355,10 @@ const EventsList = () => {
                   onClick={() =>
                     setConfigPage((prev) => ({ ...prev, page: pageNum }))
                   }
-                  className={`px-4 py-2 text-sm rounded-md border transition ${
-                    pageNum === currentPage
-                      ? "bg-amber-600 text-white border-amber-600"
-                      : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-                  }`}
+                  className={`px-4 py-2 text-sm rounded-md border transition ${pageNum === currentPage
+                    ? "bg-amber-600 text-white border-amber-600"
+                    : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+                    }`}
                 >
                   {pageNum}
                 </button>
@@ -354,11 +374,10 @@ const EventsList = () => {
                 }))
               }
               disabled={currentPage === lastPage}
-              className={`px-4 py-2 text-sm rounded-md border transition ${
-                currentPage === lastPage
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
-                  : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-              }`}
+              className={`px-4 py-2 text-sm rounded-md border transition ${currentPage === lastPage
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
+                : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
+                }`}
             >
               Next
             </button>
