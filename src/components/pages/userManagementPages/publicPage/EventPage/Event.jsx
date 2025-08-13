@@ -12,15 +12,18 @@ import EventCardLoadingSkeleton from "../../../../../components/common/loaderCom
 const Event = () => {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState("");
+  const [dates, setDates] = useState("");
+  console.log("Location state:", location.state);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [pageConfig, setPageConfig] = useState({
     page: 1,
     count: 10,
     search: "",
     category: "",
+    date: "",
     orderbyStatus: true,
   });
-  const { id } = location.state || {};
+  const { id, searchTerms, date } = location.state || {};
   const { data, isFetching, isLoading, isError } =
     useGetEventsQuery(pageConfig);
   const { data: categoryData, isLoading: isLoadingCategory } =
@@ -36,7 +39,21 @@ const Event = () => {
         category: id,
       }));
     }
-  }, [id]);
+    if (searchTerms) {
+      setSearchTerm(searchTerms);
+      setPageConfig((prev) => ({
+        ...prev,
+        search: searchTerms,
+      }));
+    }
+    if (date) {
+      setDates(date);
+      setPageConfig((prev) => ({
+        ...prev,
+        date: dates,
+      }));
+    }
+  }, [id, searchTerms, date, dates]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-orange-50/20">
       <div className="bg-white border-b border-gray-100">
@@ -104,11 +121,10 @@ const Event = () => {
                       }));
                     }
                   }}
-                  className={`flex items-center space-x-2 rounded-full px-4 py-2 transition-all duration-200 ${
-                    selectedCategory === category?.id
-                      ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-600"
-                      : "bg-white text-gray-700 border-gray-200 hover:border-amber-300 hover:text-amber-600"
-                  }`}
+                  className={`flex items-center space-x-2 rounded-full px-4 py-2 transition-all duration-200 ${selectedCategory === category?.id
+                    ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-600"
+                    : "bg-white text-gray-700 border-gray-200 hover:border-amber-300 hover:text-amber-600"
+                    }`}
                 >
                   <span className="font-medium">{category.name}</span>
                 </Button>
@@ -137,7 +153,7 @@ const Event = () => {
                 {selectedCategory === ""
                   ? "All Events"
                   : categories.find((cat) => cat.id === selectedCategory)
-                      ?.name || selectedCategory}
+                    ?.name || selectedCategory}
               </h2>
             </div>
 

@@ -15,10 +15,11 @@ import { useGetEventsQuery } from "../../../../../store/features/event/EventApiS
 import HeroSkeleton from "../../../../../components/common/loaderComponent/HeroSkeleton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 export default function Hero() {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const { data, isLoading, isError } = useGetEventsQuery({
@@ -27,6 +28,17 @@ export default function Hero() {
     featured: 1,
   });
 
+  const [searchTerms, setSearchTerm] = useState("");
+  const [date, setDate] = useState("");
+
+  const handleSearch = () => {
+    navigate("/event", {
+      state: {
+        searchTerms,
+        date,
+      },
+    });
+  };
   const featuredEvents = data?.data?.filter(
     (event) => event.is_featured === 1 || event.is_featured === "1"
   ) ?? [];
@@ -261,7 +273,8 @@ export default function Hero() {
 
         {/* Search Section */}
         <div className="max-w-4xl mx-auto mb-8 sm:mb-12">
-          <div className="bg-white/95 backdrop-blur-lg rounded p-4 sm:p-6  border border-white/50">
+          <div className="bg-white/95 backdrop-blur-lg rounded p-4 sm:p-6 border border-white/50">
+
             {/* Mobile Search */}
             <div className="block sm:hidden space-y-3">
               <div className="relative">
@@ -270,28 +283,28 @@ export default function Hero() {
                   type="text"
                   placeholder="Search events..."
                   className="w-full pl-10 pr-4 py-3 text-slate-900 bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  value={searchTerms}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
 
               <div className="flex gap-2">
-                <div className="flex-1 relative">
-                  <MapPin className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-                  <input
-                    type="text"
-                    placeholder="Location"
-                    className="w-full pl-10 pr-4 py-3 text-slate-900 bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  />
-                </div>
+
                 <div className="flex-1 relative">
                   <Calendar className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
                   <input
                     type="date"
                     className="w-full pl-10 pr-4 py-3 text-slate-900 bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
               </div>
 
-              <button className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white py-3 rounded font-semibold transition-all duration-200 ">
+              <button
+                onClick={handleSearch}
+                className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white py-3 rounded font-semibold transition-all duration-200"
+              >
                 Search Events
               </button>
             </div>
@@ -305,28 +318,29 @@ export default function Hero() {
                     type="text"
                     placeholder="Search events, artists, venues..."
                     className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    value={searchTerms}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <div className="flex-1 relative">
-                  <MapPin className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
-                  <input
-                    type="text"
-                    placeholder="Location or venue"
-                    className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                  />
-                </div>
+
                 <div className="flex-1 relative">
                   <Calendar className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
                   <input
                     type="date"
                     className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
-                <button className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                <button
+                  onClick={handleSearch}
+                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
                   Search Events
                 </button>
               </div>
             </div>
+
           </div>
         </div>
 
