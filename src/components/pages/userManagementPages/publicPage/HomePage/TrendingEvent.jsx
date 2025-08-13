@@ -29,13 +29,13 @@ const TrendingEvent = () => {
     <section className="py-20 bg-gradient-to-b from-white to-amber-50/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <Badge
+          {/* <Badge
             variant="secondary"
             className="mb-4 bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200"
           >
             <CalendarDays className="w-4 h-4 mr-2" />
             Coming Soon
-          </Badge>
+          </Badge> */}
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
             Upcoming Events
           </h2>

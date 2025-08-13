@@ -12,7 +12,9 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useGetEventsQuery } from "../../../../../store/features/event/EventApiSlice";
+import { useGetCategoriesQuery } from "../../../../../store/features/categories/categoriesApiSlice";
 import HeroSkeleton from "../../../../../components/common/loaderComponent/HeroSkeleton";
+import CategoryLoadingSkeleton from "../../../../../components/common/loaderComponent/CategoryLoadingSkeleton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,15 +23,17 @@ dayjs.extend(relativeTime);
 export default function Hero() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [searchTerms, setSearchTerm] = useState("");
+  const [date, setDate] = useState("");
 
   const { data, isLoading, isError } = useGetEventsQuery({
     page: 1,
     count: 10,
     featured: 1,
   });
+  const { data: categoryData, isLoading: isLoadingCategory } = useGetCategoriesQuery({ count: 3 });
+  const categories = categoryData?.data
 
-  const [searchTerms, setSearchTerm] = useState("");
-  const [date, setDate] = useState("");
 
   const handleSearch = () => {
     navigate("/event", {
@@ -64,10 +68,78 @@ export default function Hero() {
   return (
     <section className="relative bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50 overflow-hidden">
       {/* Simplified Background Artwork - Mobile Optimized */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-10 left-5 sm:top-20 sm:left-20 w-32 h-32 sm:w-64 sm:h-64 bg-gradient-to-br from-amber-200 to-orange-200 rounded-full opacity-20 blur-2xl sm:blur-3xl"></div>
-        <div className="absolute top-20 right-5 sm:top-40 sm:right-32 w-24 h-24 sm:w-48 sm:h-48 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-20 blur-xl sm:blur-2xl"></div>
-        <div className="absolute bottom-10 left-1/4 sm:bottom-20 sm:left-1/3 w-28 h-28 sm:w-56 sm:h-56 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-20 blur-2xl sm:blur-3xl"></div>
+      <div className="absolute inset-0">
+        {/* Geometric shapes */}
+        <div className="absolute top-20 left-20 w-64 h-64 bg-gradient-to-br from-amber-200 to-orange-200 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute top-40 right-32 w-48 h-48 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-20 blur-2xl"></div>
+        <div className="absolute bottom-20 left-1/3 w-56 h-56 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-20 blur-3xl"></div>
+
+        {/* Abstract patterns */}
+        <svg
+          className="absolute top-0 left-0 w-full h-full opacity-10"
+          viewBox="0 0 1200 800"
+        >
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop
+                offset="0%"
+                style={{ stopColor: "#f59e0b", stopOpacity: 0.3 }}
+              />
+              <stop
+                offset="100%"
+                style={{ stopColor: "#ea580c", stopOpacity: 0.1 }}
+              />
+            </linearGradient>
+          </defs>
+          <path
+            d="M0,200 Q300,100 600,150 T1200,120 L1200,0 L0,0 Z"
+            fill="url(#grad1)"
+          />
+          <path
+            d="M0,600 Q400,500 800,550 T1200,520 L1200,800 L0,800 Z"
+            fill="url(#grad1)"
+          />
+        </svg>
+
+        {/* Floating elements */}
+        <div className="absolute top-32 right-20 animate-pulse">
+          <div className="w-4 h-4 bg-amber-400 rounded-full opacity-60"></div>
+        </div>
+        <div
+          className="absolute top-60 left-40 animate-bounce"
+          style={{ animationDuration: "3s" }}
+        >
+          <div className="w-6 h-6 bg-purple-400 rounded-full opacity-40"></div>
+        </div>
+        <div
+          className="absolute bottom-40 right-40 animate-pulse"
+          style={{ animationDuration: "2s" }}
+        >
+          <div className="w-5 h-5 bg-pink-400 rounded-full opacity-50"></div>
+        </div>
+
+        {/* Music notes and event icons */}
+        <div className="absolute top-24 left-1/4 text-amber-300 opacity-30 animate-float">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+          </svg>
+        </div>
+        <div
+          className="absolute bottom-32 right-1/4 text-purple-300 opacity-30 animate-float"
+          style={{ animationDelay: "1s" }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 11H7v6h2v-6zm4 0h-2v6h2v-6zm4 0h-2v6h2v-6zm2-7H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V8h14v12z" />
+          </svg>
+        </div>
+        <div
+          className="absolute top-1/2 left-20 text-pink-300 opacity-30 animate-float"
+          style={{ animationDelay: "2s" }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        </div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
@@ -85,7 +157,7 @@ export default function Hero() {
         {featuredEvents.length > 0 && (
           <div className="mb-8 sm:mb-12 lg:mb-16">
             <div className="relative group">
-              <div className="relative bg-white/90 backdrop-blur-lg rounded sm:rounded-2xl  overflow-hidden border border-white/50">
+              <div className="relative bg-white/90 backdrop-blur-lg rounded sm:rounded  overflow-hidden border border-white/50">
                 <div className="relative h-64 sm:h-80 lg:h-96">
                   {featuredEvents.map((event, index) => (
                     <Link
@@ -125,7 +197,7 @@ export default function Hero() {
                           )}
 
                           {/* Mobile Featured Badge */}
-                          <div className="absolute top-3 left-3 bg-amber-500 text-white px-2 py-1 rounded-full flex items-center gap-1 text-xs font-medium">
+                          <div className="absolute top-3 left-3 bg-amber-500 text-white px-2 py-1 rounded flex items-center gap-1 text-xs font-medium">
                             <Star className="w-3 h-3 fill-current" />
                             Featured
                           </div>
@@ -317,7 +389,7 @@ export default function Hero() {
                   <input
                     type="text"
                     placeholder="Search events, artists, venues..."
-                    className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     value={searchTerms}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -327,14 +399,14 @@ export default function Hero() {
                   <Calendar className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
                   <input
                     type="date"
-                    className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-8 py-4 rounded font-semibold text-lg transition-all duration-200 transform hover:-translate-y-0.5"
                 >
                   Search Events
                 </button>
@@ -344,33 +416,31 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Popular Categories - Horizontal scroll on mobile */}
-        <div className="mb-8 sm:mb-12">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4 text-center sm:hidden">
-            Popular Categories
-          </h3>
-          <div className="flex sm:flex-wrap sm:justify-center gap-3 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
-            {[
-              { emoji: "🎵", text: "Music", color: "from-purple-500 to-pink-500" },
-              { emoji: "🎭", text: "Theater", color: "from-red-500 to-orange-500" },
-              { emoji: "🏈", text: "Sports", color: "from-green-500 to-blue-500" },
-              { emoji: "🎨", text: "Art", color: "from-indigo-500 to-purple-500" },
-              { emoji: "💼", text: "Business", color: "from-gray-600 to-gray-700" },
-              { emoji: "🍷", text: "Food & Drink", color: "from-amber-500 to-orange-500" },
-            ].map((category, index) => (
-              <button
-                key={index}
-                className="flex-shrink-0 bg-white/80 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-slate-300 px-4 py-2 sm:py-3 rounded-full transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5"
-              >
-                <span className="text-base sm:text-lg mr-2">{category.emoji}</span>
-                <span className="text-slate-700 font-medium text-sm sm:text-base whitespace-nowrap">
-                  {category.text}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-
+        {/* Popular Categories - Mobile Optimized */}
+        {
+          isLoadingCategory ? (<CategoryLoadingSkeleton />) : (
+            <div className="mb-8 sm:mb-12">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4 text-center sm:hidden">
+                Popular Categories
+              </h3>
+              <div className="flex sm:flex-wrap sm:justify-center gap-3 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    to="/event"
+                    state={{ id: category.id }}
+                    className="flex-shrink-0 bg-white/80 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-slate-300 px-4 py-2 sm:py-3 rounded-full transition-all duration-200  transform hover:-translate-y-0.5"
+                  >
+                    {/* <span className="text-base sm:text-lg mr-2">{category.emoji || "🎉"}</span> */}
+                    <span className="text-slate-700 font-medium text-sm sm:text-base whitespace-nowrap">
+                      {category.name}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )
+        }
         {/* Quick Stats */}
         {/* <div className="text-center">
           <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-xs sm:text-sm text-slate-500">
