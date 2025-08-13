@@ -48,6 +48,16 @@ const EventDetailsPage = () => {
       <div className="text-center p-10 text-red-500">Error loading event.</div>
     );
 
+  const requireLogin = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return false;
+    }
+    return true;
+  };
+
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -68,6 +78,7 @@ const EventDetailsPage = () => {
 
   const updateQuantity = (ticketId, change) => {
     setTicketQuantities((prev) => {
+      if (!requireLogin()) return;
       const currentQty = prev[ticketId] || 0;
       const newQty = Math.max(0, Math.min(10, currentQty + change));
       if (newQty === 0) {
@@ -99,11 +110,7 @@ const EventDetailsPage = () => {
 
   const handleBooking = () => {
     if (getTotalTickets() > 0) {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate(`/login?redirect=${window.location.pathname}`);
-        return;
-      }
+      if (!requireLogin()) return;
       setShowBookingModal(true);
     }
   };
