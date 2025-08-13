@@ -65,6 +65,7 @@ export default function Hero() {
     );
   };
 
+
   return (
     <section className="relative bg-gradient-to-br from-slate-50 via-amber-50 to-orange-50 overflow-hidden">
       {/* Simplified Background Artwork - Mobile Optimized */}
@@ -154,194 +155,130 @@ export default function Hero() {
           </div>
         )}
         {/* Featured Events Carousel */}
-        {featuredEvents.length > 0 && (
-          <div className="mb-8 sm:mb-12 lg:mb-16">
-            <div className="relative group">
-              <div className="relative bg-white/90 backdrop-blur-lg rounded sm:rounded  overflow-hidden border border-white/50">
-                <div className="relative h-64 sm:h-80 lg:h-96">
-                  {featuredEvents.map((event, index) => (
-                    <Link
-                      to={`/event-details/${event.id}`}
-                      key={event.id}
-                      className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide
-                        ? "opacity-100 translate-x-0"
-                        : index ===
-                          (currentSlide - 1 + featuredEvents.length) %
-                          featuredEvents.length
-                          ? "opacity-0 -translate-x-full"
-                          : "opacity-0 translate-x-full"
-                        }`}
-                    >
-                      {/* Mobile Layout */}
-                      <div className="block lg:hidden h-full">
-                        <div className="relative h-2/3">
-                          {event.image_url ? (
-                            <>
-                              <img
-                                src={`${import.meta.env.VITE_IMG_URL}/${event.image_url}`}
-                                alt={event.title}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                  e.currentTarget.parentNode.querySelector(".fallback-img").style.display = "flex";
-                                }}
-                              />
-                              <div className="fallback-img hidden absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 items-center justify-center">
-                                <span className="text-2xl sm:text-3xl font-bold text-white">TapKori</span>
-                              </div>
-                            </>
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                              <span className="text-2xl sm:text-3xl font-bold text-white">TapKori</span>
-                            </div>
-                          )}
-
-                          {/* Mobile Featured Badge */}
-                          <div className="absolute top-3 left-3 bg-amber-500 text-white px-2 py-1 rounded flex items-center gap-1 text-xs font-medium">
-                            <Star className="w-3 h-3 fill-current" />
-                            Featured
+        <div className="mb-8 sm:mb-12 lg:mb-16">
+          <div className="relative group">
+            <div className="relative bg-white/90 backdrop-blur-lg rounded overflow-hidden border border-white/50">
+              <div className="relative h-64 sm:h-80 lg:h-96">
+                {(featuredEvents.length > 0 ? featuredEvents : [{
+                  id: "demo",
+                  title: "Demo Event",
+                  subtitle: "This is a demo featured event",
+                  image_url: null,
+                  start_date: new Date(),
+                  location: "Virtual",
+                  creator: { name: "Demo Organizer" },
+                  gradient: "from-purple-600/20 to-pink-600/20",
+                }]).map((event, index) => (
+                  <Link
+                    to={featuredEvents.length > 0 ? `/event-details/${event.id}` : "#"}
+                    key={event.id}
+                    className={`absolute inset-0 transition-all duration-1000 ease-in-out ${index === currentSlide
+                      ? "opacity-100 translate-x-0"
+                      : index === (currentSlide - 1 + (featuredEvents.length || 1)) % (featuredEvents.length || 1)
+                        ? "opacity-0 -translate-x-full"
+                        : "opacity-0 translate-x-full"
+                      }`}
+                  >
+                    {/* Mobile Layout */}
+                    <div className="block lg:hidden h-full">
+                      <div className="relative h-2/3">
+                        {event.image_url ? (
+                          <img
+                            src={`${import.meta.env.VITE_IMG_URL}/${event.image_url}`}
+                            alt={event.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                            <span className="text-2xl sm:text-3xl font-bold text-white">TapKori</span>
                           </div>
-                        </div>
+                        )}
 
-                        <div className="h-1/3 p-4 bg-white">
-                          <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 line-clamp-2">
-                            {event.title}
-                          </h3>
-                          <div className="flex items-center justify-between text-sm text-slate-600">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4 text-amber-600" />
-                              <span>{event.date}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <MapPin className="w-4 h-4 text-amber-600" />
-                              <span className="truncate max-w-24">{event.location}</span>
-                            </div>
-                          </div>
+                        <div className="absolute top-3 left-3 bg-amber-500 text-white px-2 py-1 rounded flex items-center gap-1 text-xs font-medium">
+                          <Star className="w-3 h-3 fill-current" />
+                          Featured
                         </div>
                       </div>
 
-                      {/* Desktop Layout */}
-                      <div className="hidden lg:flex h-full">
-                        <div className="w-2/3 relative overflow-hidden">
-                          {event.image_url ? (
-                            <>
-                              <img
-                                src={`${import.meta.env.VITE_IMG_URL}/${event.image_url}`}
-                                alt={event.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                onError={(e) => {
-                                  e.currentTarget.style.display = "none";
-                                  e.currentTarget.parentNode.querySelector(".fallback-img").style.display = "flex";
-                                }}
-                              />
-                              <div className="fallback-img hidden absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-500 items-center justify-center">
-                                <span className="text-6xl font-bold text-white">TapKori</span>
-                              </div>
-                            </>
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
-                              <span className="text-6xl font-bold text-white">TapKori</span>
-                            </div>
-                          )}
-                          <div
-                            className={`absolute inset-0 bg-gradient-to-r ${event.gradient ?? "from-purple-600/20 to-pink-600/20"
-                              }`}
-                          ></div>
-                        </div>
-
-                        <div className="w-1/3 p-8 lg:p-12 flex flex-col justify-center bg-white">
-                          <h3 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-3">
-                            {event.title}
-                          </h3>
-                          <p className="text-lg text-slate-600 mb-6">
-                            {event.subtitle}
-                          </p>
-
-                          <div className="space-y-3 mb-6 text-slate-700">
-                            <div className="space-y-1">
-                              {/* Date */}
-                              <div className="flex items-center gap-2">
-                                <Calendar size={16} className="text-amber-600" />
-                                <span className="font-medium">
-                                  {event.start_date
-                                    ? dayjs(event.start_date).format("MMM D, YYYY")
-                                    : "Date N/A"}
-                                </span>
-                                {event.start_date && (
-                                  <span className="ml-2 text-sm text-slate-500">
-                                    ({dayjs(event.start_date).fromNow()})
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* Time */}
-                              <div className="flex items-center gap-2">
-                                <Clock size={16} className="text-amber-600" />
-                                <span className="font-medium">
-                                  {event.start_date
-                                    ? dayjs(event.start_date).format("h:mm A")
-                                    : "Time N/A"}
-                                </span>
-                              </div>
-                            </div>
-
-
-                            {/* Location */}
-                            <div className="flex items-center gap-2">
-                              <MapPin size={16} className="text-amber-600" />
-                              <span className="font-medium">{event.location ?? "Location N/A"}</span>
-                            </div>
-
-                            {/* Creator */}
-                            <div className="flex items-center gap-2">
-                              <Users size={16} className="text-amber-600" />
-                              <span className="font-medium">{event?.creator?.name ?? "N/A"}</span>
-                            </div>
+                      <div className="h-1/3 p-4 bg-white">
+                        <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 line-clamp-2">{event.title}</h3>
+                        <div className="flex items-center justify-between text-sm text-slate-600">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-amber-600" />
+                            <span>{dayjs(event.start_date).format("MMM D, YYYY")}</span>
                           </div>
-
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-amber-600" />
+                            <span className="truncate max-w-24">{event.location}</span>
+                          </div>
                         </div>
                       </div>
-                    </Link>
-                  ))}
-                </div>
+                    </div>
 
-                {/* Navigation Arrows - Hidden on mobile */}
-                {featuredEvents.length > 1 && (
-                  <>
-                    <button
-                      onClick={prevSlide}
-                      className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-slate-700 w-10 h-10 items-center justify-center rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={nextSlide}
-                      className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-slate-700 w-10 h-10 items-center justify-center rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100"
-                    >
-                      <ChevronRight className="w-5 h-5" />
-                    </button>
-                  </>
-                )}
+                    {/* Desktop Layout */}
+                    <div className="hidden lg:flex h-full">
+                      <div className="w-2/3 relative overflow-hidden">
+                        {event.image_url ? (
+                          <img
+                            src={`${import.meta.env.VITE_IMG_URL}/${event.image_url}`}
+                            alt={event.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+                            <span className="text-6xl font-bold text-white">TapKori</span>
+                          </div>
+                        )}
+                        <div className={`absolute inset-0 bg-gradient-to-r ${event.gradient}`}></div>
+                      </div>
 
-                {/* Slide Indicators */}
-                {featuredEvents.length > 1 && (
+                      <div className="w-1/3 p-8 lg:p-12 flex flex-col justify-center bg-white">
+                        <h3 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-3">{event.title}</h3>
+                        <p className="text-lg text-slate-600 mb-6">{event.subtitle}</p>
+                        <div className="space-y-3 mb-6 text-slate-700">
+                          <div className="flex items-center gap-2">
+                            <Calendar size={16} className="text-amber-600" />
+                            <span className="font-medium">{dayjs(event.start_date).format("MMM D, YYYY")}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock size={16} className="text-amber-600" />
+                            <span className="font-medium">{dayjs(event.start_date).format("h:mm A")}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <MapPin size={16} className="text-amber-600" />
+                            <span className="font-medium">{event.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Users size={16} className="text-amber-600" />
+                            <span className="font-medium">{event.creator?.name}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Navigation & indicators only if more than 1 slide */}
+              {(featuredEvents.length > 1) && (
+                <>
+                  <button onClick={prevSlide} className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-slate-700 w-10 h-10 items-center justify-center rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100">
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button onClick={nextSlide} className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-slate-700 w-10 h-10 items-center justify-center rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100">
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
                     {featuredEvents.map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${index === currentSlide
-                          ? "bg-amber-600 scale-125"
-                          : "bg-white/60 hover:bg-white/80"
-                          }`}
-                      />
+                      <button key={index} onClick={() => setCurrentSlide(index)} className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${index === currentSlide ? "bg-amber-600 scale-125" : "bg-white/60 hover:bg-white/80"}`} />
                     ))}
                   </div>
-                )}
-              </div>
+                </>
+              )}
             </div>
           </div>
-        )}
+        </div>
+
 
         {/* Search Section */}
         <div className="max-w-4xl mx-auto mb-8 sm:mb-12">
@@ -383,32 +320,33 @@ export default function Hero() {
 
             {/* Desktop Search */}
             <div className="hidden sm:block">
-              <div className="flex flex-col lg:flex-row gap-3">
+              <div className="flex flex-col lg:flex-row gap-2">
                 <div className="flex-1 relative">
-                  <Search className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
+                  <Search className="absolute left-3 top-4 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
-                    placeholder="Search events, artists, venues..."
-                    className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    placeholder="Search events..."
+                    className="w-full pl-10 pr-3 py-3 text-slate-900 text-base bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     value={searchTerms}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
 
                 <div className="flex-1 relative">
-                  <Calendar className="absolute left-4 top-4 w-5 h-5 text-slate-400" />
+                  <Calendar className="absolute left-3 top-4 w-4 h-4 text-slate-400" />
                   <input
                     type="date"
-                    className="w-full pl-12 pr-4 py-4 text-slate-900 text-lg bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full pl-10 pr-3 py-3 text-slate-900 text-base bg-slate-50 rounded border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                   />
                 </div>
+
                 <button
                   onClick={handleSearch}
-                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-8 py-4 rounded font-semibold text-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                  className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white px-6 py-3 rounded font-semibold text-base transition-all duration-200 transform hover:-translate-y-0.5"
                 >
-                  Search Events
+                  Search
                 </button>
               </div>
             </div>
@@ -429,7 +367,7 @@ export default function Hero() {
                     key={category.id}
                     to="/event"
                     state={{ id: category.id }}
-                    className="flex-shrink-0 bg-white/80 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-slate-300 px-4 py-2 sm:py-3 rounded-full transition-all duration-200  transform hover:-translate-y-0.5"
+                    className="flex-shrink-0 bg-white/80 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-slate-300 px-4 py-2 sm:py-3 rounded-full transition-all duration-200 transform hover:-translate-y-0.5"
                   >
                     <span className="text-slate-700 font-medium text-sm sm:text-base whitespace-nowrap">
                       {category.name}
@@ -437,12 +375,26 @@ export default function Hero() {
                   </Link>
                 ))}
               </div>
+
             </div>
           )
         }
       </div>
 
       <style>{`
+       .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
