@@ -132,12 +132,13 @@ export default function ScannersEvent() {
           {/* Scanner Section */}
           <div className="flex-1">
             <div className="bg-white rounded-2xl overflow-hidden">
-              <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
+              {/* <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
                 <h2 className="text-xl font-semibold text-white flex items-center gap-2">
                   <QrCode className="w-5 h-5" />
                   Camera Scanner
                 </h2>
-              </div>
+              </div> */}
+
               
               <div className="p-6">
                 <div className="relative">
@@ -151,7 +152,7 @@ export default function ScannersEvent() {
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 rounded">
                       <div className="text-center text-white">
                         <QrCode className="w-12 h-12 mx-auto mb-2 opacity-70" />
-                        <p className="text-sm font-medium">Ready to scan</p>
+                        {/* <p className="text-sm font-medium">Ready to scan</p> */}
                       </div>
                     </div>
                   )}
@@ -185,12 +186,12 @@ export default function ScannersEvent() {
           {/* Results Section */}
           <div className="flex-1">
             <div className="bg-white rounded h-full">
-              <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
+              {/* <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
                 <h2 className="text-xl font-semibold text-white flex items-center gap-2">
                   <Shield className="w-5 h-5" />
                   Ticket Information
                 </h2>
-              </div>
+              </div> */}
               
               <div className="p-6 flex flex-col justify-center min-h-[300px] lg:min-h-[400px]">
                 
