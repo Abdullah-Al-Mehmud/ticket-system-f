@@ -66,7 +66,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-gray-50 via-gray-50 to-gray-50 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-slate-50 via-amber-50 to-orange-50 overflow-hidden">
       {/* Simplified Background Artwork - Mobile Optimized */}
       <div className="absolute inset-0">
         {/* Geometric shapes */}
@@ -464,19 +464,6 @@ export default function Hero() {
       </div>
 
       <style>{`
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
