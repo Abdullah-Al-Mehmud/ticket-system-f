@@ -101,7 +101,7 @@ const EventDetailsPage = () => {
     if (getTotalTickets() > 0) {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/login", { state: { from: location.pathname } }); 
+        navigate(`/login?redirect=${window.location.pathname}`);
         return;
       }
       setShowBookingModal(true);

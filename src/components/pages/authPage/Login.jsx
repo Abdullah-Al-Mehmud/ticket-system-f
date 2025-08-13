@@ -55,7 +55,8 @@ const Login = () => {
       localStorage.setItem("data", JSON.stringify(response.data));
       localStorage.setItem("token", response.token);
       toast.success(response.message);
-      const redirectPath = location.state?.from || "/";
+      const searchParams = new URLSearchParams(location.search);
+      const redirectPath = searchParams.get("redirect") || "/";
       navigate(redirectPath);
     } catch (error) {
       console.error("Login failed:", error);

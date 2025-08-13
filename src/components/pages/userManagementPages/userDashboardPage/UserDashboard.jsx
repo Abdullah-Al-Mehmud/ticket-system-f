@@ -100,7 +100,9 @@ const UserDashboard = () => {
         <BookingTicketList />
 
         {/* Organized Event Card Modal show */}
-        <OrganizedEventList />
+        {/* {!isLoading && eventsData?.length > 0 && ( */}
+          <OrganizedEventList />
+         {/* )} */}
 
         {/* Edit User Modal */}
         <UserEdit
