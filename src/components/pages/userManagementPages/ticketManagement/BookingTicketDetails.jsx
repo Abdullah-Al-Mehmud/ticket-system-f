@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
-import { XCircle, MapPin, Scissors } from "lucide-react";
+import { XCircle, MapPin, Scissors, Download } from "lucide-react";
 import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -47,9 +47,38 @@ export default function BookingTicketDetails() {
     ticket_id: ticket.ticket_id
   });
 
+  const handleDownload = async () => {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/ticket/download/${ticket.ticket_id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Accept': 'application/pdf',
+      },
+    });
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(new Blob([blob]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `ticket-${ticket.ticket_number}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex items-center justify-center">
       <div className="max-w-4xl w-full">
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={handleDownload}
+            className="flex items-center px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Download Ticket
+          </button>
+        </div>
+
         <Card className="border-amber-600 overflow-hidden" style={{ fontFamily: "monospace" }}>
           <div className="flex">
             <div className="flex-1 p-8 relative">
@@ -105,7 +134,7 @@ export default function BookingTicketDetails() {
             <div className="w-48 bg-gray-50 p-6 border-l-2 border-dashed border-gray-300 relative flex flex-col items-center">
 
               {/* Vertical Admit One text */}
-              <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-30 pointer-events-none select-none z-20 transform rotate-90 origin-center">
+              <div className="absolute top-1/3 left-1/2 -translate-x-1/3 -translate-y-1/2 w-30 pointer-events-none select-none z-20 transform rotate-90 origin-center">
                 <div className="text-center">
                   <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
                     Admit One
