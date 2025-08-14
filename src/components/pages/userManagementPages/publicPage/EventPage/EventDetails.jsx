@@ -18,6 +18,9 @@ import { useCreateTicketMutation } from "../../../../../store/features/tickets/t
 import toast from "react-hot-toast";
 import BookingModal from "./BookingModal";
 import PageLoading from "../../../../../components/common/loaderComponent/PageLoading";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const EventDetailsPage = () => {
   const { id } = useParams();
@@ -57,24 +60,6 @@ const EventDetailsPage = () => {
     return true;
   };
 
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   const updateQuantity = (ticketId, change) => {
     setTicketQuantities((prev) => {
@@ -187,12 +172,12 @@ const EventDetailsPage = () => {
               <div className="flex items-center space-x-4 text-lg opacity-90">
                 <div className="flex items-center">
                   <Calendar className="w-5 h-5 mr-2" />
-                  {formatDate(eventData.start_date)}
+                  {dayjs(eventData.start_date).format("dddd, MMMM D, YYYY")}
                 </div>
                 <div className="flex items-center">
                   <Clock className="w-5 h-5 mr-2" />
-                  {formatTime(eventData.start_date)} -{" "}
-                  {formatTime(eventData.end_date)}
+                  {dayjs(eventData.start_date).format("hh:mm A")} -
+                  {dayjs(eventData.end_date).format("hh:mm A")}
                 </div>
               </div>
             </div>
@@ -234,7 +219,7 @@ const EventDetailsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start">
+                {/* <div className="flex items-start">
                   <User className="w-6 h-6 text-green-500 mr-4 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-800">
@@ -242,13 +227,13 @@ const EventDetailsPage = () => {
                     </h3>
                     <p className="text-gray-600">{eventData.creator?.name}</p>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="flex items-start">
                   <Users className="w-6 h-6 text-purple-500 mr-4 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-800">
-                      Additional Organizers
+                      Organizers
                     </h3>
                     {hasOrganizers ? (
                       <ul className="text-gray-600 list-disc list-inside">

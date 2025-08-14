@@ -10,6 +10,7 @@ import {
 } from "../../../../store/features/event/EventApiSlice";
 import { Switch } from "../../../../components/ui/switch";
 import { useUpdateEventMutation } from "../../../../store/features/event/EventApiSlice";
+import dayjs from "dayjs";
 const EventsList = () => {
 
   const [updateEvent] = useUpdateEventMutation();
@@ -84,15 +85,6 @@ const EventsList = () => {
     setIsModalOpen(false);
     setEventToDelete(null);
   };
-
-  const formatDate = (dateString) =>
-    new Date(dateString).toLocaleString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-    });
 
   const getStatusBadge = (status) => {
     const statusStyles = {
@@ -308,11 +300,11 @@ const EventsList = () => {
                         <td className="px-6 py-4 text-sm">
                           {getStatusBadge(event.status)}
                         </td>
-                        <td className="px-6 py-4 text-sm">
-                          {formatDate(event.start_date)}
+                        <td className="px-6 py-4 text-sm min-w-[200px]">
+                          {dayjs(event.start_date).format("MMM D, YYYY")}-{dayjs(event.end_date).format("MMM D, YYYY")}
                         </td>
-                        <td className="px-6 py-4 text-sm">
-                          {formatDate(event.end_date)}
+                        <td className="px-6 py-4 text-sm min-w-[150px]">
+                          {dayjs(event.start_date).format("h:mm A")}-{dayjs(event.end_date).format("h:mm A")}
                         </td>
                         <td className="px-6 py-4 text-center">
                           <div className="flex gap-2 justify-center">
