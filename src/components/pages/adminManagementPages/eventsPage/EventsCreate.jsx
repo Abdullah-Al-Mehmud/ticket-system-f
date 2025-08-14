@@ -84,7 +84,7 @@ const EventsCreate = () => {
     submissionData.append("end_date", formattedEnd);
     submissionData.append("privacy_policy", formData.privacy_policy);
 
-    // ✅ Only append image if a file is selected
+    // Only append image if a file is selected
     if (formData.image_url) {
       submissionData.append("image_url", formData.image_url);
     }

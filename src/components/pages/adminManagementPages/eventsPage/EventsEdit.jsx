@@ -163,26 +163,7 @@ const EventsEdit = () => {
             />
             <span>Featured</span>
           </div>
-          {/* Category */}
-          <div>
-            <label className="block mb-1">Category</label>
-            <select
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              className="w-full border px-3 py-2 rounded"
-            >
-              <option value="">Select Category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-            {errors.category_id && (
-              <p className="text-red-500 text-sm">{errors.category_id}</p>
-            )}
-          </div>
+
 
           {/* Title */}
           <div>
@@ -225,7 +206,26 @@ const EventsEdit = () => {
               <p className="text-red-500 text-sm">{errors.location}</p>
             )}
           </div>
-
+          {/* Category */}
+          <div>
+            <label className="block mb-1">Category</label>
+            <select
+              name="category_id"
+              value={formData.category_id}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            {errors.category_id && (
+              <p className="text-red-500 text-sm">{errors.category_id}</p>
+            )}
+          </div>
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
