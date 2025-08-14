@@ -114,29 +114,6 @@ const EventsCreate = () => {
           className="space-y-6"
           encType="multipart/form-data"
         >
-          {/* Category */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Category
-            </label>
-            <select
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2"
-            >
-              <option value="">Select Category</option>
-              {CategoriesList.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            {errors.category_id && (
-              <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>
-            )}
-          </div>
-
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -189,6 +166,32 @@ const EventsCreate = () => {
               <p className="text-red-500 text-sm mt-1">{errors.location}</p>
             )}
           </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Category
+            </label>
+            <select
+              name="category_id"
+              value={formData.category_id}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            >
+              <option value="">Select Category</option>
+              {CategoriesList.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            {errors.category_id && (
+              <p className="text-red-500 text-sm mt-1">{errors.category_id}</p>
+            )}
+          </div>
+
+
+
 
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -272,11 +275,10 @@ const EventsCreate = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-transform duration-150 ${
-              isLoading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-amber-600 hover:bg-amber-700"
-            }`}
+            className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-transform duration-150 ${isLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-amber-600 hover:bg-amber-700"
+              }`}
           >
             {isLoading ? "Creating..." : "Create Event"}
           </button>
