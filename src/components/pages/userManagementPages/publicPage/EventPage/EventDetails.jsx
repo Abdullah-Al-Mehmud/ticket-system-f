@@ -110,6 +110,26 @@ const EventDetailsPage = () => {
       ticket.total_quantity - ticket.sold_quantity > 0
     );
   };
+  const getTicketAvailabilityMessage = (ticket) => {
+    const now = new Date();
+    const start = new Date(ticket.sales_start);
+    const end = new Date(ticket.sales_end);
+
+    if (now < start) {
+      return `Sales start on ${dayjs(start).format("MMM D, YYYY h:mm A")}`;
+    }
+
+    if (now > end) {
+      return "Sales period has ended";
+    }
+
+    if (ticket.total_quantity - ticket.sold_quantity <= 0) {
+      return "Sold Out";
+    }
+
+    return null; // Means available
+  };
+
   const handleConfirmBooking = async () => {
     try {
       const bookings = Object.entries(ticketQuantities).map(
@@ -341,11 +361,14 @@ const EventDetailsPage = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
-                          <span className="text-red-600 font-medium text-sm">
-                            Currently Unavailable
-                          </span>
-                        </div>
+                        (() => {
+                          const message = getTicketAvailabilityMessage(ticket);
+                          return message ? (
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                              <span className="text-red-600 font-medium text-sm">{message}</span>
+                            </div>
+                          ) : null;
+                        })()
                       )}
                     </div>
                   );
