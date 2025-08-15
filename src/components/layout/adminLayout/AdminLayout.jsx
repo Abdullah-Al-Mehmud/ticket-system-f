@@ -68,11 +68,9 @@ const AdminLayout = () => {
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div
-        className={`${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 transition-all duration-300 ease-in-out fixed lg:static inset-y-0 left-0 z-50 ${
-          sidebarCollapsed ? "w-16" : "w-64"
-        } bg-white shadow-lg`}
+        className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:translate-x-0 transition-all duration-300 ease-in-out fixed lg:static inset-y-0 left-0 z-50 ${sidebarCollapsed ? "w-16" : "w-64"
+          } bg-white shadow-lg`}
       >
         <div className={`flex items-center justify-between h-16 border-b px-4`}>
           {!sidebarCollapsed && (
@@ -102,13 +100,11 @@ const AdminLayout = () => {
                 navigate(item.path);
                 setSidebarOpen(false);
               }}
-              className={`w-full flex items-center ${
-                sidebarCollapsed ? "justify-center px-4" : "px-6"
-              } py-3 text-left hover:bg-gray-50 transition-colors group relative ${
-                activeTab === item.id
+              className={`w-full flex items-center ${sidebarCollapsed ? "justify-center px-4" : "px-6"
+                } py-3 text-left hover:bg-gray-50 transition-colors group relative ${activeTab === item.id
                   ? "bg-blue-50 text-blue-600 border-r-2 border-blue-600"
                   : "text-gray-700"
-              }`}
+                }`}
             >
               <item.icon
                 className={`w-5 h-5 ${sidebarCollapsed ? "" : "mr-3"}`}
@@ -128,8 +124,8 @@ const AdminLayout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
-          <div className="flex items-center justify-between px-6 py-4">
+        <header className="bg-white  border-b h-16 flex items-center">
+          <div className="flex items-center justify-between w-full px-6">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSidebarOpen(true)}
