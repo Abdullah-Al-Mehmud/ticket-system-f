@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Calendar,
   Clock,
@@ -18,6 +18,9 @@ import { useCreateTicketMutation } from "../../../../../store/features/tickets/t
 import toast from "react-hot-toast";
 import BookingModal from "./BookingModal";
 import PageLoading from "../../../../../components/common/loaderComponent/PageLoading";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const EventDetailsPage = () => {
   const { id } = useParams();
@@ -27,6 +30,7 @@ const EventDetailsPage = () => {
   const [ticketQuantities, setTicketQuantities] = useState({});
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   const eventData = data?.data;
   const MAX_LENGTH = 200;
@@ -47,26 +51,19 @@ const EventDetailsPage = () => {
       <div className="text-center p-10 text-red-500">Error loading event.</div>
     );
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+  const requireLogin = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate(`/login?redirect=${encodeURIComponent(window.location.pathname)}`);
+      return false;
+    }
+    return true;
   };
 
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   const updateQuantity = (ticketId, change) => {
     setTicketQuantities((prev) => {
+      if (!requireLogin()) return;
       const currentQty = prev[ticketId] || 0;
       const newQty = Math.max(0, Math.min(10, currentQty + change));
       if (newQty === 0) {
@@ -98,6 +95,7 @@ const EventDetailsPage = () => {
 
   const handleBooking = () => {
     if (getTotalTickets() > 0) {
+      if (!requireLogin()) return;
       setShowBookingModal(true);
     }
   };
@@ -112,6 +110,26 @@ const EventDetailsPage = () => {
       ticket.total_quantity - ticket.sold_quantity > 0
     );
   };
+  const getTicketAvailabilityMessage = (ticket) => {
+    const now = new Date();
+    const start = new Date(ticket.sales_start);
+    const end = new Date(ticket.sales_end);
+
+    if (now < start) {
+      return `Sales start on ${dayjs(start).format("MMM D, YYYY h:mm A")}`;
+    }
+
+    if (now > end) {
+      return "Sales period has ended";
+    }
+
+    if (ticket.total_quantity - ticket.sold_quantity <= 0) {
+      return "Sold Out";
+    }
+
+    return null; // Means available
+  };
+
   const handleConfirmBooking = async () => {
     try {
       const bookings = Object.entries(ticketQuantities).map(
@@ -174,12 +192,12 @@ const EventDetailsPage = () => {
               <div className="flex items-center space-x-4 text-lg opacity-90">
                 <div className="flex items-center">
                   <Calendar className="w-5 h-5 mr-2" />
-                  {formatDate(eventData.start_date)}
+                  {dayjs(eventData.start_date).format("dddd, MMMM D, YYYY")}
                 </div>
                 <div className="flex items-center">
                   <Clock className="w-5 h-5 mr-2" />
-                  {formatTime(eventData.start_date)} -{" "}
-                  {formatTime(eventData.end_date)}
+                  {dayjs(eventData.start_date).format("hh:mm A")} -
+                  {dayjs(eventData.end_date).format("hh:mm A")}
                 </div>
               </div>
             </div>
@@ -221,7 +239,7 @@ const EventDetailsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-start">
+                {/* <div className="flex items-start">
                   <User className="w-6 h-6 text-green-500 mr-4 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-800">
@@ -229,13 +247,13 @@ const EventDetailsPage = () => {
                     </h3>
                     <p className="text-gray-600">{eventData.creator?.name}</p>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="flex items-start">
                   <Users className="w-6 h-6 text-purple-500 mr-4 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-800">
-                      Additional Organizers
+                      Organizers
                     </h3>
                     {hasOrganizers ? (
                       <ul className="text-gray-600 list-disc list-inside">
@@ -257,11 +275,10 @@ const EventDetailsPage = () => {
                     <h3 className="font-semibold text-gray-800">Status</h3>
                     <p
                       className={`text-sm font-medium px-3 py-1 rounded-full inline-block 
-              ${
-                eventData.status === "Cancelled"
-                  ? "bg-red-100 text-red-700"
-                  : "bg-green-100 text-green-700"
-              }`}
+              ${eventData.status === "Cancelled"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-green-100 text-green-700"
+                        }`}
                     >
                       {eventData.status}
                     </p>
@@ -344,11 +361,14 @@ const EventDetailsPage = () => {
                           </div>
                         </div>
                       ) : (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
-                          <span className="text-red-600 font-medium text-sm">
-                            Currently Unavailable
-                          </span>
-                        </div>
+                        (() => {
+                          const message = getTicketAvailabilityMessage(ticket);
+                          return message ? (
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-center">
+                              <span className="text-red-600 font-medium text-sm">{message}</span>
+                            </div>
+                          ) : null;
+                        })()
                       )}
                     </div>
                   );

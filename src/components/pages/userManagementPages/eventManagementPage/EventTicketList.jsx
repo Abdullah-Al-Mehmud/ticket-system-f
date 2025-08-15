@@ -49,9 +49,8 @@ const EventTicketList = () => {
 
     exportToPDF({
       title: `Ticket List for Event: ${event.title}`,
-      subtitle: `Exported on: ${new Date().toLocaleDateString()} | Total Tickets: ${
-        tickets.length
-      }`,
+      subtitle: `Exported on: ${new Date().toLocaleDateString()} | Total Tickets: ${tickets.length
+        }`,
       headers,
       rows,
       fileName: `tickets_event_${event.id}.pdf`,
@@ -99,6 +98,9 @@ const EventTicketList = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Purchased At
                 </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Verify
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -121,6 +123,19 @@ const EventTicketList = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {formatDate(ticket.created_at)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+
+                    {ticket.is_verify ? (
+                      <span className="text-green-500 font-medium">
+                        Verified
+                      </span>
+                    ) : (
+                      <span className="text-red-500 font-medium">
+                        Not Verified
+                      </span>
+                    )}
+
                   </td>
                 </tr>
               ))}

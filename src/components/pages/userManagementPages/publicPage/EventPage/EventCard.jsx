@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Clock, MapPin, Ticket } from "lucide-react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const EventCard = ({ event }) => {
   return (
@@ -44,15 +47,14 @@ const EventCard = ({ event }) => {
 
           <Badge className="absolute top-3 right-3 bg-amber-600 text-white border-0 shadow-sm">
             {(() => {
-              const eventDate = new Date(event.start_date);
-              const today = new Date();
-              const diffTime = eventDate - today;
-              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              const eventDate = dayjs(event.start_date);
+              const diffDays = eventDate.diff(dayjs(), "day");
+
               return diffDays === 0
                 ? "Today"
                 : diffDays === 1
-                ? "Tomorrow"
-                : `${diffDays} days`;
+                  ? "Tomorrow"
+                  : `${diffDays} days`;
             })()}
           </Badge>
         </div>
@@ -66,20 +68,9 @@ const EventCard = ({ event }) => {
             {event.start_date && (
               <div className="flex items-center text-sm text-slate-600">
                 <Calendar className="w-4 h-4 mr-3 text-amber-600" />
-                <span>
-                  {new Date(event.start_date).toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </span>
+                <span>{dayjs(event.start_date).format("MMM D, YYYY")}</span>
                 <Clock className="w-4 h-4 ml-4 mr-2 text-amber-600" />
-                <span>
-                  {new Date(event.start_date).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
+                <span>{dayjs(event.start_date).format("hh:mm A")}</span>
               </div>
             )}
 
@@ -90,8 +81,8 @@ const EventCard = ({ event }) => {
               <span>
                 {event.ticket_categories.length > 0
                   ? `starting from ৳${Math.min(
-                      ...event.ticket_categories.map((t) => parseFloat(t.price))
-                    ).toFixed(2)}`
+                    ...event.ticket_categories.map((t) => parseFloat(t.price))
+                  ).toFixed(2)}`
                   : "No tickets available"}
               </span>
             </div>

@@ -1,17 +1,18 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-const PageLoading = lazy(() =>import("./components/common/loaderComponent/PageLoading"));
-const Home = lazy(() =>import("./components/pages/userManagementPages/publicPage/Home"));
-const UserLayout = lazy(() =>import("./components/layout/userLayout/UserLayout"));
-const Event = lazy(() =>import("./components/pages/userManagementPages/publicPage/EventPage/Event"));
-const Contact = lazy(() =>import("./components/pages/userManagementPages/publicPage/ContactPage/Contact"));
+import ScannersEvent from "./components/pages/userManagementPages/eventManagementPage/ScannersEvent";
+const PageLoading = lazy(() => import("./components/common/loaderComponent/PageLoading"));
+const Home = lazy(() => import("./components/pages/userManagementPages/publicPage/Home"));
+const UserLayout = lazy(() => import("./components/layout/userLayout/UserLayout"));
+const Event = lazy(() => import("./components/pages/userManagementPages/publicPage/EventPage/Event"));
+const Contact = lazy(() => import("./components/pages/userManagementPages/publicPage/ContactPage/Contact"));
 const About = lazy(() => import("./components/pages/userManagementPages/publicPage/AboutPage/About"));
-const TermsOfService = lazy(() =>import("./components/pages/userManagementPages/publicPage/SupportPage/TermsOfService"));
-const RefundPolicy = lazy(() =>import("./components/pages/userManagementPages/publicPage/SupportPage/RefundPolicy"));
-const HelpCenter = lazy(() =>import("./components/pages/userManagementPages/publicPage/SupportPage/HelpCenter"));
-const Careers = lazy(() =>import("./components/pages/userManagementPages/publicPage/CompanyPage/Careers"));
-const Press = lazy(() =>import("./components/pages/userManagementPages/publicPage/CompanyPage/Press"));
-const PrivacyPolicy = lazy(() =>import("./components/pages/userManagementPages/publicPage/CompanyPage/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/TermsOfService"));
+const RefundPolicy = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/RefundPolicy"));
+const HelpCenter = lazy(() => import("./components/pages/userManagementPages/publicPage/SupportPage/HelpCenter"));
+const Careers = lazy(() => import("./components/pages/userManagementPages/publicPage/CompanyPage/Careers"));
+const Press = lazy(() => import("./components/pages/userManagementPages/publicPage/CompanyPage/Press"));
+const PrivacyPolicy = lazy(() => import("./components/pages/userManagementPages/publicPage/CompanyPage/PrivacyPolicy"));
 const NotFound = lazy(() => import("./components/pages/authPage/NotFound"));
 const EventDetailsPage = lazy(() => import("./components/pages/userManagementPages/publicPage/EventPage/EventDetails"));
 const PublicRoute = lazy(() => import("./components/layout/PublicRoute"));
@@ -68,6 +69,7 @@ function App() {
           <Route path="press" element={<Press />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
 
+
           <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
@@ -86,7 +88,7 @@ function App() {
             <Route path="categories-list" element={<CategoryList />} />
             <Route path="categories-create" element={<CategoryCreate />} />
             <Route path="categories-edit/:id" element={<CategoryEdit />} />
-            <Route path="categories-details/:id"element={<CategoryDetails />} />
+            <Route path="categories-details/:id" element={<CategoryDetails />} />
 
             <Route path="events-list" element={<EventsList />} />
             <Route path="events-create" element={<EventsCreate />} />
@@ -98,7 +100,7 @@ function App() {
             <Route path="tickets-details/:id" element={<TicketsDetails />} />
             {/* <Route path="tickets-create" element={<TicketsCreate />} /> */}
 
-            <Route path="ticket-categories-list" element={<TicketCategoriesList />}/>
+            <Route path="ticket-categories-list" element={<TicketCategoriesList />} />
             <Route path="ticket-categories-details/:id" element={<TicketCategoriesDetails />} />
             <Route path="ticket-categories-edit/:id" element={<TicketCategoriesEdit />} />
           </Route>
@@ -113,6 +115,7 @@ function App() {
 
             <Route path="events-sales-overview/:id" element={<EventSalesOverview />} />
             <Route path="events-ticket-list/:id" element={<EventTicketList />} />
+            <Route path="scanners-event/:id" element={<ScannersEvent />} />
 
           </Route>
         </Route>

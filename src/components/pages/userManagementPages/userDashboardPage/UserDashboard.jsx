@@ -16,7 +16,7 @@ const UserDashboard = () => {
 
   const { data: userData, isLoading } = useGetUserByIdQuery(userId);
   const user = userData?.data;
-
+  
   if (isLoading)
     return (
       <p>
@@ -33,7 +33,7 @@ const UserDashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* User Profile Section */}
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+        <div className="bg-white rounded border border-gray-200 overflow-hidden mb-6">
           <div className="px-6 py-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center">
               {/* Profile Image */}
@@ -56,7 +56,7 @@ const UserDashboard = () => {
 
                 <button
                   onClick={handleEditClick}
-                  className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-white rounded-full p-1.5 shadow-lg transition-colors"
+                  className="absolute bottom-0 right-0 bg-amber-500 hover:bg-amber-600 text-white rounded-full p-1.5 transition-colors"
                 >
                   <Edit className="w-3 h-3" />
                 </button>
@@ -86,7 +86,7 @@ const UserDashboard = () => {
 
                   <button
                     onClick={handleEditClick}
-                    className="self-start sm:self-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-lg font-medium transition-colors mt-4 sm:mt-0"
+                    className="self-start sm:self-center bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded font-medium transition-colors mt-4 sm:mt-0"
                   >
                     Edit Profile
                   </button>
