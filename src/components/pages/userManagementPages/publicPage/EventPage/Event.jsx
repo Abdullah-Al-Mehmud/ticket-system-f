@@ -3,17 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, Search } from "lucide-react";
 import EventCard from "./EventCard";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetEventsQuery } from "../../../../../store/features/event/EventApiSlice";
 import { useGetCategoriesQuery } from "../../../../../store/features/categories/categoriesApiSlice";
 import CategoryLoadingSkeleton from "../../../../../components/common/loaderComponent/CategoryLoadingSkeleton";
 import EventCardLoadingSkeleton from "../../../../../components/common/loaderComponent/EventCardLoadingSkeleton";
 
 const Event = () => {
-  const location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [dates, setDates] = useState("");
-  console.log("Location state:", location.state);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [pageConfig, setPageConfig] = useState({
     page: 1,
@@ -23,7 +23,6 @@ const Event = () => {
     date: "",
     orderbyStatus: true,
   });
-  const { id, searchTerms, date } = location.state || {};
   const { data, isFetching, isLoading, isError } =
     useGetEventsQuery(pageConfig);
   const { data: categoryData, isLoading: isLoadingCategory } =
@@ -32,6 +31,10 @@ const Event = () => {
   const categories = categoryData?.data ?? [];
 
   useEffect(() => {
+    const idString = searchParams.get("category");
+    const id = idString ? parseInt(idString, 10) : null;
+    const searchTerms = searchParams.get("search");
+    const date = searchParams.get("date");
     if (id) {
       setSelectedCategory(id);
       setPageConfig((prev) => ({
@@ -50,10 +53,10 @@ const Event = () => {
       setDates(date);
       setPageConfig((prev) => ({
         ...prev,
-        date: dates,
+        date: date,
       }));
     }
-  }, [id, searchTerms, date, dates]);
+  }, [selectedCategory, searchParams, dates]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-orange-50/20">
       <div className="bg-white border-b border-gray-100">
@@ -113,12 +116,14 @@ const Event = () => {
                         ...prev,
                         category: "",
                       }));
+                      navigate("/event");
                     } else {
                       setSelectedCategory(category?.id);
                       setPageConfig((prev) => ({
                         ...prev,
                         category: category?.id,
                       }));
+                      navigate(`/event?category=${category?.id}`);
                     }
                   }}
                   className={`flex items-center space-x-2 rounded-full px-4 py-2 transition-all duration-200 ${selectedCategory === category?.id
@@ -180,6 +185,7 @@ const Event = () => {
                     setPageConfig("");
                     setSearchTerm("");
                     setSelectedCategory("");
+                    navigate("/event");
                   }}
                   className="rounded-full px-6 py-2 border-amber-300 text-amber-600 hover:bg-amber-50"
                 >

@@ -47,8 +47,7 @@ const Footer = () => {
                   data.data.map((category) => (
                     <li key={category.id}>
                       <Link
-                        to="/event"
-                        state={{ id: category.id }}
+                        to={`/event?category=${category.id}`}
                         className="hover:text-white transition-colors"
                       >
                         {category.name}

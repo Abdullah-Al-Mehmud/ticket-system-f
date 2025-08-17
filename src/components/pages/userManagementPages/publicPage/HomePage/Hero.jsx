@@ -36,12 +36,12 @@ export default function Hero() {
 
 
   const handleSearch = () => {
-    navigate("/event", {
-      state: {
-        searchTerms,
-        date,
-      },
-    });
+    const query = new URLSearchParams();
+
+    if (searchTerms) query.set("search", searchTerms);
+    if (date) query.set("date", date);
+
+    navigate(`/event?${query.toString()}`);
   };
   const featuredEvents = data?.data?.filter(
     (event) => event.is_featured === 1 || event.is_featured === "1"
@@ -360,8 +360,7 @@ export default function Hero() {
               <div className="flex sm:flex-wrap sm:justify-center gap-3 overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
                 {categories.map((category) => (
                   <Link
-                    key={category.id}
-                    to="/event"
+                    to={`/event?category=${category.id}`}
                     state={{ id: category.id }}
                     className="flex-shrink-0 bg-white/80 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-slate-300 px-4 py-2 sm:py-3 rounded-full transition-all duration-200 transform hover:-translate-y-0.5"
                   >
