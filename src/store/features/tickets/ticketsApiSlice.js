@@ -75,6 +75,14 @@ export const ticketsApiSlice = apiSlice.injectEndpoints({
         responseHandler: async (response) => await response.blob(),
       }),
     }),
+    sendBookingEmail: builder.mutation({
+      query: (payload) => ({
+        url: "/send-bookingTicket-email",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Ticket"],
+    }),
   }),
 });
 
@@ -88,4 +96,5 @@ export const {
   useVerifyTicketMutation,
   useCheckTicketMutation,
   useDownloadTicketMutation,
+  useSendBookingEmailMutation,
 } = ticketsApiSlice;

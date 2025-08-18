@@ -14,7 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useGetEventByIdQuery } from "../../../../../store/features/event/EventApiSlice";
-import { useCreateTicketMutation } from "../../../../../store/features/tickets/ticketsApiSlice";
+import { useCreateTicketMutation, useSendBookingEmailMutation } from "../../../../../store/features/tickets/ticketsApiSlice";
 import toast from "react-hot-toast";
 import BookingModal from "./BookingModal";
 import PageLoading from "../../../../../components/common/loaderComponent/PageLoading";
@@ -27,6 +27,7 @@ const EventDetailsPage = () => {
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const [createTicket, { isLoading: bookingLoading }] =
     useCreateTicketMutation();
+  const [sendBookingEmail] = useSendBookingEmailMutation();
   const [ticketQuantities, setTicketQuantities] = useState({});
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -127,30 +128,37 @@ const EventDetailsPage = () => {
       return "Sold Out";
     }
 
-    return null; // Means available
+    return null; 
   };
 
   const handleConfirmBooking = async () => {
     try {
-      const bookings = Object.entries(ticketQuantities).map(
-        ([ticketCategoryId, quantity]) => ({
-          ticket_category_id: parseInt(ticketCategoryId),
-          quantity,
-          status: "Confirmed",
-        })
-      );
+      const bookings = Object.entries(ticketQuantities).map(([ticketCategoryId, quantity]) => ({
+        ticket_category_id: parseInt(ticketCategoryId),
+        quantity,
+        status: "Confirmed",
+      }));
 
+      const createdTicketIds = [];
       for (const booking of bookings) {
-        await createTicket(booking).unwrap();
+        const result = await createTicket(booking).unwrap();
+        createdTicketIds.push(result.data.id);
       }
-
-      toast.success("Booking successful!");
+      toast.success("Booking confirmed! Email sent with tickets.");
       setShowBookingModal(false);
       setTicketQuantities({});
       refetch();
+
+      if (createdTicketIds.length > 0) {
+        await sendBookingEmail({ ticket_id: createdTicketIds }).unwrap();
+        console.log("Booking email sent for tickets:", createdTicketIds);
+      }
+
     } catch (error) {
-      toast.error("Booking failed. Please try again.");
-      console.error("Booking error:", error);
+      console.error("Booking or email failed:", error);
+
+      const errorMsg = error?.data?.message || "Booking failed. Please try again.";
+      toast.error(errorMsg);
     }
   };
 
