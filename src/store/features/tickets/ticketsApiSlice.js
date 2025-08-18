@@ -66,6 +66,15 @@ export const ticketsApiSlice = apiSlice.injectEndpoints({
         body: payload,
       }),
     }),
+
+    downloadTicket: builder.mutation({
+      query: (id) => ({
+        url: `/ticket/download/${id}`,
+        method: "GET",
+        // don't let fetchBaseQuery parse JSON
+        responseHandler: async (response) => await response.blob(),
+      }),
+    }),
   }),
 });
 
@@ -78,4 +87,5 @@ export const {
   useGetUserTicketsQuery,
   useVerifyTicketMutation,
   useCheckTicketMutation,
+  useDownloadTicketMutation,
 } = ticketsApiSlice;

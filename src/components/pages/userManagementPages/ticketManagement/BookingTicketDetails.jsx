@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
+import { useDownloadTicketMutation, useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
 import { XCircle, MapPin, Scissors, Download } from "lucide-react";
 import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 export default function BookingTicketDetails() {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetTicketByIdQuery(id);
+  const [downloadTicket, { isLoading: isDownloading }] = useDownloadTicketMutation();
 
   if (isLoading) return <div className="min-h-screen bg-gray-100 flex items-center justify-center"><PageLoading /></div>;
 
@@ -48,22 +49,21 @@ export default function BookingTicketDetails() {
   });
 
   const handleDownload = async () => {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/ticket/download/${ticket.ticket_id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Accept': 'application/pdf',
-      },
-    });
+    try {
+      const blob = await downloadTicket(ticket.ticket_id).unwrap();
+      const url = window.URL.createObjectURL(blob);
 
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(new Blob([blob]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `ticket-${ticket.ticket_number}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-    link.parentNode.removeChild(link);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `ticket-${ticket.ticket_number}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed:", err);
+    }
   };
 
   return (
@@ -71,11 +71,11 @@ export default function BookingTicketDetails() {
       <div className="max-w-4xl w-full">
         <div className="flex justify-end mb-4">
           <button
-            onClick={handleDownload}
+            onClick={handleDownload} disabled={isDownloading}
             className="flex items-center px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
           >
             <Download className="w-4 h-4 mr-2" />
-            Download Ticket
+            {isDownloading ? "Downloading..." : "Download Ticket"}
           </button>
         </div>
 

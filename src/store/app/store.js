@@ -6,6 +6,12 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore all actions and state paths from RTK Query
+        ignoredActions: [`${apiSlice.reducerPath}/*`],
+        ignoredPaths: [apiSlice.reducerPath],
+      },
+    }).concat(apiSlice.middleware),
   devTools: import.meta.env.NODE_ENV !== "production",
 });
