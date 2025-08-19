@@ -149,6 +149,7 @@ export default function TicketCategoriesList() {
                     "Category Name",
                     "Event Title",
                     "Price",
+                    "Max Per Purchase",
                     "Sales Start",
                     "Sales End",
                     "Total Qty",
@@ -195,6 +196,10 @@ export default function TicketCategoriesList() {
                       <td className="px-6 py-4 text-sm text-gray-800">
                         ৳{category.price}
                       </td>
+                      <td className="px-6 py-4 text-sm text-gray-800">
+                        {category.max_per_purchase ?? 'null'}
+                      </td>
+
                       <td className="px-6 py-4 text-sm text-gray-600">
                         {formatDateOnly(category.sales_start)}
                       </td>
@@ -261,11 +266,10 @@ export default function TicketCategoriesList() {
               }))
             }
             disabled={currentPage === 1}
-            className={`px-4 py-2 text-sm rounded-md border transition ${
-              currentPage === 1
+            className={`px-4 py-2 text-sm rounded-md border transition ${currentPage === 1
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                 : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-            }`}
+              }`}
           >
             Previous
           </button>
@@ -278,11 +282,10 @@ export default function TicketCategoriesList() {
                 onClick={() =>
                   setPageConfig((prev) => ({ ...prev, page: pageNum }))
                 }
-                className={`px-4 py-2 text-sm rounded-md border transition ${
-                  pageNum === currentPage
+                className={`px-4 py-2 text-sm rounded-md border transition ${pageNum === currentPage
                     ? "bg-amber-600 text-white border-amber-600"
                     : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-                }`}
+                  }`}
               >
                 {pageNum}
               </button>
@@ -297,11 +300,10 @@ export default function TicketCategoriesList() {
               }))
             }
             disabled={currentPage === lastPage}
-            className={`px-4 py-2 text-sm rounded-md border transition ${
-              currentPage === lastPage
+            className={`px-4 py-2 text-sm rounded-md border transition ${currentPage === lastPage
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                 : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-            }`}
+              }`}
           >
             Next
           </button>
