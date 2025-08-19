@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import ScannersEvent from "./components/pages/userManagementPages/eventManagementPage/ScannersEvent";
+const ScannersEvent = lazy(() => import("./components/pages/userManagementPages/scannerManagement/ScannersEvent"));
 const PageLoading = lazy(() => import("./components/common/loaderComponent/PageLoading"));
 const Home = lazy(() => import("./components/pages/userManagementPages/publicPage/Home"));
 const UserLayout = lazy(() => import("./components/layout/userLayout/UserLayout"));
