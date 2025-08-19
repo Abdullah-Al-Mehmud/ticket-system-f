@@ -281,6 +281,7 @@ const TicketCategoriesEdit = () => {
                     </p>
                   )}
                 </div>
+                
                 {/* Max Per Purchase */}
                 <div>
                   <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
