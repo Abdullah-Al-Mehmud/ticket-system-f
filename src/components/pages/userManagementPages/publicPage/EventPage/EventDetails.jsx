@@ -66,7 +66,12 @@ const EventDetailsPage = () => {
     setTicketQuantities((prev) => {
       if (!requireLogin()) return;
       const currentQty = prev[ticketId] || 0;
-      const newQty = Math.max(0, Math.min(10, currentQty + change));
+      const ticket = eventData.ticket_categories.find((t) => t.id === ticketId);
+      if (!ticket) return prev;
+
+      const maxAllowed = ticket.max_per_purchase || ticket.total_quantity;
+      const newQty = Math.max(0, Math.min(maxAllowed, currentQty + change));
+
       if (newQty === 0) {
         const { [ticketId]: _, ...rest } = prev;
         return rest;
@@ -128,7 +133,7 @@ const EventDetailsPage = () => {
       return "Sold Out";
     }
 
-    return null; 
+    return null;
   };
 
   const handleConfirmBooking = async () => {
@@ -148,6 +153,7 @@ const EventDetailsPage = () => {
       setShowBookingModal(false);
       setTicketQuantities({});
       refetch();
+      navigate("/user/booking-ticket-details/" + createdTicketIds[0]);
 
       if (createdTicketIds.length > 0) {
         await sendBookingEmail({ ticket_id: createdTicketIds }).unwrap();
@@ -361,7 +367,8 @@ const EventDetailsPage = () => {
                               onClick={() => updateQuantity(ticket.id, 1)}
                               className="w-9 h-9 rounded-lg bg-amber-600 hover:bg-amber-700 text-white flex items-center justify-center transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-600"
                               disabled={
-                                (ticketQuantities[ticket.id] || 0) >= 10
+                                (ticketQuantities[ticket.id] || 0) >=
+                                (ticket.max_per_purchase || ticket.total_quantity)
                               }
                             >
                               <Plus className="w-4 h-4" />
