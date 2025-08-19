@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-const ScannersEvent = lazy(() => import("./components/pages/userManagementPages/scannerManagement/ScannersEvent"));
 const PageLoading = lazy(() => import("./components/common/loaderComponent/PageLoading"));
 const Home = lazy(() => import("./components/pages/userManagementPages/publicPage/Home"));
 const UserLayout = lazy(() => import("./components/layout/userLayout/UserLayout"));
@@ -49,6 +48,7 @@ const UserDashboard = lazy(() => import("./components/pages/userManagementPages/
 const BookingTicketDetails = lazy(() => import("./components/pages/userManagementPages/ticketManagement/BookingTicketDetails"));
 const EventSalesOverview = lazy(() => import("./components/pages/userManagementPages/eventManagementPage/EventSalesOverview"));
 const EventTicketList = lazy(() => import("./components/pages/userManagementPages/eventManagementPage/EventTicketList"));
+const ScannersEvent = lazy(() => import("./components/pages/userManagementPages/eventManagementPage/ScannersEvent"));
 
 function App() {
   return (
@@ -83,25 +83,25 @@ function App() {
             <Route path="user-list" element={<UserList />} />
             <Route path="user-create" element={<UserCreate />} />
             <Route path="user-edit/:id" element={<UserEdit />} />
-            <Route path="user-profile/:id" element={<UserProfile />} />
+            <Route path="user-list/:id" element={<UserProfile />} />
 
             <Route path="categories-list" element={<CategoryList />} />
             <Route path="categories-create" element={<CategoryCreate />} />
             <Route path="categories-edit/:id" element={<CategoryEdit />} />
-            <Route path="categories-details/:id" element={<CategoryDetails />} />
+            <Route path="categories-list/:id" element={<CategoryDetails />} />
 
             <Route path="events-list" element={<EventsList />} />
             <Route path="events-create" element={<EventsCreate />} />
             <Route path="events-edit/:id" element={<EventsEdit />} />
-            <Route path="events-details/:id" element={<EventsDetails />} />
+            <Route path="events-list/:id" element={<EventsDetails />} />
 
             <Route path="tickets-list" element={<TicketsList />} />
             <Route path="tickets-edit/:id" element={<TicketsEdit />} />
-            <Route path="tickets-details/:id" element={<TicketsDetails />} />
+            <Route path="tickets-list/:id" element={<TicketsDetails />} />
             {/* <Route path="tickets-create" element={<TicketsCreate />} /> */}
 
             <Route path="ticket-categories-list" element={<TicketCategoriesList />} />
-            <Route path="ticket-categories-details/:id" element={<TicketCategoriesDetails />} />
+            <Route path="ticket-categories-list/:id" element={<TicketCategoriesDetails />} />
             <Route path="ticket-categories-edit/:id" element={<TicketCategoriesEdit />} />
           </Route>
         </Route>

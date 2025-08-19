@@ -177,7 +177,7 @@ export default function TicketCategoriesList() {
                       <td className="px-6 py-4 text-sm text-gray-800 font-medium">
                         <Link
                           className="hover:underline"
-                          to={`/admin/ticket-categories-details/${category.id}`}
+                          to={`/admin/ticket-categories-list/${category.id}`}
                         >
                           #{category.id}
                         </Link>
@@ -185,7 +185,7 @@ export default function TicketCategoriesList() {
                       <td className="px-6 py-4 text-sm text-gray-800">
                         <Link
                           className="hover:underline"
-                          to={`/admin/ticket-categories-details/${category.id}`}
+                          to={`/admin/ticket-categories-list/${category.id}`}
                         >
                           {category.name}
                         </Link>
@@ -215,7 +215,7 @@ export default function TicketCategoriesList() {
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
                           <Link
-                            to={`/admin/ticket-categories-details/${category.id}`}
+                            to={`/admin/ticket-categories-list/${category.id}`}
                             className="p-2 text-blue-600 hover:bg-blue-100 rounded-md"
                             title="View"
                           >

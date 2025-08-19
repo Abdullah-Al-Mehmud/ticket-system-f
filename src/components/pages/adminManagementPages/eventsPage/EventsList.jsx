@@ -278,7 +278,7 @@ const EventsList = () => {
                         </td>
                         <td className="px-6 py-4 text-sm">
                           <Link
-                            to={`/admin/events-details/${event.id}`}
+                            to={`/admin/events-list/${event.id}`}
                             className="hover:underline"
                           >
                             {event.title}
@@ -309,7 +309,7 @@ const EventsList = () => {
                         <td className="px-6 py-4 text-center">
                           <div className="flex gap-2 justify-center">
                             <Link
-                              to={`/admin/events-details/${event.id}`}
+                              to={`/admin/events-list/${event.id}`}
                               className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                             >
                               <Eye size={16} />
