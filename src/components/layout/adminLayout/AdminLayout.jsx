@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import Breadcrumb from "./BreadCrumb";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -126,6 +127,9 @@ const AdminLayout = () => {
         {/* Header */}
         <header className="bg-white  border-b h-16 flex items-center">
           <div className="flex items-center justify-between w-full px-6">
+            <div className="flex items-center space-x-2">
+              <Breadcrumb />
+            </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -164,9 +168,10 @@ const AdminLayout = () => {
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-y-auto ">
+        <main className="flex-1 overflow-y-auto p-4">
           <Outlet />
         </main>
+
       </div>
 
       {/* Overlay */}
