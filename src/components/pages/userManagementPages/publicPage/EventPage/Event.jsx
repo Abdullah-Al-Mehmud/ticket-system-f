@@ -199,7 +199,7 @@ const Event = () => {
 
       {/* Pagination */}
       {data && data?.total > 0 && (
-        <div className="flex justify-center mt-6 space-x-2">
+        <div className="flex justify-center mt-6 mb-8 space-x-2">
           <Button
             disabled={data?.current_page === 1}
             onClick={() =>
