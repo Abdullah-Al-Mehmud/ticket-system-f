@@ -206,14 +206,14 @@ const UserList = () => {
                     <tr key={user.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">
                         <Link
-                          to={`/admin/user-profile/${user.id}`}
+                          to={`/admin/user-list/${user.id}`}
                           className="hover:underline"
                         >
                           #{user.id.toString()}
                         </Link>
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <Link to={`/admin/user-profile/${user?.id}`}>
+                        <Link to={`/admin/user-list/${user?.id}`}>
                           {user?.image_url ? (
                             <img
                               src={`${import.meta.env.VITE_IMG_URL}/${
@@ -242,7 +242,7 @@ const UserList = () => {
 
                       <td className="px-6 py-4 text-sm">
                         <Link
-                          to={`/admin/user-profile/${user.id}`}
+                          to={`/admin/user-list/${user.id}`}
                           className="hover:underline"
                         >
                           {user.name}
@@ -267,7 +267,7 @@ const UserList = () => {
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <Link
-                            to={`/admin/user-profile/${user.id}`}
+                            to={`/admin/user-list/${user.id}`}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                           >
                             <Eye size={16} />

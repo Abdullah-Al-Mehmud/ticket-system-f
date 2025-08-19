@@ -15,6 +15,7 @@ import {
   CheckCircle,
   Loader2,
   ArrowLeft,
+  TrendingUp,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
@@ -42,6 +43,7 @@ const TicketCategoriesEdit = () => {
     sales_end: "",
     total_quantity: "",
     sold_quantity: "",
+    max_per_purchase: "", // New field for max per purchase
   });
 
   const [errors, setErrors] = useState({});
@@ -56,6 +58,7 @@ const TicketCategoriesEdit = () => {
         sales_end: existingData.sales_end?.slice(0, 16) || "",
         total_quantity: existingData.total_quantity || "",
         sold_quantity: existingData.sold_quantity || "",
+        max_per_purchase: existingData.max_per_purchase || "",
       });
     }
   }, [existingData]);
@@ -76,6 +79,11 @@ const TicketCategoriesEdit = () => {
         newErrors.sales_end = "Sales end date must be after start date";
       }
     }
+    if (formData.max_per_purchase < 0)
+      newErrors.max_per_purchase = "Max per purchase cannot be negative";
+    if (formData.max_per_purchase && formData.max_per_purchase > formData.total_quantity)
+      newErrors.max_per_purchase = "Max per purchase cannot exceed total quantity";
+
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -83,7 +91,7 @@ const TicketCategoriesEdit = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const numericFields = ["price", "total_quantity", "sold_quantity"];
+    const numericFields = ["price", "total_quantity", "sold_quantity", "max_per_purchase"];
     const parsedValue = numericFields.includes(name)
       ? value === ""
         ? ""
@@ -116,7 +124,7 @@ const TicketCategoriesEdit = () => {
   // Show loading
   if (isFetching) {
     return (
-      <PageLoading/>
+      <PageLoading />
     );
   }
 
@@ -153,7 +161,7 @@ const TicketCategoriesEdit = () => {
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
-                 Update Category Details
+                  Update Category Details
                 </h2>
                 <p className="text-sm text-gray-600 mt-1">
                   Update the ticket category information below
@@ -177,11 +185,10 @@ const TicketCategoriesEdit = () => {
                     type="text"
                     value={formData.name}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
-                      errors.name
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.name
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                    } focus:outline-none focus:ring-0`}
+                      } focus:outline-none focus:ring-0`}
                     placeholder="Enter category name"
                     required
                   />
@@ -206,11 +213,10 @@ const TicketCategoriesEdit = () => {
                     step="0.01"
                     value={formData.price}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
-                      errors.price
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.price
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                    } focus:outline-none focus:ring-0`}
+                      } focus:outline-none focus:ring-0`}
                     placeholder="0.00"
                     required
                   />
@@ -234,11 +240,10 @@ const TicketCategoriesEdit = () => {
                     min="1"
                     value={formData.total_quantity}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
-                      errors.total_quantity
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.total_quantity
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                    } focus:outline-none focus:ring-0`}
+                      } focus:outline-none focus:ring-0`}
                     placeholder="0"
                     required
                   />
@@ -262,11 +267,10 @@ const TicketCategoriesEdit = () => {
                     min="0"
                     value={formData.sold_quantity}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
-                      errors.sold_quantity
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.sold_quantity
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                    } focus:outline-none focus:ring-0`}
+                      } focus:outline-none focus:ring-0`}
                     placeholder="0"
                     required
                   />
@@ -274,6 +278,33 @@ const TicketCategoriesEdit = () => {
                     <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
                       <AlertCircle className="w-4 h-4" />
                       {errors.sold_quantity}
+                    </p>
+                  )}
+                </div>
+                
+                {/* Max Per Purchase */}
+                <div>
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
+                    <TrendingUp className="w-4 h-4 text-gray-600" />
+                    Max Per Purchase
+                  </label>
+                  <input
+                    name="max_per_purchase"
+                    type="number"
+                    min="0"
+                    value={formData.max_per_purchase}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.max_per_purchase
+                        ? "border-red-300 bg-red-50 focus:border-red-500"
+                        : "border-gray-200 focus:border-amber-600"
+                      } focus:outline-none focus:ring-0`}
+                    placeholder="0"
+                    required
+                  />
+                  {errors.max_per_purchase && (
+                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.max_per_purchase}
                     </p>
                   )}
                 </div>
@@ -316,11 +347,10 @@ const TicketCategoriesEdit = () => {
                     type="datetime-local"
                     value={formData.sales_end}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
-                      errors.sales_end
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.sales_end
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                    } focus:outline-none focus:ring-0`}
+                      } focus:outline-none focus:ring-0`}
                     required
                   />
                   {errors.sales_end && (

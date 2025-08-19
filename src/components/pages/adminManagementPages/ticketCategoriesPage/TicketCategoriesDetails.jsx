@@ -329,7 +329,7 @@ function TicketCategoriesDetails() {
               <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
                   <Link
-                    to={`/admin/events-details/${event.id}`}
+                    to={`/admin/events-list/${event.id}`}
                     className="hover:underline flex items-center gap-1 underline"
                   >
                     {event.title}

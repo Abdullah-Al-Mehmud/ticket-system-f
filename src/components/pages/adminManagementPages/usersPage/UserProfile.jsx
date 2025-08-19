@@ -306,7 +306,7 @@ export default function UserProfile() {
                             </td>
                             <td className="px-4 py-2 text-gray-900">
                               <Link
-                                to={`/admin/tickets-details/${ticket.id}`}
+                                to={`/admin/tickets-list/${ticket.id}`}
                                 className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                               >
                                 <Eye size={16} />
@@ -413,7 +413,7 @@ export default function UserProfile() {
                           </td>
                           <td className="px-4 py-2 text-sm text-gray-700">
                             <Link
-                              to={`/admin/events-details/${event?.id}`}
+                              to={`/admin/events-list/${event?.id}`}
                               className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                             >
                               <Eye size={16} />

@@ -196,7 +196,7 @@ const CategoryList = () => {
                     <tr key={category.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 text-sm font-medium text-gray-900">
                         <Link
-                          to={`/admin/categories-details/${category.id}`}
+                          to={`/admin/categories-list/${category.id}`}
                           className="hover:underline"
                         >
                           #{category.id}
@@ -215,7 +215,7 @@ const CategoryList = () => {
                       <td className="px-6 py-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <Link
-                            to={`/admin/categories-details/${category.id}`}
+                            to={`/admin/categories-list/${category.id}`}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                           >
                             <Eye size={16} />

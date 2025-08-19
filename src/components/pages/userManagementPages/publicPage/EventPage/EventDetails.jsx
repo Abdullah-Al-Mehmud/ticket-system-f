@@ -14,7 +14,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useGetEventByIdQuery } from "../../../../../store/features/event/EventApiSlice";
-import { useCreateTicketMutation } from "../../../../../store/features/tickets/ticketsApiSlice";
+import { useCreateTicketMutation, useSendBookingEmailMutation } from "../../../../../store/features/tickets/ticketsApiSlice";
 import toast from "react-hot-toast";
 import BookingModal from "./BookingModal";
 import PageLoading from "../../../../../components/common/loaderComponent/PageLoading";
@@ -27,6 +27,7 @@ const EventDetailsPage = () => {
   const { data, isLoading, isError, refetch } = useGetEventByIdQuery(id);
   const [createTicket, { isLoading: bookingLoading }] =
     useCreateTicketMutation();
+  const [sendBookingEmail] = useSendBookingEmailMutation();
   const [ticketQuantities, setTicketQuantities] = useState({});
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -65,7 +66,15 @@ const EventDetailsPage = () => {
     setTicketQuantities((prev) => {
       if (!requireLogin()) return;
       const currentQty = prev[ticketId] || 0;
-      const newQty = Math.max(0, Math.min(10, currentQty + change));
+      const ticket = eventData.ticket_categories.find(
+        (t) => String(t.id) === String(ticketId)
+      );
+
+      if (!ticket) return prev;
+
+      const maxAllowed = ticket.max_per_purchase || ticket.total_quantity;
+      const newQty = Math.max(0, Math.min(maxAllowed, currentQty + change));
+
       if (newQty === 0) {
         const { [ticketId]: _, ...rest } = prev;
         return rest;
@@ -78,8 +87,10 @@ const EventDetailsPage = () => {
     return Object.entries(ticketQuantities).reduce(
       (total, [ticketId, quantity]) => {
         const ticket = eventData.ticket_categories.find(
-          (t) => t.id === parseInt(ticketId)
+          (t) => String(t.id) === String(ticketId)
         );
+
+
         return total + (ticket ? parseFloat(ticket.price) * quantity : 0);
       },
       0
@@ -127,30 +138,45 @@ const EventDetailsPage = () => {
       return "Sold Out";
     }
 
-    return null; // Means available
+    return null;
   };
 
   const handleConfirmBooking = async () => {
     try {
-      const bookings = Object.entries(ticketQuantities).map(
-        ([ticketCategoryId, quantity]) => ({
-          ticket_category_id: parseInt(ticketCategoryId),
+      const bookings = Object.entries(ticketQuantities).map(([ticketCategoryId, quantity]) => {
+        const id = isNaN(Number(ticketCategoryId)) ? ticketCategoryId : Number(ticketCategoryId);
+
+        return {
+          ticket_category_id: id,
           quantity,
           status: "Confirmed",
-        })
-      );
+        };
+      });
 
+      const createdTicketIds = [];
       for (const booking of bookings) {
-        await createTicket(booking).unwrap();
+        const result = await createTicket(booking).unwrap();
+        createdTicketIds.push(result.data.id);
       }
-
-      toast.success("Booking successful!");
+      toast.success("Booking confirmed! Email sent with tickets.");
       setShowBookingModal(false);
       setTicketQuantities({});
       refetch();
+
+      // Navigate to first created ticket detail page
+      if (createdTicketIds.length > 0) {
+        navigate("/user/booking-ticket-details/" + createdTicketIds[0]);
+
+        // Send booking email for all created tickets
+        await sendBookingEmail({ ticket_id: createdTicketIds }).unwrap();
+        console.log("Booking email sent for tickets:", createdTicketIds);
+      }
+
     } catch (error) {
-      toast.error("Booking failed. Please try again.");
-      console.error("Booking error:", error);
+      console.error("Booking or email failed:", error);
+
+      const errorMsg = error?.data?.message || "Booking failed. Please try again.";
+      toast.error(errorMsg);
     }
   };
 
@@ -353,7 +379,8 @@ const EventDetailsPage = () => {
                               onClick={() => updateQuantity(ticket.id, 1)}
                               className="w-9 h-9 rounded-lg bg-amber-600 hover:bg-amber-700 text-white flex items-center justify-center transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-amber-600"
                               disabled={
-                                (ticketQuantities[ticket.id] || 0) >= 10
+                                (ticketQuantities[ticket.id] || 0) >=
+                                (ticket.max_per_purchase || ticket.total_quantity)
                               }
                             >
                               <Plus className="w-4 h-4" />

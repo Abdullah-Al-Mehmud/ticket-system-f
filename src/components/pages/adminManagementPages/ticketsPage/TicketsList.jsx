@@ -246,7 +246,7 @@ const TicketsList = () => {
                         <td className="px-6 py-4 text-center">
                           <div className="flex gap-2 justify-center">
                             <Link
-                              to={`/admin/tickets-details/${ticket.id}`}
+                              to={`/admin/tickets-list/${ticket.id}`}
                               className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
                             >
                               <Eye size={16} />

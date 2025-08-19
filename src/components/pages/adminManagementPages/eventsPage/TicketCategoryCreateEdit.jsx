@@ -24,6 +24,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
     sales_end: "",
     total_quantity: "",
     sold_quantity: 0,
+    max_per_purchase: "",
   });
 
   const [updateTicketCategory] = useUpdateTicketCategoryMutation();
@@ -38,6 +39,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
         sales_end: initialData.sales_end || "",
         total_quantity: initialData.total_quantity || "",
         sold_quantity: initialData.sold_quantity || 0,
+        max_per_purchase: initialData.max_per_purchase || "",
       });
     } else {
       setForm({
@@ -47,6 +49,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
         sales_end: "",
         total_quantity: "",
         sold_quantity: 0,
+        max_per_purchase: "",
       });
     }
   }, [initialData]);
@@ -70,6 +73,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
         price: parseFloat(form.price),
         total_quantity: parseInt(form.total_quantity),
         sold_quantity: parseInt(form.sold_quantity),
+        max_per_purchase: form.max_per_purchase ? parseInt(form.max_per_purchase) : null,
       };
 
       if (initialData?.id) {
@@ -168,6 +172,23 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
                   className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:bg-white"
                 />
               </div>
+            </div>
+          </div>
+          {/* Max Per Purchase */}
+          <div className="group">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Max Per Purchase
+            </label>
+            <div className="relative">
+              <TrendingUp className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                name="max_per_purchase"
+                value={form.max_per_purchase}
+                onChange={handleChange}
+                type="number"
+                placeholder="0"
+                className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:bg-white"
+              />
             </div>
           </div>
           <div className="group">
