@@ -66,7 +66,10 @@ const EventDetailsPage = () => {
     setTicketQuantities((prev) => {
       if (!requireLogin()) return;
       const currentQty = prev[ticketId] || 0;
-      const ticket = eventData.ticket_categories.find((t) => t.id === ticketId);
+      const ticket = eventData.ticket_categories.find(
+        (t) => String(t.id) === String(ticketId)
+      );
+
       if (!ticket) return prev;
 
       const maxAllowed = ticket.max_per_purchase || ticket.total_quantity;
@@ -84,8 +87,10 @@ const EventDetailsPage = () => {
     return Object.entries(ticketQuantities).reduce(
       (total, [ticketId, quantity]) => {
         const ticket = eventData.ticket_categories.find(
-          (t) => t.id === parseInt(ticketId)
+          (t) => String(t.id) === String(ticketId)
         );
+
+
         return total + (ticket ? parseFloat(ticket.price) * quantity : 0);
       },
       0
@@ -138,11 +143,15 @@ const EventDetailsPage = () => {
 
   const handleConfirmBooking = async () => {
     try {
-      const bookings = Object.entries(ticketQuantities).map(([ticketCategoryId, quantity]) => ({
-        ticket_category_id: parseInt(ticketCategoryId),
-        quantity,
-        status: "Confirmed",
-      }));
+      const bookings = Object.entries(ticketQuantities).map(([ticketCategoryId, quantity]) => {
+        const id = isNaN(Number(ticketCategoryId)) ? ticketCategoryId : Number(ticketCategoryId);
+
+        return {
+          ticket_category_id: id,
+          quantity,
+          status: "Confirmed",
+        };
+      });
 
       const createdTicketIds = [];
       for (const booking of bookings) {
@@ -153,9 +162,12 @@ const EventDetailsPage = () => {
       setShowBookingModal(false);
       setTicketQuantities({});
       refetch();
-      navigate("/user/booking-ticket-details/" + createdTicketIds[0]);
 
+      // Navigate to first created ticket detail page
       if (createdTicketIds.length > 0) {
+        navigate("/user/booking-ticket-details/" + createdTicketIds[0]);
+
+        // Send booking email for all created tickets
         await sendBookingEmail({ ticket_id: createdTicketIds }).unwrap();
         console.log("Booking email sent for tickets:", createdTicketIds);
       }
