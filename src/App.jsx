@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import PaymentMethodsList from "./components/pages/adminManagementPages/paymentMethodsPage/PaymentMethodsList";
 const PageLoading = lazy(() => import("./components/common/loaderComponent/PageLoading"));
 const Home = lazy(() => import("./components/pages/userManagementPages/publicPage/Home"));
 const UserLayout = lazy(() => import("./components/layout/userLayout/UserLayout"));
@@ -103,6 +104,8 @@ function App() {
             <Route path="ticket-categories-list" element={<TicketCategoriesList />} />
             <Route path="ticket-categories-list/:id" element={<TicketCategoriesDetails />} />
             <Route path="ticket-categories-edit/:id" element={<TicketCategoriesEdit />} />
+
+            <Route path="payment-methods-list" element={<PaymentMethodsList />} />
           </Route>
         </Route>
 

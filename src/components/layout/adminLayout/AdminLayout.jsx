@@ -10,6 +10,7 @@ import {
   Calendar,
   Ticket,
   ChartBarStacked,
+  CreditCard 
 } from "lucide-react";
 
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
@@ -51,6 +52,12 @@ const AdminLayout = () => {
       label: "Purchase Tickets",
       icon: Ticket,
       path: "/admin/tickets-list",
+    },
+    {
+      id: "payment methods",
+      label: "Payment Methods",
+      icon: CreditCard,
+      path: "/admin/payment-methods-list",
     },
   ];
 
@@ -127,9 +134,6 @@ const AdminLayout = () => {
         {/* Header */}
         <header className="bg-white  border-b h-16 flex items-center">
           <div className="flex items-center justify-between w-full px-6">
-            <div className="flex items-center space-x-2">
-              <Breadcrumb />
-            </div>
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -137,6 +141,9 @@ const AdminLayout = () => {
               >
                 <Menu className="w-5 h-5" />
               </button>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Breadcrumb />
             </div>
             <div className="flex items-center space-x-6">
               <div className="text-right">
