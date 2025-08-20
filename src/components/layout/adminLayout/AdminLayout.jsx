@@ -10,7 +10,7 @@ import {
   Calendar,
   Ticket,
   ChartBarStacked,
-  CreditCard 
+  CreditCard
 } from "lucide-react";
 
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
@@ -132,8 +132,9 @@ const AdminLayout = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-white  border-b h-16 flex items-center">
-          <div className="flex items-center justify-between w-full px-6">
+        <header className="bg-white border-b h-16 flex items-center px-6">
+          <div className="flex items-center justify-between w-full">
+            {/* Left: Sidebar button + Breadcrumb */}
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -141,10 +142,14 @@ const AdminLayout = () => {
               >
                 <Menu className="w-5 h-5" />
               </button>
+
+              {/* Breadcrumb (visible on lg+) */}
+              <div className="hidden lg:flex">
+                <Breadcrumb />
+              </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Breadcrumb />
-            </div>
+
+            {/* Right: User info and logout */}
             <div className="flex items-center space-x-6">
               <div className="text-right">
                 <div className="font-medium text-gray-800">{user.name}</div>
@@ -173,6 +178,7 @@ const AdminLayout = () => {
             </div>
           </div>
         </header>
+
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto p-4">
