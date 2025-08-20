@@ -47,7 +47,7 @@ const TicketsEdit = () => {
       const res = await updateTicket({
         id,
         ...formData,
-        ticket_category_id: Number(formData.ticket_category_id),
+        ticket_category_id: formData.ticket_category_id,
         quantity: Number(formData.quantity),
       }).unwrap();
 

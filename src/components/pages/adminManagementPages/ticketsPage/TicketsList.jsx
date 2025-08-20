@@ -173,7 +173,7 @@ const TicketsList = () => {
               <option value="confirmed">Confirmed</option>
               <option value="booked">Booked</option>
               <option value="refunded">Refunded</option>
-              <option value="canceled">Canceled</option>
+              <option value="cancelled">Cancelled</option>
             </select>
           </div>
         </div>
