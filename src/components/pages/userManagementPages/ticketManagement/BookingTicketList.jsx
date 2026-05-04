@@ -1,8 +1,7 @@
-import React from "react";
-import { useGetUserTicketsQuery } from "../../../../store/features/tickets/ticketsApiSlice";
+import TableRowSkeleton from "@/components/common/loaderComponent/TableRowSkeleton";
 import { Bell, ChartBarStacked, MapPinCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-import TableRowSkeleton from "../../../../components/common/LoaderComponent/TableRowSkeleton";
+import { useGetUserTicketsQuery } from "../../../../store/features/tickets/ticketsApiSlice";
 
 function BookingTicketList() {
   const { data, isLoading, isError } = useGetUserTicketsQuery();
@@ -55,7 +54,7 @@ function BookingTicketList() {
                       total +
                       (booking?.quantity * booking?.ticket_category?.price ||
                         0),
-                    0
+                    0,
                   )
                   .toFixed(0)}{" "}
                 <span className="font-mono mr-1">৳</span>
@@ -99,8 +98,7 @@ function BookingTicketList() {
               {data.data.map((booking) => (
                 <Link
                   key={booking.id}
-                  to={`/user/booking-ticket-details/${booking.id}`}
-                >
+                  to={`/user/booking-ticket-details/${booking.id}`}>
                   <div
                     className="relative bg-gradient-to-r from-amber-50 to-amber-100 rounded-lg border-2 border-dashed border-amber-400 cursor-pointer "
                     style={{
@@ -113,8 +111,7 @@ function BookingTicketList() {
                       rgba(245, 158, 11, 0.1) 10px,
                       rgba(245, 158, 11, 0.1) 11px
                     )`,
-                    }}
-                  >
+                    }}>
                     {/* Ticket Stub - Left Side */}
                     <div className="flex h-full">
                       <div className="w-4 bg-amber-200 rounded-l-lg flex flex-col justify-center items-center py-4">
@@ -137,8 +134,7 @@ function BookingTicketList() {
                                 booking.status === "Confirmed"
                                   ? "bg-green-200 text-green-800"
                                   : "bg-gray-200 text-gray-800"
-                              }`}
-                            >
+                              }`}>
                               {booking.status.toUpperCase()}
                             </span>
                           </div>
@@ -160,7 +156,7 @@ function BookingTicketList() {
                               </div>
                               <div className="text-base font-bold text-amber-900">
                                 {Number(
-                                  booking?.ticket_category?.price
+                                  booking?.ticket_category?.price,
                                 ).toFixed(0)}{" "}
                                 <span className="font-mono mr-1">৳</span>
                               </div>
@@ -205,8 +201,7 @@ function BookingTicketList() {
                              rgba(245, 158, 11, 0.8) 4px,
                              rgba(245, 158, 11, 0.8) 6px
                            )`,
-                        }}
-                      ></div>
+                        }}></div>
                     </div>
                   </div>
                 </Link>

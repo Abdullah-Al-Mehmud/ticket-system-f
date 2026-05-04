@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../../store/features/auth/AuthApiSlice";
 
 const Login = () => {
@@ -54,6 +54,7 @@ const Login = () => {
       // Store user data only (token is in cookie)
       localStorage.setItem("data", JSON.stringify(response.data));
       localStorage.setItem("token", response.token);
+      localStorage.setItem("isLoggedIn", "true");
       toast.success(response.message);
       const searchParams = new URLSearchParams(location.search);
       const redirectPath = searchParams.get("redirect") || "/";
@@ -102,8 +103,9 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg ${errors.email ? "border-red-300" : "border-gray-300"
-                  } focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg ${
+                  errors.email ? "border-red-300" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="name@example.com"
               />
             </div>
@@ -124,15 +126,15 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full pl-10 pr-12 py-3 border rounded-lg ${errors.password ? "border-red-300" : "border-gray-300"
-                  } focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                className={`w-full pl-10 pr-12 py-3 border rounded-lg ${
+                  errors.password ? "border-red-300" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
-              >
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
                 ) : (
@@ -172,15 +174,13 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setFormData(demoCredentials.admin)}
-                className="text-xs font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded py-2"
-              >
+                className="text-xs font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded py-2">
                 Admin Demo
               </button>
               <button
                 type="button"
                 onClick={() => setFormData(demoCredentials.user)}
-                className="text-xs font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded py-2"
-              >
+                className="text-xs font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded py-2">
                 User Demo
               </button>
             </div>
@@ -190,8 +190,7 @@ const Login = () => {
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="w-full mt-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded flex items-center justify-center gap-2 disabled:opacity-70"
-          >
+            className="w-full mt-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-3 rounded flex items-center justify-center gap-2 disabled:opacity-70">
             {isLoading ? (
               <>
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -212,8 +211,7 @@ const Login = () => {
             Don’t have an account?{" "}
             <Link
               to="/register"
-              className="text-amber-600 hover:text-amber-700 font-medium"
-            >
+              className="text-amber-600 hover:text-amber-700 font-medium">
               Sign up
             </Link>
           </p>

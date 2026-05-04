@@ -1,21 +1,21 @@
-import React from "react";
 import {
-  Ticket,
-  CreditCard,
-  BarChart3,
-  Users,
-  Smartphone,
-  HeartHandshake,
-  Zap,
-  Globe,
-  Calendar,
   ArrowRight,
+  BarChart3,
+  Calendar,
   CheckCircle,
+  CreditCard,
+  Globe,
+  HeartHandshake,
+  Smartphone,
   Star,
+  Ticket,
+  Users,
+  Zap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const About = () => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
   const features = [
     {
       icon: <Ticket className="w-6 h-6" />,
@@ -75,12 +75,14 @@ const About = () => {
             A modern event ticketing platform that makes it super easy to
             create, manage, and attend events — all in just a few taps.
           </p>
-          <div className="mt-8 flex justify-center">
-            <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
-              <Link to="/login">Get Started Today</Link>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
+          {!isLoggedIn === "true" && (
+            <div className="mt-8 flex justify-center">
+              <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
+                <Link to="/login">Get Started Today</Link>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* What is TapKori */}
@@ -145,8 +147,7 @@ const About = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-amber rounded-xl  hover: transition-all duration-300 p-6 border border-gray-100 hover:border-amber-200 group"
-              >
+                className="bg-amber rounded-xl  hover: transition-all duration-300 p-6 border border-gray-100 hover:border-amber-200 group">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-amber-50 group-hover:bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-300">
                     <div className="text-black-600">{feature.icon}</div>
@@ -246,10 +247,14 @@ const About = () => {
             Join thousands of event organizers who trust TapKori to make their
             events successful. Start creating memorable experiences today!
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
-              <Link to="/login">Get Started</Link>
-            </button>
+            {!isLoggedIn === "true" && (
+              <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
+                <Link to="/login">Get Started</Link>
+              </button>
+            )}
+
             <button className="w-full sm:w-auto bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center space-x-2">
               <Link to="/event">View Demo</Link>
             </button>
