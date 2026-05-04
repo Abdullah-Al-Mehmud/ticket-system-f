@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, Search } from "lucide-react";
-import EventCard from "./EventCard";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useGetEventsQuery } from "../../../../../store/features/event/EventApiSlice";
-import { useGetCategoriesQuery } from "../../../../../store/features/categories/categoriesApiSlice";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import CategoryLoadingSkeleton from "../../../../../components/common/loaderComponent/CategoryLoadingSkeleton";
 import EventCardLoadingSkeleton from "../../../../../components/common/loaderComponent/EventCardLoadingSkeleton";
+import { useGetCategoriesQuery } from "../../../../../store/features/categories/categoriesApiSlice";
+import { useGetEventsQuery } from "../../../../../store/features/event/EventApiSlice";
+import EventCard from "./EventCard";
 
 const Event = () => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [dates, setDates] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [pageConfig, setPageConfig] = useState({
     page: 1,
     count: 10,
     search: "",
-    category: "",
+    category: "all",
     date: "",
     orderbyStatus: true,
   });
@@ -32,15 +31,24 @@ const Event = () => {
 
   useEffect(() => {
     const idString = searchParams.get("category");
-    const id = idString ? parseInt(idString, 10) : null;
     const searchTerms = searchParams.get("search");
     const date = searchParams.get("date");
-    if (id) {
-      setSelectedCategory(id);
+
+    if (idString === "all" || !idString) {
+      setSelectedCategory("all");
       setPageConfig((prev) => ({
         ...prev,
-        category: id,
+        category: "all",
       }));
+    } else {
+      const id = parseInt(idString, 10);
+      if (id) {
+        setSelectedCategory(id);
+        setPageConfig((prev) => ({
+          ...prev,
+          category: id,
+        }));
+      }
     }
     if (searchTerms) {
       setSearchTerm(searchTerms);
@@ -56,7 +64,7 @@ const Event = () => {
         date: date,
       }));
     }
-  }, [selectedCategory, searchParams, dates]);
+  }, [searchParams]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-amber-50/20 to-orange-50/20">
       <div className="bg-white border-b border-gray-100">
@@ -90,8 +98,7 @@ const Event = () => {
                     search: searchTerm,
                   }))
                 }
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white  transition-all duration-200 cursor-pointer px-3 py-[11px] text-lg  rounded-r-xl font-medium"
-              >
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white  transition-all duration-200 cursor-pointer px-3 py-[11px] text-lg  rounded-r-xl font-medium">
                 Search
               </button>
             </div>
@@ -102,38 +109,58 @@ const Event = () => {
             {isLoadingCategory ? (
               <CategoryLoadingSkeleton count={5} />
             ) : (
-              categories.map((category) => (
+              <>
                 <Button
-                  key={category?.id}
-                  variant={
-                    selectedCategory === category?.id ? "default" : "outline"
-                  }
+                  variant={selectedCategory === "all" ? "default" : "outline"}
                   size="sm"
                   onClick={() => {
-                    if (selectedCategory === category?.id) {
-                      setSelectedCategory("");
-                      setPageConfig((prev) => ({
-                        ...prev,
-                        category: "",
-                      }));
-                      navigate("/event");
-                    } else {
-                      setSelectedCategory(category?.id);
-                      setPageConfig((prev) => ({
-                        ...prev,
-                        category: category?.id,
-                      }));
-                      navigate(`/event?category=${category?.id}`);
-                    }
+                    setSelectedCategory("all");
+                    setPageConfig((prev) => ({
+                      ...prev,
+                      category: "all",
+                      page: 1,
+                    }));
                   }}
-                  className={`flex items-center space-x-2 rounded-full px-4 py-2 transition-all duration-200 ${selectedCategory === category?.id
-                    ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-600"
-                    : "bg-white text-gray-700 border-gray-200 hover:border-amber-300 hover:text-amber-600"
-                    }`}
-                >
-                  <span className="font-medium">{category.name}</span>
+                  className={`flex items-center space-x-2 rounded-full px-4 py-2 transition-all duration-200 ${
+                    selectedCategory === "all"
+                      ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-600"
+                      : "bg-white text-gray-700 border-gray-200 hover:border-amber-300 hover:text-amber-600"
+                  }`}>
+                  <span className="font-medium">All</span>
                 </Button>
-              ))
+                {categories.map((category) => (
+                  <Button
+                    key={category?.id}
+                    variant={
+                      selectedCategory === category?.id ? "default" : "outline"
+                    }
+                    size="sm"
+                    onClick={() => {
+                      if (selectedCategory === category?.id) {
+                        setSelectedCategory("all");
+                        setPageConfig((prev) => ({
+                          ...prev,
+                          category: "all",
+                          page: 1,
+                        }));
+                      } else {
+                        setSelectedCategory(category?.id);
+                        setPageConfig((prev) => ({
+                          ...prev,
+                          category: category?.id,
+                          page: 1,
+                        }));
+                      }
+                    }}
+                    className={`flex items-center space-x-2 rounded-full px-4 py-2 transition-all duration-200 ${
+                      selectedCategory === category?.id
+                        ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-600"
+                        : "bg-white text-gray-700 border-gray-200 hover:border-amber-300 hover:text-amber-600"
+                    }`}>
+                    <span className="font-medium">{category.name}</span>
+                  </Button>
+                ))}
+              </>
             )}
           </div>
         </div>
@@ -155,10 +182,10 @@ const Event = () => {
           <>
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-gray-900">
-                {selectedCategory === ""
+                {selectedCategory === "all"
                   ? "All Events"
                   : categories.find((cat) => cat.id === selectedCategory)
-                    ?.name || selectedCategory}
+                      ?.name || selectedCategory}
               </h2>
             </div>
 
@@ -182,13 +209,16 @@ const Event = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setPageConfig("");
                     setSearchTerm("");
-                    setSelectedCategory("");
-                    navigate("/event");
+                    setSelectedCategory("all");
+                    setPageConfig((prev) => ({
+                      ...prev,
+                      search: "",
+                      category: "all",
+                      page: 1,
+                    }));
                   }}
-                  className="rounded-full px-6 py-2 border-amber-300 text-amber-600 hover:bg-amber-50"
-                >
+                  className="rounded-full px-6 py-2 border-amber-300 text-amber-600 hover:bg-amber-50">
                   Clear Filters
                 </Button>
               </div>
@@ -207,8 +237,7 @@ const Event = () => {
                 ...prev,
                 page: prev.page - 1,
               }))
-            }
-          >
+            }>
             Previous
           </Button>
           <span className="px-4 py-2 text-amber-700">
@@ -221,8 +250,7 @@ const Event = () => {
                 ...prev,
                 page: prev.page + 1,
               }))
-            }
-          >
+            }>
             Next
           </Button>
         </div>

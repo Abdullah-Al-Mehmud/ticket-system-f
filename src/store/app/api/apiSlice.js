@@ -12,6 +12,7 @@ export const apiSlice = createApi({
     },
     credentials: "include",
   }),
+  keepUnusedDataFor: 0,
   tagTypes: ["User", "Event", "Other"],
   endpoints: (builder) => ({}), // Inject endpoints later
 });
