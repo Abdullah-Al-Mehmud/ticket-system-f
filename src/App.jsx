@@ -18,6 +18,8 @@ const EventDetailsPage = lazy(() => import("./components/pages/userManagementPag
 const PublicRoute = lazy(() => import("./components/layout/PublicRoute"));
 const Register = lazy(() => import("./components/pages/authPage/Register"));
 const Login = lazy(() => import("./components/pages/authPage/Login"));
+const VerifyEmail = lazy(() => import("./components/pages/authPage/VerifyEmail"));
+const ResendVerification = lazy(() => import("./components/pages/authPage/ResendVerification"));
 const PrivateRoute = lazy(() => import("./components/layout/PrivateRoute"));
 const AdminLayout = lazy(() => import("./components/layout/adminLayout/AdminLayout"));
 const AdminDashboard = lazy(() => import("./components/pages/adminManagementPages/adminDashboardPage/AdminDashboard"));
@@ -74,6 +76,8 @@ function App() {
           <Route element={<PublicRoute />}>
             <Route path="register" element={<Register />} />
             <Route path="login" element={<Login />} />
+            <Route path="verify-email/:token" element={<VerifyEmail />} />
+            <Route path="resend-verification" element={<ResendVerification />} />
           </Route>
         </Route>
 
