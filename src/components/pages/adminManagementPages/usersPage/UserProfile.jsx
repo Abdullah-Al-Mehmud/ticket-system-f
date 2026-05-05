@@ -1,20 +1,19 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  User,
-  Mail,
+  Activity,
+  Calendar,
+  Eye,
   Hash,
+  Mail,
+  Settings,
   Shield,
   Ticket,
-  Calendar,
-  Settings,
-  Activity,
-  Eye,
+  User,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { useGetUserByIdQuery } from "../../../../store/features/user/userApiSlice";
 import { useGetOrganizerEventsQuery } from "../../../../store/features/event/EventApiSlice";
 import { useGetUserTicketsQuery } from "../../../../store/features/tickets/ticketsApiSlice";
+import { useGetUserByIdQuery } from "../../../../store/features/user/userApiSlice";
 import PageLoading from "../../../common/loaderComponent/PageLoading";
 
 export default function UserProfile() {
@@ -88,8 +87,7 @@ export default function UserProfile() {
                     title={userData?.name || "Unknown userData"}
                     aria-label={`userData avatar placeholder for ${
                       userData?.name || "Unknown"
-                    }`}
-                  >
+                    }`}>
                     {userData?.name?.charAt(0) || "?"}
                   </div>
                 )}
@@ -103,8 +101,7 @@ export default function UserProfile() {
             <div>
               <Link
                 to={`/admin/user-edit/${id}`}
-                className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-              >
+                className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-600 text-white font-medium py-2 px-4 rounded-lg transition-colors">
                 <Settings className="w-4 h-4" />
                 Edit Profile
               </Link>
@@ -270,8 +267,7 @@ export default function UserProfile() {
                         return (
                           <tr
                             key={ticket.id}
-                            className="border-b border-gray-100 hover:bg-gray-50 transition"
-                          >
+                            className="border-b border-gray-100 hover:bg-gray-50 transition">
                             <td className="px-4 py-2 text-gray-900">
                               {index + 1}
                             </td>
@@ -296,8 +292,7 @@ export default function UserProfile() {
                                   ticket.status === "Confirmed"
                                     ? "bg-green-100 text-green-700"
                                     : "bg-yellow-100 text-yellow-700"
-                                }`}
-                              >
+                                }`}>
                                 {ticket.status}
                               </span>
                             </td>
@@ -307,8 +302,7 @@ export default function UserProfile() {
                             <td className="px-4 py-2 text-gray-900">
                               <Link
                                 to={`/admin/tickets-list/${ticket.id}`}
-                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                              >
+                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded">
                                 <Eye size={16} />
                               </Link>
                             </td>
@@ -404,18 +398,16 @@ export default function UserProfile() {
                     event.status === "Upcoming"
                       ? "bg-green-100 text-green-800"
                       : event.status === "Cancelled"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-gray-100 text-gray-800"
-                  }`}
-                            >
+                        ? "bg-red-100 text-red-800"
+                        : "bg-gray-100 text-gray-800"
+                  }`}>
                               {event.status}
                             </span>
                           </td>
                           <td className="px-4 py-2 text-sm text-gray-700">
                             <Link
                               to={`/admin/events-list/${event?.id}`}
-                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded"
-                            >
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded">
                               <Eye size={16} />
                             </Link>
                           </td>

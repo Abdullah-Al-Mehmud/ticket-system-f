@@ -1,18 +1,16 @@
-import React, { useState } from "react";
 import {
   ArrowLeft,
   Calendar,
-  MapPin,
-  Users,
-  Ticket,
   Clock,
   Eye,
-  Download,
-  Share2,
+  MapPin,
+  Ticket,
+  Users,
 } from "lucide-react";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useGetTicketCategoryByIdQuery } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
+import { useGetTicketCategoryByIdQuery } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 
 function TicketCategoriesDetails() {
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -62,8 +60,7 @@ function TicketCategoriesDetails() {
       viewBox="0 0 24 24"
       stroke="currentColor"
       strokeWidth={2}
-      className={className}
-    >
+      className={className}>
       {/* Custom Taka (৳) Icon - stylized */}
       <path
         strokeLinecap="round"
@@ -107,8 +104,7 @@ function TicketCategoriesDetails() {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate(-1)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                 <ArrowLeft className="w-5 h-5 text-gray-600" />
               </button>
               <div>
@@ -191,8 +187,7 @@ function TicketCategoriesDetails() {
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div
                       className="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-300"
-                      style={{ width: `${soldPercentage}%` }}
-                    ></div>
+                      style={{ width: `${soldPercentage}%` }}></div>
                   </div>
                 </div>
 
@@ -259,8 +254,7 @@ function TicketCategoriesDetails() {
                       {tickets.map((ticket) => (
                         <tr
                           key={ticket.id}
-                          className="hover:bg-gray-50 transition-colors"
-                        >
+                          className="hover:bg-gray-50 transition-colors">
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             #{ticket.id}
                           </td>
@@ -273,9 +267,8 @@ function TicketCategoriesDetails() {
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-                                ticket.status
-                              )}`}
-                            >
+                                ticket.status,
+                              )}`}>
                               {ticket.status}
                             </span>
                           </td>
@@ -304,7 +297,7 @@ function TicketCategoriesDetails() {
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                         e.currentTarget.parentNode.querySelector(
-                          ".fallback-banner"
+                          ".fallback-banner",
                         ).style.display = "flex";
                       }}
                     />
@@ -318,9 +311,8 @@ function TicketCategoriesDetails() {
                 <div className="absolute top-4 right-4">
                   <span
                     className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                      event.status
-                    )}`}
-                  >
+                      event.status,
+                    )}`}>
                     {event.status}
                   </span>
                 </div>
@@ -330,8 +322,7 @@ function TicketCategoriesDetails() {
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
                   <Link
                     to={`/admin/events-list/${event.id}`}
-                    className="hover:underline flex items-center gap-1 underline"
-                  >
+                    className="hover:underline flex items-center gap-1 underline">
                     {event.title}
                     <Eye className="w-4 h-4 text-gray-500" />
                   </Link>
@@ -376,8 +367,7 @@ function TicketCategoriesDetails() {
                       onClick={() =>
                         setShowFullDescription(!showFullDescription)
                       }
-                      className="text-amber-600 hover:underline text-sm mt-1"
-                    >
+                      className="text-amber-600 hover:underline text-sm mt-1">
                       {showFullDescription ? "See less" : "See more"}
                     </button>
                   )}

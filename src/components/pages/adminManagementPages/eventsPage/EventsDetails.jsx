@@ -1,44 +1,44 @@
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  Calendar,
-  MapPin,
-  User,
-  Tag,
-  Eye,
-  Users,
-  TrendingUp,
-  Settings,
-  Edit,
-  Trash2,
-  Check,
-  ChevronsUpDown,
-} from "lucide-react";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   Command,
-  CommandInput,
   CommandGroup,
+  CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
-import TicketCategoryCreate from "./TicketCategoryCreateEdit";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import {
+  Calendar,
+  Check,
+  ChevronsUpDown,
+  Edit,
+  Eye,
+  MapPin,
+  Settings,
+  Tag,
+  Trash2,
+  TrendingUp,
+  User,
+  Users,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ConfirmModal from "../../../../components/common/confirmModel/ConfirmModal";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
 import {
   useAssignOrganizerMutation,
   useDeleteEventMutation,
   useGetEventByIdQuery,
   useUpdateEventStatusMutation,
 } from "../../../../store/features/event/EventApiSlice";
-import { useGetUserListQuery } from "../../../../store/features/user/userApiSlice";
 import { useDeleteTicketCategoryMutation } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
+import { useGetUserListQuery } from "../../../../store/features/user/userApiSlice";
+import TicketCategoryCreate from "./TicketCategoryCreateEdit";
 const EventsDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -111,19 +111,19 @@ const EventsDetails = () => {
 
   const totalTickets = event.ticket_categories.reduce(
     (sum, t) => sum + t.total_quantity,
-    0
+    0,
   );
   const soldTickets = event.ticket_categories.reduce(
     (sum, t) => sum + t.sold_quantity,
-    0
+    0,
   );
   const totalRevenue = event.ticket_categories.reduce(
     (sum, t) => sum + t.sold_quantity * parseFloat(t.price),
-    0
+    0,
   );
 
   const daysUntil = Math.ceil(
-    (new Date(event.start_date) - new Date()) / (1000 * 60 * 60 * 24)
+    (new Date(event.start_date) - new Date()) / (1000 * 60 * 60 * 24),
   );
 
   const openCreateModal = () => {
@@ -200,8 +200,8 @@ const EventsDetails = () => {
     try {
       await Promise.all(
         selectedUsers.map((userId) =>
-          assignOrganizer({ event_id: event.id, user_id: userId }).unwrap()
-        )
+          assignOrganizer({ event_id: event.id, user_id: userId }).unwrap(),
+        ),
       );
 
       toast.success("Organizer assigned successfully.");
@@ -278,8 +278,7 @@ const EventsDetails = () => {
                         activeTab === tab.id
                           ? "border-amber-500 text-amber-600"
                           : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                      }`}
-                    >
+                      }`}>
                       <tab.icon className="w-4 h-4 mr-2" />
                       {tab.name}
                     </button>
@@ -297,15 +296,13 @@ const EventsDetails = () => {
                         event.status === "Live"
                           ? "bg-green-100 text-green-800"
                           : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
+                      }`}>
                       {event.status}
                     </span>
                   </div>
                   <button
                     onClick={() => setShowModal(true)}
-                    className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
-                  >
+                    className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
                     Assign Organizer
                   </button>
                 </div>
@@ -327,8 +324,7 @@ const EventsDetails = () => {
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="w-full justify-between"
-                      >
+                        className="w-full justify-between">
                         {selectedUsers.length > 0
                           ? `${selectedUsers.length} user(s) selected`
                           : "Select organizers..."}
@@ -344,25 +340,25 @@ const EventsDetails = () => {
                               key={user.id}
                               onSelect={() => {
                                 const isSelected = selectedUsers.includes(
-                                  user.id
+                                  user.id,
                                 );
                                 if (isSelected) {
                                   setSelectedUsers(
-                                    selectedUsers.filter((id) => id !== user.id)
+                                    selectedUsers.filter(
+                                      (id) => id !== user.id,
+                                    ),
                                   );
                                 } else {
                                   setSelectedUsers([...selectedUsers, user.id]);
                                 }
-                              }}
-                            >
+                              }}>
                               <div
                                 className={cn(
                                   "mr-2 h-4 w-4 border border-primary rounded-sm flex items-center justify-center",
                                   selectedUsers.includes(user.id)
                                     ? "bg-primary text-primary-foreground"
-                                    : "opacity-50"
-                                )}
-                              >
+                                    : "opacity-50",
+                                )}>
                                 {selectedUsers.includes(user.id) && (
                                   <Check className="h-4 w-4" />
                                 )}
@@ -379,14 +375,12 @@ const EventsDetails = () => {
                 <div className="mt-4 flex justify-end space-x-2">
                   <button
                     onClick={() => setShowModal(false)}
-                    className="px-4 py-2 border rounded"
-                  >
+                    className="px-4 py-2 border rounded">
                     Cancel
                   </button>
                   <button
                     onClick={handleAssignOrganizer}
-                    className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2"
-                  >
+                    className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded transition duration-300 flex items-center gap-2">
                     Assign
                   </button>
                 </div>
@@ -453,8 +447,7 @@ const EventsDetails = () => {
                             event.category.status === "active"
                               ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
+                          }`}>
                           {event.category.name}
                         </span>
                       </div>
@@ -473,8 +466,7 @@ const EventsDetails = () => {
                         onClick={() =>
                           setShowFullDescription(!showFullDescription)
                         }
-                        className="text-amber-600 hover:underline text-sm mt-1"
-                      >
+                        className="text-amber-600 hover:underline text-sm mt-1">
                         {showFullDescription ? "See less" : "See more"}
                       </button>
                     )}
@@ -498,7 +490,7 @@ const EventsDetails = () => {
                           onError={(e) => {
                             e.currentTarget.style.display = "none";
                             e.currentTarget.parentNode.querySelector(
-                              ".fallback-banner"
+                              ".fallback-banner",
                             ).style.display = "flex";
                           }}
                         />
@@ -538,8 +530,7 @@ const EventsDetails = () => {
                               <tr
                                 key={org.id}
                                 className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 transition-all duration-300"
-                                style={{ animationDelay: `${index * 100}ms` }}
-                              >
+                                style={{ animationDelay: `${index * 100}ms` }}>
                                 <td className="px-6 py-4 text-sm text-gray-900">
                                   {org.name}
                                 </td>
@@ -602,9 +593,8 @@ const EventsDetails = () => {
                   </h3>
                   <button
                     onClick={openCreateModal}
-                    className=" hover:bg-amber-600 hover:text-white text-amber-600 border-2 border-amber-600 font-medium py-1 px-4 rounded transition duration-300 flex items-center gap-1"
-                  >
-                    Add New Ticket Type
+                    className=" hover:bg-amber-600 hover:text-white text-amber-600 border-2 border-amber-600 font-medium py-1 px-4 rounded transition duration-300 flex items-center gap-1">
+                    Add Ticket Category
                   </button>
                 </div>
 
@@ -659,8 +649,7 @@ const EventsDetails = () => {
                                   <div className="flex items-center">
                                     <a
                                       href={`/admin/ticket-categories-list/${t.id}`}
-                                      className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900"
-                                    >
+                                      className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900">
                                       {t.name}
                                       <Eye className="w-4 h-4 text-amber-600" />
                                     </a>
@@ -694,8 +683,7 @@ const EventsDetails = () => {
                                   <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
                                     <div
                                       className="bg-amber-600 h-2 rounded-full"
-                                      style={{ width: `${percent}%` }}
-                                    ></div>
+                                      style={{ width: `${percent}%` }}></div>
                                   </div>
                                   <span className="text-sm text-gray-600">
                                     {percent.toFixed(1)}%
@@ -724,15 +712,13 @@ const EventsDetails = () => {
                                   <button
                                     onClick={() => openEditModal(t)}
                                     className="text-amber-600 hover:text-amber-800 p-1"
-                                    title="Edit"
-                                  >
+                                    title="Edit">
                                     <Edit className="w-4 h-4" />
                                   </button>
                                   <button
                                     onClick={() => handleDeleteClick(t.id)}
                                     className="text-red-600 hover:text-red-800 p-1"
-                                    title="Delete"
-                                  >
+                                    title="Delete">
                                     <Trash2 className="w-4 h-4" />
                                   </button>
                                 </div>
@@ -773,8 +759,7 @@ const EventsDetails = () => {
                     <select
                       value={eventStatus}
                       onChange={(e) => setEventStatus(e.target.value)}
-                      className="block w-48 px-3 py-2 border rounded-md"
-                    >
+                      className="block w-48 px-3 py-2 border rounded-md">
                       <option value="Upcoming">Upcoming</option>
                       <option value="Live">Live</option>
                       <option value="Done">Done</option>
@@ -782,8 +767,7 @@ const EventsDetails = () => {
                     </select>
                     <button
                       onClick={handleStatusUpdate}
-                      className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
-                    >
+                      className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">
                       Update Status
                     </button>
                   </div>
@@ -803,8 +787,7 @@ const EventsDetails = () => {
                       {!showConfirmInput ? (
                         <button
                           onClick={() => setShowConfirmInput(true)}
-                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors"
-                        >
+                          className="bg-red-600 text-white px-5 py-2.5 rounded-md hover:bg-red-700 transition-colors">
                           Delete Event Permanently
                         </button>
                       ) : (
@@ -828,8 +811,7 @@ const EventsDetails = () => {
                           <div className="flex gap-3">
                             <button
                               onClick={handleConfirmClick}
-                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-                            >
+                              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors">
                               Confirm Delete
                             </button>
                             <button
@@ -837,8 +819,7 @@ const EventsDetails = () => {
                                 setShowConfirmInput(false);
                                 setConfirmationText("");
                               }}
-                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors"
-                            >
+                              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors">
                               Cancel
                             </button>
                           </div>

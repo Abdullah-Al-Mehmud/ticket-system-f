@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  useUpdateTicketCategoryMutation,
   useGetTicketCategoryByIdQuery,
+  useUpdateTicketCategoryMutation,
 } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 
+import PageLoading from "@/components/common/loaderComponent/PageLoading";
 import {
+  AlertCircle,
   Calendar,
+  CheckCircle,
   DollarSign,
+  Loader2,
   Package,
   ShoppingCart,
   Tag,
-  AlertCircle,
-  CheckCircle,
-  Loader2,
-  ArrowLeft,
   TrendingUp,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
 
 const TicketCategoriesEdit = () => {
   const { id } = useParams();
@@ -81,9 +80,12 @@ const TicketCategoriesEdit = () => {
     }
     if (formData.max_per_purchase < 0)
       newErrors.max_per_purchase = "Max per purchase cannot be negative";
-    if (formData.max_per_purchase && formData.max_per_purchase > formData.total_quantity)
-      newErrors.max_per_purchase = "Max per purchase cannot exceed total quantity";
-
+    if (
+      formData.max_per_purchase &&
+      formData.max_per_purchase > formData.total_quantity
+    )
+      newErrors.max_per_purchase =
+        "Max per purchase cannot exceed total quantity";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -91,7 +93,12 @@ const TicketCategoriesEdit = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const numericFields = ["price", "total_quantity", "sold_quantity", "max_per_purchase"];
+    const numericFields = [
+      "price",
+      "total_quantity",
+      "sold_quantity",
+      "max_per_purchase",
+    ];
     const parsedValue = numericFields.includes(name)
       ? value === ""
         ? ""
@@ -123,9 +130,7 @@ const TicketCategoriesEdit = () => {
 
   // Show loading
   if (isFetching) {
-    return (
-      <PageLoading />
-    );
+    return <PageLoading />;
   }
 
   // Show error
@@ -149,7 +154,6 @@ const TicketCategoriesEdit = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       {/* Main Content */}
       <div className="max-w-5xl mx-auto px-6 py-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
@@ -185,10 +189,11 @@ const TicketCategoriesEdit = () => {
                     type="text"
                     value={formData.name}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.name
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
+                      errors.name
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                      } focus:outline-none focus:ring-0`}
+                    } focus:outline-none focus:ring-0`}
                     placeholder="Enter category name"
                     required
                   />
@@ -213,10 +218,11 @@ const TicketCategoriesEdit = () => {
                     step="0.01"
                     value={formData.price}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.price
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
+                      errors.price
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                      } focus:outline-none focus:ring-0`}
+                    } focus:outline-none focus:ring-0`}
                     placeholder="0.00"
                     required
                   />
@@ -240,10 +246,11 @@ const TicketCategoriesEdit = () => {
                     min="1"
                     value={formData.total_quantity}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.total_quantity
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
+                      errors.total_quantity
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                      } focus:outline-none focus:ring-0`}
+                    } focus:outline-none focus:ring-0`}
                     placeholder="0"
                     required
                   />
@@ -267,10 +274,11 @@ const TicketCategoriesEdit = () => {
                     min="0"
                     value={formData.sold_quantity}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.sold_quantity
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
+                      errors.sold_quantity
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                      } focus:outline-none focus:ring-0`}
+                    } focus:outline-none focus:ring-0`}
                     placeholder="0"
                     required
                   />
@@ -281,7 +289,7 @@ const TicketCategoriesEdit = () => {
                     </p>
                   )}
                 </div>
-                
+
                 {/* Max Per Purchase */}
                 <div>
                   <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
@@ -294,10 +302,11 @@ const TicketCategoriesEdit = () => {
                     min="0"
                     value={formData.max_per_purchase}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.max_per_purchase
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
+                      errors.max_per_purchase
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                      } focus:outline-none focus:ring-0`}
+                    } focus:outline-none focus:ring-0`}
                     placeholder="0"
                     required
                   />
@@ -316,7 +325,9 @@ const TicketCategoriesEdit = () => {
                     Available Quantity
                   </label>
                   <div className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-medium">
-                    {(formData.total_quantity || 0) - (formData.sold_quantity || 0)} tickets
+                    {(formData.total_quantity || 0) -
+                      (formData.sold_quantity || 0)}{" "}
+                    tickets
                   </div>
                 </div>
 
@@ -347,10 +358,11 @@ const TicketCategoriesEdit = () => {
                     type="datetime-local"
                     value={formData.sales_end}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${errors.sales_end
+                    className={`w-full px-4 py-3 border rounded-xl bg-white transition-colors ${
+                      errors.sales_end
                         ? "border-red-300 bg-red-50 focus:border-red-500"
                         : "border-gray-200 focus:border-amber-600"
-                      } focus:outline-none focus:ring-0`}
+                    } focus:outline-none focus:ring-0`}
                     required
                   />
                   {errors.sales_end && (
@@ -377,15 +389,13 @@ const TicketCategoriesEdit = () => {
                 <button
                   type="button"
                   className="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium"
-                  onClick={() => navigate(-1)}
-                >
+                  onClick={() => navigate(-1)}>
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
-                >
+                  className="px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-xl flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium">
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />

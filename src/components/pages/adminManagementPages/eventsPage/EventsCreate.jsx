@@ -1,12 +1,26 @@
-import React, { useState } from "react";
 import { Calendar, MapPin, Upload } from "lucide-react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { useCreateEventMutation } from "../../../../store/features/event/EventApiSlice";
 import { useGetCategoriesQuery } from "../../../../store/features/categories/categoriesApiSlice";
+import { useCreateEventMutation } from "../../../../store/features/event/EventApiSlice";
 
 const EventsCreate = () => {
   const navigate = useNavigate();
+
+  // Get today's date in format for datetime-local min attribute
+  const getMinDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const minDate = getMinDate();
+
   const [formData, setFormData] = useState({
     category_id: "",
     title: "",
@@ -112,8 +126,7 @@ const EventsCreate = () => {
         <form
           onSubmit={handleSubmit}
           className="space-y-6"
-          encType="multipart/form-data"
-        >
+          encType="multipart/form-data">
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -176,8 +189,7 @@ const EventsCreate = () => {
               name="category_id"
               value={formData.category_id}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-md px-4 py-2"
-            >
+              className="w-full border border-gray-300 rounded-md px-4 py-2">
               <option value="">Select Category</option>
               {CategoriesList.map((category) => (
                 <option key={category.id} value={category.id}>
@@ -190,9 +202,6 @@ const EventsCreate = () => {
             )}
           </div>
 
-
-
-
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -204,6 +213,7 @@ const EventsCreate = () => {
                 name="start_date"
                 value={formData.start_date}
                 onChange={handleChange}
+                min={minDate}
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.start_date && (
@@ -220,6 +230,7 @@ const EventsCreate = () => {
                 name="end_date"
                 value={formData.end_date}
                 onChange={handleChange}
+                min={minDate}
                 className="w-full border border-gray-300 rounded-md px-4 py-2"
               />
               {errors.end_date && (
@@ -275,11 +286,11 @@ const EventsCreate = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-transform duration-150 ${isLoading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-amber-600 hover:bg-amber-700"
-              }`}
-          >
+            className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-transform duration-150 ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-amber-600 hover:bg-amber-700"
+            }`}>
             {isLoading ? "Creating..." : "Create Event"}
           </button>
         </form>

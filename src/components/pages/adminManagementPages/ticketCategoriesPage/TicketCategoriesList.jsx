@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { Eye, Edit, Trash2, Plus, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Edit, Eye, Plus, Search, Trash2 } from "lucide-react";
+import { useState } from "react";
 import toast from "react-hot-toast";
-import ConfirmModal from "../../../../components/common/ConfirmModel/ConfirmModal";
-import TableRowSkeleton from "../../../../components/common/LoaderComponent/TableRowSkeleton";
+import { Link } from "react-router-dom";
+
+import ConfirmModal from "@/components/common/confirmModel/ConfirmModal";
+import TableRowSkeleton from "@/components/common/loaderComponent/TableRowSkeleton";
 import {
-  useGetTicketCategoriesQuery,
   useDeleteTicketCategoryMutation,
+  useGetTicketCategoriesQuery,
 } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
+import TicketCategoryCreate from "../eventsPage/TicketCategoryCreateEdit";
 
 export default function TicketCategoriesList() {
   const [pageConfig, setPageConfig] = useState({
@@ -18,12 +20,24 @@ export default function TicketCategoriesList() {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const {
     data: fetchData,
     isLoading,
     refetch,
   } = useGetTicketCategoriesQuery(pageConfig);
+
+  const openCreateModal = () => {
+    setSelectedCategory(null);
+    setIsCreateModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsCreateModalOpen(false);
+    refetch();
+  };
 
   const [deleteTicketCategory, { isLoading: isDeleting }] =
     useDeleteTicketCategoryMutation();
@@ -79,12 +93,11 @@ export default function TicketCategoriesList() {
               Manage all tickets with user and event info
             </p>
           </div>
-          {/* <Link
-            to="/admin/tickets-create"
-            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
-          >
-            <Plus size={20} /> Create Ticket
-          </Link> */}
+          <button
+            onClick={openCreateModal}
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2">
+            <Plus size={20} /> Create Ticket Category
+          </button>
         </div>
 
         {/* Filters */}
@@ -115,8 +128,7 @@ export default function TicketCategoriesList() {
                 onClick={() =>
                   setPageConfig((prev) => ({ ...prev, search, page: 1 }))
                 }
-                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1"
-              >
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1">
                 Search
               </button>
 
@@ -130,8 +142,7 @@ export default function TicketCategoriesList() {
                     page: 1,
                   }));
                 }}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
-              >
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">
                 Clear
               </button>
             </div>
@@ -158,8 +169,7 @@ export default function TicketCategoriesList() {
                   ].map((header) => (
                     <th
                       key={header}
-                      className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase"
-                    >
+                      className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">
                       {header}
                     </th>
                   ))}
@@ -172,21 +182,18 @@ export default function TicketCategoriesList() {
                   ticketCategories.map((category) => (
                     <tr
                       key={category.id}
-                      className="hover:bg-gray-50 transition-colors"
-                    >
+                      className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-sm text-gray-800 font-medium">
                         <Link
                           className="hover:underline"
-                          to={`/admin/ticket-categories-list/${category.id}`}
-                        >
+                          to={`/admin/ticket-categories-list/${category.id}`}>
                           #{category.id}
                         </Link>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-800">
                         <Link
                           className="hover:underline"
-                          to={`/admin/ticket-categories-list/${category.id}`}
-                        >
+                          to={`/admin/ticket-categories-list/${category.id}`}>
                           {category.name}
                         </Link>
                       </td>
@@ -197,7 +204,7 @@ export default function TicketCategoriesList() {
                         ৳{category.price}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-800">
-                        {category.max_per_purchase ?? 'null'}
+                        {category.max_per_purchase ?? "null"}
                       </td>
 
                       <td className="px-6 py-4 text-sm text-gray-600">
@@ -217,23 +224,20 @@ export default function TicketCategoriesList() {
                           <Link
                             to={`/admin/ticket-categories-list/${category.id}`}
                             className="p-2 text-blue-600 hover:bg-blue-100 rounded-md"
-                            title="View"
-                          >
+                            title="View">
                             <Eye size={16} />
                           </Link>
                           <Link
                             to={`/admin/ticket-categories-edit/${category.id}`}
                             className="p-2 text-green-600 hover:bg-green-100 rounded-md"
-                            title="Edit"
-                          >
+                            title="Edit">
                             <Edit size={16} />
                           </Link>
                           <button
                             onClick={() => handleDeleteClick(category.id)}
                             className="p-2 text-red-600 hover:bg-red-100 rounded-md"
                             title="Delete"
-                            disabled={isDeleting}
-                          >
+                            disabled={isDeleting}>
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -244,8 +248,7 @@ export default function TicketCategoriesList() {
                   <tr>
                     <td
                       colSpan="9"
-                      className="text-center py-6 text-sm text-gray-500"
-                    >
+                      className="text-center py-6 text-sm text-gray-500">
                       No ticket categories found.
                     </td>
                   </tr>
@@ -266,11 +269,11 @@ export default function TicketCategoriesList() {
               }))
             }
             disabled={currentPage === 1}
-            className={`px-4 py-2 text-sm rounded-md border transition ${currentPage === 1
+            className={`px-4 py-2 text-sm rounded-md border transition ${
+              currentPage === 1
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                 : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-              }`}
-          >
+            }`}>
             Previous
           </button>
 
@@ -282,11 +285,11 @@ export default function TicketCategoriesList() {
                 onClick={() =>
                   setPageConfig((prev) => ({ ...prev, page: pageNum }))
                 }
-                className={`px-4 py-2 text-sm rounded-md border transition ${pageNum === currentPage
+                className={`px-4 py-2 text-sm rounded-md border transition ${
+                  pageNum === currentPage
                     ? "bg-amber-600 text-white border-amber-600"
                     : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-                  }`}
-              >
+                }`}>
                 {pageNum}
               </button>
             );
@@ -300,11 +303,11 @@ export default function TicketCategoriesList() {
               }))
             }
             disabled={currentPage === lastPage}
-            className={`px-4 py-2 text-sm rounded-md border transition ${currentPage === lastPage
+            className={`px-4 py-2 text-sm rounded-md border transition ${
+              currentPage === lastPage
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                 : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-              }`}
-          >
+            }`}>
             Next
           </button>
         </div>
@@ -316,6 +319,13 @@ export default function TicketCategoriesList() {
         onClose={closeModal}
         onConfirm={confirmDelete}
         message="Are you sure you want to delete this ticket category?"
+      />
+
+      {/* Create/Edit Ticket Category Modal */}
+      <TicketCategoryCreate
+        isOpen={isCreateModalOpen}
+        onClose={handleModalClose}
+        initialData={selectedCategory}
       />
     </div>
   );

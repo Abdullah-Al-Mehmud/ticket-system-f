@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   useGetUserByIdQuery,
   useUpdateUserMutation,
 } from "../../../../store/features/user/userApiSlice";
-import toast from "react-hot-toast";
 
 const UserEdit = ({ isOpen, onClose, userId }) => {
   const { data: userData, isLoading } = useGetUserByIdQuery(userId);
   const [updateUser] = useUpdateUserMutation();
 
+  const [showPreviousPassword, setShowPreviousPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    previousPassword: "",
+    newPassword: "",
     // image_url: null,
   });
 
@@ -39,6 +45,8 @@ const UserEdit = ({ isOpen, onClose, userId }) => {
     const form = new FormData();
     form.append("name", formData.name);
     form.append("email", formData.email);
+    form.append("previousPassword", formData.previousPassword);
+    form.append("newPassword", formData.newPassword);
 
     if (formData.image_url && typeof formData.image_url !== "string") {
       form.append("image_url", formData.image_url);
@@ -124,19 +132,55 @@ const UserEdit = ({ isOpen, onClose, userId }) => {
                 )
               )}
             </div>
+            <div>
+              <label className="block text-sm font-medium">
+                Previous Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPreviousPassword ? "text" : "password"}
+                  name="previousPassword"
+                  value={formData.previousPassword}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPreviousPassword(!showPreviousPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600">
+                  {showPreviousPassword ? <EyeOff /> : <Eye />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium">New Password</label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600">
+                  {showNewPassword ? <EyeOff /> : <Eye />}
+                </button>
+              </div>
+            </div>
 
             <div className="flex justify-end space-x-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border rounded"
-              >
+                className="px-4 py-2 border rounded">
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-amber-500 text-white rounded"
-              >
+                className="px-4 py-2 bg-amber-500 text-white rounded">
                 Save
               </button>
             </div>

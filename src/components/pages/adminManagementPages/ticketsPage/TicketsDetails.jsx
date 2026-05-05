@@ -1,11 +1,10 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import PageLoading from "@/components/common/loaderComponent/PageLoading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Ticket, DollarSign, Calendar, Hash, Layers, Edit } from "lucide-react";
-import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, DollarSign, Edit, Hash, Layers, Ticket } from "lucide-react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
 
 const TicketsDetails = () => {
   const { id } = useParams();
@@ -52,11 +51,10 @@ const TicketsDetails = () => {
                 ticket.status === "Confirmed"
                   ? "secondary"
                   : ticket.status === "Cancelled"
-                  ? "destructive"
-                  : "outline"
+                    ? "destructive"
+                    : "outline"
               }
-              className="capitalize px-3 py-1"
-            >
+              className="capitalize px-3 py-1">
               {ticket.status}
             </Badge>
 
@@ -65,8 +63,7 @@ const TicketsDetails = () => {
               size="icon"
               onClick={handleEdit}
               title="Edit Ticket"
-              className="text-blue-600 hover:bg-blue-100"
-            >
+              className="text-blue-600 hover:bg-blue-100">
               <Edit size={18} />
             </Button>
           </div>

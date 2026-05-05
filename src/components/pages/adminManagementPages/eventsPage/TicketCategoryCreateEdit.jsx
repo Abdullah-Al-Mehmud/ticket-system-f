@@ -1,21 +1,34 @@
-import React, { useEffect, useState } from "react";
 import {
-  useUpdateTicketCategoryMutation,
-  useCreateTicketCategoryMutation,
-} from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
-import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
-import {
-  Ticket,
   Calendar,
   DollarSign,
   Package,
+  Ticket,
   TrendingUp,
   X,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import {
+  useCreateTicketCategoryMutation,
+  useUpdateTicketCategoryMutation,
+} from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 
 const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
   const { id } = useParams();
+
+  // Get today's date in format for datetime-local min attribute
+  const getMinDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const hours = String(today.getHours()).padStart(2, "0");
+    const minutes = String(today.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const minDate = getMinDate();
 
   const [form, setForm] = useState({
     name: "",
@@ -73,7 +86,9 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
         price: parseFloat(form.price),
         total_quantity: parseInt(form.total_quantity),
         sold_quantity: parseInt(form.sold_quantity),
-        max_per_purchase: form.max_per_purchase ? parseInt(form.max_per_purchase) : null,
+        max_per_purchase: form.max_per_purchase
+          ? parseInt(form.max_per_purchase)
+          : null,
       };
 
       if (initialData?.id) {
@@ -110,8 +125,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-amber-700 hover:bg-opacity-20 rounded-xl transition-all duration-200 group"
-            >
+              className="p-2 hover:bg-amber-700 hover:bg-opacity-20 rounded-xl transition-all duration-200 group">
               <X className="w-5 h-5 text-white group-hover:rotate-90 transition-transform duration-200" />
             </button>
           </div>
@@ -223,6 +237,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
                   value={form.sales_start}
                   onChange={handleChange}
                   type="datetime-local"
+                  min={minDate}
                   className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white"
                   required
                 />
@@ -240,6 +255,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
                   value={form.sales_end}
                   onChange={handleChange}
                   type="datetime-local"
+                  min={minDate}
                   className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white"
                   required
                 />
@@ -255,7 +271,9 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
                 <span>
                   {Math.min(
                     100,
-                    Math.round((form.sold_quantity / form.total_quantity) * 100)
+                    Math.round(
+                      (form.sold_quantity / form.total_quantity) * 100,
+                    ),
                   )}
                   %
                 </span>
@@ -266,10 +284,9 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
                   style={{
                     width: `${Math.min(
                       (form.sold_quantity / form.total_quantity) * 100,
-                      100
+                      100,
                     )}%`,
-                  }}
-                ></div>
+                  }}></div>
               </div>
             </div>
           ) : null}
@@ -279,14 +296,12 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-200 font-medium transform hover:scale-105"
-            >
+              className="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition-all duration-200 font-medium transform hover:scale-105">
               Cancel
             </button>
             <button
               type="submit"
-              className="px-8 py-3 bg-gradient-to-r from-amber-600 to-amber-600 hover:from-amber-700 hover:to-amber-700 text-white rounded-xl transition-all duration-200 font-medium transform hover:scale-105"
-            >
+              className="px-8 py-3 bg-gradient-to-r from-amber-600 to-amber-600 hover:from-amber-700 hover:to-amber-700 text-white rounded-xl transition-all duration-200 font-medium transform hover:scale-105">
               {initialData ? "Update Category" : "Create Category"}
             </button>
           </div>
