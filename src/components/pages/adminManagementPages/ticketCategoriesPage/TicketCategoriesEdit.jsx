@@ -4,6 +4,7 @@ import {
   useGetTicketCategoryByIdQuery,
   useUpdateTicketCategoryMutation,
 } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
+import { useGetTicketTypesQuery } from "../../../../store/features/ticketTypes/ticketTypesApiSlice";
 
 import PageLoading from "@/components/common/loaderComponent/PageLoading";
 import {
@@ -42,8 +43,12 @@ const TicketCategoriesEdit = () => {
     sales_end: "",
     total_quantity: "",
     sold_quantity: "",
-    max_per_purchase: "", // New field for max per purchase
+    max_per_purchase: "",
+    ticket_type_id: "",
   });
+
+  const { data: ticketTypesData } = useGetTicketTypesQuery({ all: true });
+  const ticketTypes = ticketTypesData?.data || [];
 
   const [errors, setErrors] = useState({});
 
@@ -58,6 +63,7 @@ const TicketCategoriesEdit = () => {
         total_quantity: existingData.total_quantity || "",
         sold_quantity: existingData.sold_quantity || "",
         max_per_purchase: existingData.max_per_purchase || "",
+        ticket_type_id: existingData.ticket_type_id || "",
       });
     }
   }, [existingData]);
@@ -178,6 +184,29 @@ const TicketCategoriesEdit = () => {
           <div className="p-8">
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Ticket Type - Full Width */}
+                <div className="lg:col-span-2">
+                  <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">
+                    <Tag className="w-4 h-4 text-gray-600" />
+                    Ticket Type{" "}
+                    <span className="text-gray-400 font-normal">
+                      (optional)
+                    </span>
+                  </label>
+                  <select
+                    name="ticket_type_id"
+                    value={formData.ticket_type_id}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white focus:border-amber-600 focus:outline-none focus:ring-0">
+                    <option value="">Select ticket type (optional)</option>
+                    {ticketTypes.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {type.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* Category Name - Full Width */}
                 <div className="lg:col-span-2">
                   <label className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-3">

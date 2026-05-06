@@ -9,13 +9,32 @@ import {
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import { useGetEventsQuery } from "../../../../store/features/event/EventApiSlice";
 import {
   useCreateTicketCategoryMutation,
   useUpdateTicketCategoryMutation,
 } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
+import { useGetTicketTypesQuery } from "../../../../store/features/ticketTypes/ticketTypesApiSlice";
 
-const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
-  const { id } = useParams();
+const TicketCategoryCreate = ({
+  isOpen,
+  onClose,
+  initialData,
+  eventId: propEventId,
+}) => {
+  const params = useParams();
+  const urlEventId = params.id;
+
+  const { data: eventsData } = useGetEventsQuery({ all: true });
+  const events = eventsData?.data || [];
+
+  const { data: ticketTypesData } = useGetTicketTypesQuery({
+    all: true,
+    is_active: true,
+  });
+  const ticketTypes = ticketTypesData?.data || [];
+
+  const [selectedEventId, setSelectedEventId] = useState("");
 
   // Get today's date in format for datetime-local min attribute
   const getMinDate = () => {
@@ -38,6 +57,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
     total_quantity: "",
     sold_quantity: 0,
     max_per_purchase: "",
+    ticket_type_id: "",
   });
 
   const [updateTicketCategory] = useUpdateTicketCategoryMutation();
@@ -53,6 +73,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
         total_quantity: initialData.total_quantity || "",
         sold_quantity: initialData.sold_quantity || 0,
         max_per_purchase: initialData.max_per_purchase || "",
+        ticket_type_id: initialData.ticket_type_id || "",
       });
     } else {
       setForm({
@@ -63,6 +84,7 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
         total_quantity: "",
         sold_quantity: 0,
         max_per_purchase: "",
+        ticket_type_id: "",
       });
     }
   }, [initialData]);
@@ -72,11 +94,17 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const getEventId = () => {
+    if (initialData?.id) return null;
+    return propEventId || urlEventId || selectedEventId;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!id) {
-      toast.error("Event ID is missing.");
+    const eventId = getEventId();
+    if (!eventId) {
+      toast.error("Please select an event.");
       return;
     }
 
@@ -94,8 +122,9 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
       if (initialData?.id) {
         await updateTicketCategory({ id: initialData.id, ...payload }).unwrap();
         toast.success("Ticket category updated successfully.");
+        form[{}];
       } else {
-        await createTicketCategory({ ...payload, event_id: id }).unwrap();
+        await createTicketCategory({ ...payload, event_id: eventId }).unwrap();
         toast.success("Ticket category created successfully.");
       }
 
@@ -133,6 +162,51 @@ const TicketCategoryCreate = ({ isOpen, onClose, initialData }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
+          {/* Event Selector - Show only when creating new category without event ID */}
+          {!initialData?.id && !propEventId && !urlEventId && (
+            <div className="group">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Event <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedEventId}
+                  onChange={(e) => setSelectedEventId(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:bg-white appearance-none"
+                  required>
+                  <option value="">Select an event</option>
+                  {events.map((event) => (
+                    <option key={event.id} value={event.id}>
+                      {event.title}
+                    </option>
+                  ))}
+                </select>
+                {/* <Ticket className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" /> */}
+              </div>
+            </div>
+          )}
+
+          {/* Ticket Type Selector */}
+          <div className="group">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Ticket Type <span className="text-gray-400">(optional)</span>
+            </label>
+            <div className="relative">
+              <select
+                name="ticket_type_id"
+                value={form.ticket_type_id}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-amber-500 focus:border-transparent focus:bg-white appearance-none">
+                <option value="">Select ticket type (optional)</option>
+                {ticketTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {/* Category Name */}
           <div className="group">
             <label className="block text-sm font-medium text-gray-700 mb-2">

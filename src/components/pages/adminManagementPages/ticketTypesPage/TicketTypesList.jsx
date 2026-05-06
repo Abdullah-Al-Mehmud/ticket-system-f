@@ -1,17 +1,15 @@
-import { Edit, Eye, Plus, Search, Trash2 } from "lucide-react";
+import { Edit, Eye, Plus, Search, Trash2, Tag } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
-
 import ConfirmModal from "@/components/common/confirmModel/ConfirmModal";
 import TableRowSkeleton from "@/components/common/loaderComponent/TableRowSkeleton";
 import {
-  useDeleteTicketCategoryMutation,
-  useGetTicketCategoriesQuery,
-} from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
-import TicketCategoryCreate from "../eventsPage/TicketCategoryCreateEdit";
+  useDeleteTicketTypeMutation,
+  useGetTicketTypesQuery,
+} from "../../../../store/features/ticketTypes/ticketTypesApiSlice";
 
-export default function TicketCategoriesList() {
+export default function TicketTypesList() {
   const [pageConfig, setPageConfig] = useState({
     page: 1,
     count: 10,
@@ -19,88 +17,60 @@ export default function TicketCategoriesList() {
   });
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [ticketTypeToDelete, setTicketTypeToDelete] = useState(null);
 
-  const {
-    data: fetchData,
-    isLoading,
-    refetch,
-  } = useGetTicketCategoriesQuery(pageConfig);
+  const { data: fetchData, isLoading, refetch } = useGetTicketTypesQuery(pageConfig);
 
-  const openCreateModal = () => {
-    setSelectedCategory(null);
-    setIsCreateModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsCreateModalOpen(false);
-    refetch();
-  };
-
-  const [deleteTicketCategory, { isLoading: isDeleting }] =
-    useDeleteTicketCategoryMutation();
+  const [deleteTicketType, { isLoading: isDeleting }] = useDeleteTicketTypeMutation();
 
   const handleDeleteClick = (id) => {
-    setCategoryToDelete(id);
+    setTicketTypeToDelete(id);
     setIsModalOpen(true);
   };
 
   const confirmDelete = async () => {
-    if (!categoryToDelete) return;
+    if (!ticketTypeToDelete) return;
     try {
-      await deleteTicketCategory(categoryToDelete).unwrap();
-      toast.success("Ticket category deleted successfully!");
+      await deleteTicketType(ticketTypeToDelete).unwrap();
+      toast.success("Ticket type deleted successfully!");
       refetch();
     } catch {
-      toast.error("Failed to delete the ticket category.");
+      toast.error("Failed to delete the ticket type.");
     } finally {
       setIsModalOpen(false);
-      setCategoryToDelete(null);
+      setTicketTypeToDelete(null);
     }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setCategoryToDelete(null);
+    setTicketTypeToDelete(null);
   };
 
-  const formatDateOnly = (dateString) => {
-    if (!dateString) return "";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // Destructure pagination data
-  const ticketCategories = fetchData?.data || [];
+  const ticketTypes = fetchData?.data || [];
   const currentPage = fetchData?.current_page || 1;
   const lastPage = fetchData?.last_page || 1;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="">
-        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-semibold text-gray-900">
-              All Ticket Categories
+              All Ticket Types
             </h1>
             <p className="mt-2 text-gray-600">
-              Manage all tickets with user and event info
+              Manage ticket types (e.g., General, Student, VIP)
             </p>
           </div>
-          <button
-            onClick={openCreateModal}
-            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2">
-            <Plus size={20} /> Create Ticket Category
-          </button>
+          <Link
+            to="/admin/ticket-types-create"
+            className="bg-amber-600 hover:bg-amber-800 text-white font-semibold py-2 px-4 rounded flex items-center gap-2"
+          >
+            <Plus size={20} /> Create Ticket Type
+          </Link>
         </div>
 
-        {/* Filters */}
         <div className="bg-white rounded-lg border p-6 mb-6">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="flex-1 flex gap-2 w-full flex-wrap">
@@ -111,7 +81,7 @@ export default function TicketCategoriesList() {
                 />
                 <input
                   type="text"
-                  placeholder="Search by Ticket Category..."
+                  placeholder="Search by Ticket Type..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={(e) => {
@@ -120,7 +90,6 @@ export default function TicketCategoriesList() {
                     }
                   }}
                   className="w-full pl-10 pr-4 py-3 border border-amber-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  aria-label="Search tickets"
                 />
               </div>
 
@@ -128,7 +97,8 @@ export default function TicketCategoriesList() {
                 onClick={() =>
                   setPageConfig((prev) => ({ ...prev, search, page: 1 }))
                 }
-                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1">
+                className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
                 Search
               </button>
 
@@ -138,39 +108,27 @@ export default function TicketCategoriesList() {
                   setPageConfig((prev) => ({
                     ...prev,
                     search: "",
-                    status: "",
                     page: 1,
                   }));
                 }}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium">
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              >
                 Clear
               </button>
             </div>
           </div>
         </div>
 
-        {/* Table */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  {[
-                    "ID",
-                    "Category Name",
-                    "Ticket Type",
-                    "Event Title",
-                    "Price",
-                    "Max Per Purchase",
-                    "Sales Start",
-                    "Sales End",
-                    "Total Qty",
-                    "Sold Qty",
-                    "Actions",
-                  ].map((header) => (
+                  {["ID", "Name", "Description", "Status", "Created At", "Actions"].map((header) => (
                     <th
                       key={header}
-                      className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase">
+                      className="px-6 py-4 text-left text-sm font-semibold text-gray-900 uppercase"
+                    >
                       {header}
                     </th>
                   ))}
@@ -179,75 +137,67 @@ export default function TicketCategoriesList() {
               <tbody className="divide-y divide-gray-200">
                 {isLoading ? (
                   <TableRowSkeleton count={4} />
-                ) : ticketCategories.length > 0 ? (
-                  ticketCategories.map((category) => (
+                ) : ticketTypes.length > 0 ? (
+                  ticketTypes.map((ticketType) => (
                     <tr
-                      key={category.id}
-                      className="hover:bg-gray-50 transition-colors">
+                      key={ticketType.id}
+                      className="hover:bg-gray-50 transition-colors"
+                    >
                       <td className="px-6 py-4 text-sm text-gray-800 font-medium">
                         <Link
                           className="hover:underline"
-                          to={`/admin/ticket-categories-list/${category.id}`}>
-                          #{category.id}
+                          to={`/admin/ticket-types-list/${ticketType.id}`}
+                        >
+                          #{ticketType.id}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-800">
-                        <Link
-                          className="hover:underline"
-                          to={`/admin/ticket-categories-list/${category.id}`}>
-                          {category.name}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        {category.ticket_type ? (
-                          <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium">
-                            {category.ticket_type.name}
-                          </span>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800">
-                        {category.event?.title || "-"}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800">
-                        ৳{category.price}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800">
-                        {category.max_per_purchase ?? "null"}
-                      </td>
-
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {formatDateOnly(category.sales_start)}
+                      <td className="px-6 py-4 text-sm text-gray-800 font-medium">
+                        <div className="flex items-center gap-2">
+                          <Tag className="w-4 h-4 text-amber-600" />
+                          {ticketType.name}
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600">
-                        {formatDateOnly(category.sales_end)}
+                        {ticketType.description || "-"}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            ticketType.is_active
+                              ? "bg-green-100 text-green-800"
+                              : "bg-gray-100 text-gray-600"
+                          }`}
+                        >
+                          {ticketType.is_active ? "Active" : "Inactive"}
+                        </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600">
-                        {category.total_quantity}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
-                        {category.sold_quantity}
+                        {ticketType.created_at
+                          ? new Date(ticketType.created_at).toLocaleDateString()
+                          : "-"}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">
                           <Link
-                            to={`/admin/ticket-categories-list/${category.id}`}
+                            to={`/admin/ticket-types-list/${ticketType.id}`}
                             className="p-2 text-blue-600 hover:bg-blue-100 rounded-md"
-                            title="View">
+                            title="View"
+                          >
                             <Eye size={16} />
                           </Link>
                           <Link
-                            to={`/admin/ticket-categories-edit/${category.id}`}
+                            to={`/admin/ticket-types-edit/${ticketType.id}`}
                             className="p-2 text-green-600 hover:bg-green-100 rounded-md"
-                            title="Edit">
+                            title="Edit"
+                          >
                             <Edit size={16} />
                           </Link>
                           <button
-                            onClick={() => handleDeleteClick(category.id)}
+                            onClick={() => handleDeleteClick(ticketType.id)}
                             className="p-2 text-red-600 hover:bg-red-100 rounded-md"
                             title="Delete"
-                            disabled={isDeleting}>
+                            disabled={isDeleting}
+                          >
                             <Trash2 size={16} />
                           </button>
                         </div>
@@ -257,9 +207,10 @@ export default function TicketCategoriesList() {
                 ) : (
                   <tr>
                     <td
-                      colSpan="9"
-                      className="text-center py-6 text-sm text-gray-500">
-                      No ticket categories found.
+                      colSpan="6"
+                      className="text-center py-6 text-sm text-gray-500"
+                    >
+                      No ticket types found.
                     </td>
                   </tr>
                 )}
@@ -268,7 +219,7 @@ export default function TicketCategoriesList() {
           </div>
         </div>
       </div>
-      {/* Pagination */}
+
       {lastPage > 1 && (
         <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
           <button
@@ -283,7 +234,8 @@ export default function TicketCategoriesList() {
               currentPage === 1
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                 : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-            }`}>
+            }`}
+          >
             Previous
           </button>
 
@@ -299,7 +251,8 @@ export default function TicketCategoriesList() {
                   pageNum === currentPage
                     ? "bg-amber-600 text-white border-amber-600"
                     : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-                }`}>
+                }`}
+              >
                 {pageNum}
               </button>
             );
@@ -317,25 +270,18 @@ export default function TicketCategoriesList() {
               currentPage === lastPage
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200"
                 : "bg-white hover:bg-amber-100 text-gray-700 border-gray-300"
-            }`}>
+            }`}
+          >
             Next
           </button>
         </div>
       )}
 
-      {/* Confirm delete modal */}
       <ConfirmModal
         isOpen={isModalOpen}
         onClose={closeModal}
         onConfirm={confirmDelete}
-        message="Are you sure you want to delete this ticket category?"
-      />
-
-      {/* Create/Edit Ticket Category Modal */}
-      <TicketCategoryCreate
-        isOpen={isCreateModalOpen}
-        onClose={handleModalClose}
-        initialData={selectedCategory}
+        message="Are you sure you want to delete this ticket type?"
       />
     </div>
   );

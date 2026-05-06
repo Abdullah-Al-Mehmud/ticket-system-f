@@ -10,7 +10,8 @@ import {
   Calendar,
   Ticket,
   ChartBarStacked,
-  CreditCard
+  CreditCard,
+  Tag
 } from "lucide-react";
 
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
@@ -41,6 +42,12 @@ const AdminLayout = () => {
       path: "/admin/categories-list",
     },
     { id: "events", label: "Events", icon: Calendar, path: "/admin/events-list" },
+    {
+      id: "ticket types",
+      label: "Ticket Types",
+      icon: Tag,
+      path: "/admin/ticket-types-list",
+    },
     {
       id: "ticket categories",
       label: "Ticket Categories",

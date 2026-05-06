@@ -47,6 +47,11 @@ const TicketCategoriesList = lazy(() => import("./components/pages/adminManageme
 const TicketCategoriesDetails = lazy(() => import("./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesDetails"));
 const TicketCategoriesEdit = lazy(() => import("./components/pages/adminManagementPages/ticketCategoriesPage/TicketCategoriesEdit"));
 
+const TicketTypesList = lazy(() => import("./components/pages/adminManagementPages/ticketTypesPage/TicketTypesList"));
+const TicketTypeCreate = lazy(() => import("./components/pages/adminManagementPages/ticketTypesPage/TicketTypeCreate"));
+const TicketTypeEdit = lazy(() => import("./components/pages/adminManagementPages/ticketTypesPage/TicketTypeEdit"));
+const TicketTypeDetails = lazy(() => import("./components/pages/adminManagementPages/ticketTypesPage/TicketTypeDetails"));
+
 const UserDashboard = lazy(() => import("./components/pages/userManagementPages/userDashboardPage/UserDashboard"));
 const BookingTicketDetails = lazy(() => import("./components/pages/userManagementPages/ticketManagement/BookingTicketDetails"));
 const EventSalesOverview = lazy(() => import("./components/pages/userManagementPages/eventManagementPage/EventSalesOverview"));
@@ -108,6 +113,11 @@ function App() {
             <Route path="ticket-categories-list" element={<TicketCategoriesList />} />
             <Route path="ticket-categories-list/:id" element={<TicketCategoriesDetails />} />
             <Route path="ticket-categories-edit/:id" element={<TicketCategoriesEdit />} />
+
+            <Route path="ticket-types-list" element={<TicketTypesList />} />
+            <Route path="ticket-types-create" element={<TicketTypeCreate />} />
+            <Route path="ticket-types-edit/:id" element={<TicketTypeEdit />} />
+            <Route path="ticket-types-list/:id" element={<TicketTypeDetails />} />
 
             <Route path="payment-methods-list" element={<PaymentMethodsList />} />
           </Route>

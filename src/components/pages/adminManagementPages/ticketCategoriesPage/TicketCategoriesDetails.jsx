@@ -1,3 +1,4 @@
+import PageLoading from "@/components/common/loaderComponent/PageLoading";
 import {
   ArrowLeft,
   Calendar,
@@ -6,10 +7,10 @@ import {
   MapPin,
   Ticket,
   Users,
+  Tag,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import PageLoading from "../../../../components/common/LoaderComponent/PageLoading";
 import { useGetTicketCategoryByIdQuery } from "../../../../store/features/ticketCategories/ticketCategoriesApiSlice";
 
 function TicketCategoriesDetails() {
@@ -126,9 +127,19 @@ function TicketCategoriesDetails() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {category.name}
-                  </h2>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {category.name}
+                    </h2>
+                    {category.ticket_type && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <Tag className="w-4 h-4 text-amber-600" />
+                        <span className="text-sm text-amber-600 font-medium">
+                          {category.ticket_type.name}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <div className="text-3xl font-bold text-amber-600">
                     {formatCurrency(category.price)}
                   </div>
