@@ -11,7 +11,8 @@ import {
   Ticket,
   ChartBarStacked,
   CreditCard,
-  Tag
+  Tag,
+  TicketPercent
 } from "lucide-react";
 
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
@@ -53,6 +54,12 @@ const AdminLayout = () => {
       label: "Ticket Categories",
       icon: ChartBarStacked,
       path: "/admin/ticket-categories-list",
+    },
+    {
+      id: "coupons",
+      label: "Coupons",
+      icon: TicketPercent,
+      path: "/admin/coupons-list",
     },
     {
       id: "purchase tickets",

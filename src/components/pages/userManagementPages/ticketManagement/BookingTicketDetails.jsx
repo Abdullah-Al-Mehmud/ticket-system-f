@@ -1,20 +1,28 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useDownloadTicketMutation, useGetTicketByIdQuery } from "../../../../store/features/tickets/ticketsApiSlice";
-import { XCircle, MapPin, Scissors, Download } from "lucide-react";
-import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { QRCodeSVG } from "qrcode.react";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import dayjs from "dayjs";
+import { Download, MapPin, Scissors, XCircle } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
+import { useParams } from "react-router-dom";
+import PageLoading from "../../../../components/common/loaderComponent/PageLoading";
+import {
+  useDownloadTicketMutation,
+  useGetTicketByIdQuery,
+} from "../../../../store/features/tickets/ticketsApiSlice";
 
 export default function BookingTicketDetails() {
   const { id } = useParams();
   const { data, isLoading, isError } = useGetTicketByIdQuery(id);
-  const [downloadTicket, { isLoading: isDownloading }] = useDownloadTicketMutation();
+  const [downloadTicket, { isLoading: isDownloading }] =
+    useDownloadTicketMutation();
 
-  if (isLoading) return <div className="min-h-screen bg-gray-100 flex items-center justify-center"><PageLoading /></div>;
+  if (isLoading)
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <PageLoading />
+      </div>
+    );
 
   if (isError || !data?.data) {
     return (
@@ -23,7 +31,9 @@ export default function BookingTicketDetails() {
           <CardContent className="flex flex-col items-center p-8">
             <XCircle className="w-16 h-16 text-red-500 mb-4" />
             <CardTitle className="text-xl mb-2">Ticket Not Found</CardTitle>
-            <p className="text-gray-600 text-center">We couldn't find the ticket you're looking for.</p>
+            <p className="text-gray-600 text-center">
+              We couldn't find the ticket you're looking for.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -34,18 +44,24 @@ export default function BookingTicketDetails() {
   const event = ticket.event;
 
   const ticketFields = [
-    { label: "Start Date", value: dayjs(event.start_date).format("MMM D, YYYY") },
+    {
+      label: "Start Date",
+      value: dayjs(event.start_date).format("MMM D, YYYY"),
+    },
     { label: "End Date", value: dayjs(event.end_date).format("MMM D, YYYY") },
     { label: "Start Time", value: dayjs(event.start_date).format("h:mm A") },
     { label: "End Time", value: dayjs(event.end_date).format("h:mm A") },
     { label: "Ticket Category", value: ticket.ticket_category_name || "N/A" },
-    { label: "Quantity", value: `${ticket.quantity} TICKET${ticket.quantity > 1 ? "S" : ""}` },
-    { label: "Price Each", value: `৳${ticket.price_per_ticket}` }
+    {
+      label: "Quantity",
+      value: `${ticket.quantity} TICKET${ticket.quantity > 1 ? "S" : ""}`,
+    },
+    { label: "Price Each", value: `৳${ticket.price_per_ticket}` },
   ];
   const qrPayload = JSON.stringify({
     user_name: ticket.user?.name,
     event_id: event?.id,
-    ticket_id: ticket.ticket_id
+    ticket_id: ticket.ticket_id,
   });
 
   const handleDownload = async () => {
@@ -71,29 +87,37 @@ export default function BookingTicketDetails() {
       <div className="max-w-4xl w-full">
         <div className="flex justify-end mb-4">
           <button
-            onClick={handleDownload} disabled={isDownloading}
-            className="flex items-center px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
-          >
+            onClick={handleDownload}
+            disabled={isDownloading}
+            className="flex items-center px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700">
             <Download className="w-4 h-4 mr-2" />
             {isDownloading ? "Downloading..." : "Download Ticket"}
           </button>
         </div>
 
-        <Card className="border-amber-600 overflow-hidden" style={{ fontFamily: "monospace" }}>
+        <Card
+          className="border-amber-600 overflow-hidden"
+          style={{ fontFamily: "monospace" }}>
           <div className="flex">
             <div className="flex-1 p-8 relative">
               <CardHeader className="p-0 pb-6">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <CardTitle className="text-2xl text-gray-900 mb-2">{event.title}</CardTitle>
+                    <CardTitle className="text-2xl text-gray-900 mb-2">
+                      {event.title}
+                    </CardTitle>
                     <div className="flex items-center text-gray-600 mb-2">
                       <MapPin className="w-4 h-4 mr-2" />
                       <span className="text-sm">{event.location}</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <Badge className="bg-amber-600 hover:bg-amber-700 text-white mb-2">{ticket.status?.toUpperCase()}</Badge>
-                    <div className="text-xs text-gray-500">#{ticket.ticket_number}</div>
+                    <Badge className="bg-amber-600 hover:bg-amber-700 text-white mb-2">
+                      {ticket.status?.toUpperCase()}
+                    </Badge>
+                    <div className="text-xs text-gray-500">
+                      #{ticket.ticket_number}
+                    </div>
                   </div>
                 </div>
                 <div className="border-b-2 border-dashed border-gray-300"></div>
@@ -103,24 +127,74 @@ export default function BookingTicketDetails() {
                 <div className="grid grid-cols-2 gap-6 mb-6">
                   {ticketFields.slice(0, 4).map(({ label, value }, idx) => (
                     <div key={idx}>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1">{label}</label>
-                      <div className="text-lg font-mono text-gray-900">{value}</div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1">
+                        {label}
+                      </label>
+                      <div className="text-lg font-mono text-gray-900">
+                        {value}
+                      </div>
                     </div>
                   ))}
                 </div>
                 <div className="grid grid-cols-3 gap-6 mb-6">
                   {ticketFields.slice(4).map(({ label, value }, idx) => (
                     <div key={idx}>
-                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1">{label}</label>
-                      <div className="text-lg font-mono text-gray-900">{value}</div>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1">
+                        {label}
+                      </label>
+                      <div className="text-lg font-mono text-gray-900">
+                        {value}
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="border-t-2 border-dashed border-gray-300 pt-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">Total Amount</span>
-                    <span className="text-3xl font-bold text-amber-600">৳{ticket.total_price}</span>
+                <div className="border-t-2 border-dashed border-gray-300 pt-6">
+                  <div className="space-y-3">
+                    {/* Original Amount */}
+                    <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                        Original Amount
+                      </span>
+                      <span className="text-lg font-mono text-gray-700">
+                        ৳{ticket.original_amount}
+                      </span>
+                    </div>
+
+                    {/* Coupon Code and Discount - Show only if coupon applied */}
+                    {ticket.coupon_code && ticket.discount_applied && (
+                      <>
+                        <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                          <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+                            Coupon Code
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800">
+                              {ticket.coupon_code}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+                          <span className="text-xs font-bold text-green-600 uppercase tracking-wide">
+                            Discount Applied
+                          </span>
+                          <span className="text-lg font-mono text-green-600 font-semibold">
+                            -৳{ticket.discount_applied}
+                          </span>
+                        </div>
+                      </>
+                    )}
+
+                    {/* Final Amount */}
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                        Total Amount
+                      </span>
+                      <span className="text-3xl font-bold text-amber-600">
+                        ৳{ticket.final_amount}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -132,14 +206,15 @@ export default function BookingTicketDetails() {
               </div>
             </div>
             <div className="w-48 bg-gray-50 p-6 border-l-2 border-dashed border-gray-300 relative flex flex-col items-center">
-
               {/* Vertical Admit One text */}
               <div className="absolute top-1/3 left-1/2 -translate-x-1/3 -translate-y-1/2 w-30 pointer-events-none select-none z-20 transform rotate-90 origin-center">
                 <div className="text-center">
                   <div className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
                     Admit One
                   </div>
-                  <Badge variant="outline" className="text-amber-600 border-amber-600 mb-2">
+                  <Badge
+                    variant="outline"
+                    className="text-amber-600 border-amber-600 mb-2">
                     #{ticket.ticket_number}
                   </Badge>
                   <div className="text-xs text-gray-600">
@@ -149,7 +224,9 @@ export default function BookingTicketDetails() {
               </div>
 
               {/* QR Code */}
-              <div className="absolute bottom-6 left-6 right-6 z-10">  {/* lower z-index */}
+              <div className="absolute bottom-6 left-6 right-6 z-10">
+                {" "}
+                {/* lower z-index */}
                 <Card className="w-36 h-36 mx-auto flex items-center justify-center border-2">
                   <QRCodeSVG
                     value={qrPayload}
@@ -161,9 +238,7 @@ export default function BookingTicketDetails() {
                   SCAN AT VENUE
                 </div>
               </div>
-
             </div>
-
           </div>
 
           <div className="border-t-2 border-dashed border-gray-300 bg-gray-50 px-8 py-4">
@@ -172,7 +247,10 @@ export default function BookingTicketDetails() {
                 <Scissors className="w-3 h-3 mr-2" />
                 <span>DETACH AT VENUE</span>
               </div>
-              <div>Valid for: {ticket.quantity} person{ticket.quantity > 1 ? "s" : ""}</div>
+              <div>
+                Valid for: {ticket.quantity} person
+                {ticket.quantity > 1 ? "s" : ""}
+              </div>
               <div>Keep this portion</div>
             </div>
           </div>
@@ -180,8 +258,13 @@ export default function BookingTicketDetails() {
 
         <Alert className="mt-4 bg-transparent border-none">
           <AlertDescription className="text-center text-xs text-gray-500">
-            <p>This ticket is non-refundable and non-transferable. Please arrive 30 minutes before event start time.</p>
-            <p className="mt-1">For support, contact us at support@tapkori.com</p>
+            <p>
+              This ticket is non-refundable and non-transferable. Please arrive
+              30 minutes before event start time.
+            </p>
+            <p className="mt-1">
+              For support, contact us at support@tapkori.com
+            </p>
           </AlertDescription>
         </Alert>
       </div>

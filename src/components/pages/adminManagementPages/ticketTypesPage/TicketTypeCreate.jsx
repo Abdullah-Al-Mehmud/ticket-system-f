@@ -1,7 +1,7 @@
 import { ArrowLeft, Tag } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { useCreateTicketTypeMutation } from "../../../../store/features/ticketTypes/ticketTypesApiSlice";
 
 const TicketTypeCreate = () => {
@@ -45,8 +45,7 @@ const TicketTypeCreate = () => {
         <div className="flex items-center gap-4 mb-6">
           <button
             onClick={() => navigate("/admin/ticket-types-list")}
-            className="p-2 hover:bg-gray-100 rounded-lg"
-          >
+            className="p-2 hover:bg-gray-100 rounded-lg">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
@@ -92,26 +91,11 @@ const TicketTypeCreate = () => {
             />
           </div>
 
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              name="is_active"
-              id="is_active"
-              checked={formData.is_active}
-              onChange={handleChange}
-              className="w-5 h-5 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-            />
-            <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
-              Active (visible in ticket category creation)
-            </label>
-          </div>
-
           <div className="flex gap-4 pt-4">
             <button
               type="button"
               onClick={() => navigate("/admin/ticket-types-list")}
-              className="flex-1 py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
-            >
+              className="flex-1 py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">
               Cancel
             </button>
             <button
@@ -121,8 +105,7 @@ const TicketTypeCreate = () => {
                 isLoading
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-amber-600 hover:bg-amber-700"
-              }`}
-            >
+              }`}>
               {isLoading ? "Creating..." : "Create Ticket Type"}
             </button>
           </div>
